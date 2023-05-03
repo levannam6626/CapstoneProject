@@ -1,13 +1,11 @@
 import { createStore } from "vuex";
 import auth from "./modules/auth";
-import login from "./modules/login";
-import register from "./modules/register";
+import account from "./modules/account";
 
 export default createStore({
   modules: {
     auth,
-    login,
-    register,
+    account,
   }
 });
 

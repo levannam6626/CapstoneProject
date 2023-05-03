@@ -56,9 +56,17 @@ export default {
       }
     };
   },
+  mounted: function () {
+    this.loadFormData();
+  },
   methods: {
     ...mapActions('auth', ['deToken']),
-    ...mapActions('login', ['loginAction']),
+    ...mapActions('account', ['loginAction']),
+
+    loadFormData() {
+      this.email = store.state.account.loginForm.email;
+      this.password = store.state.account.loginForm.password;
+    },
     resetMessages() {
       this.messages.email = '';
       this.messages.password = '';
@@ -83,7 +91,7 @@ export default {
           password: this.password,
         };
         await this.loginAction(objLogin);
-        await store.state.login.userAccount.then(array => {
+        await store.state.account.userAccount.then(array => {
           if(array.status === 200){
             this.isLogin = true;
             this.deTokenData = array.data;
@@ -102,18 +110,13 @@ export default {
   },
 };
 </script>
-<style >
-
-html, head, body {
-  margin: 0px ;
-  padding: 0px;
-}
+<style scoped>
 .container {
   background-color: #DBDBDB;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 667px;
+  height: 100%;
 }
 .signin-image{
   margin: 70px 40px 0px 30px;
