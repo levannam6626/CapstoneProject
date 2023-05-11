@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.finalpbl.Dto.AuthRequest;
 import com.finalpbl.Dto.AuthResponse;
-import com.finalpbl.Service.AuthenticationServiceImpl;
+import com.finalpbl.Service.Authentication.AuthenticationServiceImpl;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 

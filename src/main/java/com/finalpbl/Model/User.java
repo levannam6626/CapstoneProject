@@ -36,9 +36,6 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column
-    private String username;
-
     @Column(nullable = false)
     private String firstname;
 
@@ -54,6 +51,8 @@ public class User implements UserDetails {
 
     private String address;
 
+    private String gender;
+
     @Column(nullable = false)
     private String phone;
 
@@ -65,8 +64,7 @@ public class User implements UserDetails {
     private Role role;
 
 
-    public User(String username, String firstname, String lastname, String password, String email, String address, String phone, Boolean isDeleted, Role role) {
-        this.username = username;
+    public User(String firstname, String lastname, String password, String email, String address, String phone, Boolean isDeleted, Role role, String gender) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.password = password;
@@ -75,6 +73,7 @@ public class User implements UserDetails {
         this.phone = phone;
         this.isDeleted = isDeleted;
         this.role = role;
+        this.gender = gender;
     }
 
 
@@ -90,7 +89,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override

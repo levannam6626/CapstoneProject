@@ -1,4 +1,4 @@
-package com.finalpbl.Service;
+package com.finalpbl.Service.Authentication;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,11 +25,11 @@ public class AuthenticationServiceImpl implements IAuththenticationService {
     public AuthResponse authenticate(AuthRequest request) {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                request.getUsername(),
+                request.getEmail(),
                 request.getPassword()
             )
         );
-        var user = userRepository.findByUsername(request.getUsername()).filter(u -> !u.getIsDeleted()).orElseThrow(null);
+        var user = userRepository.findByEmail(request.getEmail()).filter(u -> !u.getIsDeleted()).orElseThrow(null);
         var jwtToken = jwtUtils.generateToken(user);
         return AuthResponse.builder()
             .token(jwtToken)

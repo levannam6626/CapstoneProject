@@ -1,5 +1,6 @@
 package com.finalpbl.Config;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,11 +23,16 @@ public class AppConfig {
   
     @Bean
     public UserDetailsService userDetailsService() {
-      return username -> userRepository.findByUsername(username)
+      return email -> userRepository.findByEmail(email)
           .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    
+    @Bean
+    public ModelMapper modelMapper(){
+        return new ModelMapper();
+    }
+
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

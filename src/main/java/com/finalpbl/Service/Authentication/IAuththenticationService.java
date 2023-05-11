@@ -1,4 +1,4 @@
-package com.finalpbl.Service;
+package com.finalpbl.Service.Authentication;
 
 import com.finalpbl.Dto.AuthRequest;
 import com.finalpbl.Dto.AuthResponse;
