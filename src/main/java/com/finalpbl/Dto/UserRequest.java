@@ -34,6 +34,9 @@ public class UserRequest {
     @NotBlank
     private String role;
 
+    @NotBlank
+    private String gender;
+
     public Boolean validatePassword(UserRequest userRequest)
     {
         if(userRequest.getPassword().equals(userRequest.getConfirmPassword()))

@@ -40,7 +40,7 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
-    @RequestMapping(path = "", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @RequestMapping(path = "/register", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> createUser(@ModelAttribute @Validated UserRequest userRequest)
     {
         String msg = userService.createUser(userRequest);
