@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,27 +26,33 @@ public class Products {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long product_id;
+    @Column(name = "product_id")
+    private long productId;
 
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "category_id")
     Category category;
 
+    @Column(name = "product_name")
     @NotNull
-    private String product_name;
+    private String productName;
 
+    @Column(name = "product_description")
     @NotNull
-    private String product_description;
+    private String productDescription;
 
+    @Column(name = "product_image")
     @NotNull
-    private String product_image;
+    private String productImage;
 
+    @Column(name = "update_date")
     @NotNull
-    private LocalDate update_date;
+    private LocalDate updateDate;
 
+    @Column(name = "product_price")
     @NotNull
-    private double product_price;
+    private double productPrice;
 }
 
 

@@ -3,10 +3,12 @@ package com.finalpbl.Service.Products;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.finalpbl.Model.Products;
 import com.finalpbl.Repository.ProductsRepository;
 
+@Service
 public class ProductService implements IProductService{
 
     @Autowired
@@ -26,15 +28,15 @@ public class ProductService implements IProductService{
 
     @Override
     public String addProduct(Products product) {
-        Products productValidate = productsRepository.findByProduct_name(product.getProduct_name()).orElseThrow(null);
+        Products productValidate = productsRepository.findByProductName(product.getProductName()).orElseThrow(null);
         if(productValidate == null)
         {
             Products product1 = new Products();
-            product1.setProduct_name(product.getProduct_name());
-            product1.setProduct_image(product.getProduct_image());
-            product1.setProduct_price(product.getProduct_price());
-            product1.setUpdate_date(product.getUpdate_date());
-            product1.setProduct_description(product.getProduct_description());
+            product1.setProductName(product.getProductName());
+            product1.setProductImage(product.getProductImage());
+            product1.setProductPrice(product.getProductPrice());
+            product1.setUpdateDate(product.getUpdateDate());
+            product1.setProductDescription(product.getProductDescription());
             product1.setCategory(product.getCategory());
             productsRepository.save(product1);
             return "STATUS OK";
