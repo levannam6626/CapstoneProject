@@ -28,7 +28,7 @@ public class ProductService implements IProductService{
 
     @Override
     public String addProduct(Products product) {
-        Products productValidate = productsRepository.findByProductName(product.getProductName()).orElseThrow(null);
+        Products productValidate = productsRepository.findByProductName(product.getProductName()).orElse(null);
         if(productValidate == null)
         {
             Products product1 = new Products();

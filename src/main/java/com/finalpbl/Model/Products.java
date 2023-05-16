@@ -1,6 +1,7 @@
 package com.finalpbl.Model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -48,7 +49,7 @@ public class Products {
 
     @Column(name = "update_date")
     @NotNull
-    private LocalDate updateDate;
+    private LocalDateTime updateDate;
 
     @Column(name = "product_price")
     @NotNull
