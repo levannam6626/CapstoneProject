@@ -5,6 +5,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import com.finalpbl.Config.UserDetailsImpl;
 import com.finalpbl.Dto.AuthRequest;
 import com.finalpbl.Dto.AuthResponse;
 import com.finalpbl.Repository.UserRepository;
@@ -30,7 +31,8 @@ public class AuthenticationServiceImpl implements IAuththenticationService {
             )
         );
         var user = userRepository.findByEmail(request.getEmail()).filter(u -> !u.getIsDeleted()).orElseThrow(null);
-        var jwtToken = jwtUtils.generateToken(user);
+        UserDetailsImpl userDetailsImpl = new UserDetailsImpl(user);
+        var jwtToken = jwtUtils.generateToken(userDetailsImpl);
         return AuthResponse.builder()
             .token(jwtToken)
             .build();

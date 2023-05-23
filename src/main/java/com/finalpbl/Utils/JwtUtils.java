@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import com.finalpbl.Config.UserDetailsImpl;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -35,39 +37,40 @@ public class JwtUtils {
       return claimsResolver.apply(claims);
     }
   
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetailsImpl userDetails) {
       return generateToken(new HashMap<>(), userDetails);
     }
   
     public String generateToken(
         Map<String, Object> extraClaims,
-        UserDetails userDetails
+        UserDetailsImpl userDetails
     ) {
       return buildToken(extraClaims, userDetails, jwtExpiration);
     }
   
     public String generateRefreshToken(
-        UserDetails userDetails
+        UserDetailsImpl userDetails
     ) {
       return buildToken(new HashMap<>(), userDetails, refreshExpiration);
     }
   
     private String buildToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails,
+            UserDetailsImpl userDetails,
             long expiration
     ) {
       return Jwts
               .builder()
               .setClaims(extraClaims)
               .setSubject(userDetails.getUsername())
+              .setId(userDetails.getID())
               .setIssuedAt(new Date(System.currentTimeMillis()))
               .setExpiration(new Date(System.currentTimeMillis() + expiration))
               .signWith(getSignInKey(), SignatureAlgorithm.HS256)
               .compact();
     }
   
-    public boolean isTokenValid(String token, UserDetails userDetails) {
+    public boolean isTokenValid(String token, UserDetailsImpl userDetails) {
       final String email = extractUsername(token);
       return (email.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }

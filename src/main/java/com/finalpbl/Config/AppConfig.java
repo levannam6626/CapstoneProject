@@ -17,19 +17,16 @@ import com.finalpbl.Repository.UserRepository;
 
 @Configuration
 public class AppConfig {
-    
-    @Autowired
-    private UserRepository userRepository;
-  
-    @Bean
-    public UserDetailsService userDetailsService() {
-      return email -> userRepository.findByEmail(email)
-          .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
+
 
     @Bean
     public ModelMapper modelMapper(){
         return new ModelMapper();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsServiceImpl();
     }
 
 
