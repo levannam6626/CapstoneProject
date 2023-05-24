@@ -32,7 +32,6 @@ public class CategoryServiceImpl implements ICategoryService{
         {
             Category category2 = new Category();
             category2.setCategoryName(category.getCategoryName());
-            category2.setImageUrl(category.getImageUrl());
             categoryRepository.save(category2);
             return "OK";
         }
