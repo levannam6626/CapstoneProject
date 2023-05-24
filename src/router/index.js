@@ -1,8 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
-import LoginView from "../views/LoginView.vue";
-import HomePageView from "../views/HomePageView.vue";
-import RegisterView from "../views/RegisterView.vue";
+import AdminPage from "@/views/AdminPage.vue";
+import LoginView from "@/views/LoginView.vue";
+import HomePageView from "@/views/HomePageView.vue";
+import RegisterView from "@/views/RegisterView.vue";
 import ProductList from "@/views/ProductList.vue";
+import IntroduceView from "@/views/IntroduceView.vue";
+import ProductDetail from "@/views/ProductDetail.vue";
+import AddProduct from "@/views/AddProduct.vue";
+import EditProduct from "@/views/EditProduct.vue";
 
 const routes = [
   {
@@ -17,14 +22,52 @@ const routes = [
   },
   {
     path: '/',
-    name: 'homePageView',
+    alias: ['/homePage'],
+    name: 'homePage',
     component: HomePageView,
-    children: [{
-      path: '/',
-      name: 'productList',
-      component: ProductList,
-    },
-  ],
+    children: [
+      {
+        path: '/',
+        alias: ['/homePage'],
+        name: '',
+        component: ProductList,
+        children: [{
+          path: 'productDetail',
+          name: 'productDetail',
+          component: ProductDetail,
+        }],
+      },
+      {
+        path: '/productList',
+        name: 'productList',
+        component: ProductList,
+        children: [{
+          path: '/productDetail',
+          name: 'productDetail',
+          component: ProductDetail,
+        }],
+      },
+      {
+        path: '/introduce',
+        name: 'introduce',
+        component: IntroduceView,
+      },
+      {
+        path: '/addProduct',
+        name: 'addProduct',
+        component: AddProduct,
+      },
+      {
+        path: '/editProduct/:productId',
+        name: 'editProduct',
+        component: EditProduct
+      },
+    ],
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: AdminPage,
   },
 ]
 const router = createRouter({
@@ -32,7 +75,7 @@ const router = createRouter({
   routes,
 });
 // router.beforeEach((to, from, next) => {
-//   const publicPages = ['/login'];
+//   const publicPages = ['/register','/login','/'];
 //   const authRequired = !publicPages.includes(to.path);
 //   const loggedIn = localStorage.getItem('token');
 
@@ -41,7 +84,7 @@ const router = createRouter({
 //     //return next('/register');
 //   }
 //   if (to.name === "login" && loggedIn) {
-//     return next('/')
+//     return next('/admin')
 //   }
 //   next();
 // })

@@ -1,27 +1,32 @@
 <template>
   <div class="menu" style="margin:0px;">
     <h3>PRODUCT CATEGORY</h3>
-    <div class="menu-item">
-      <a href="#">Raspberry</a>
-    </div>
-    <div class="menu-item">
-      <a href="#">Arduino</a>
-    </div>
-    <div class="menu-item">
-      <a href="#">Account</a>
-    </div>
-    <div class="menu-item">
-      <a href="#">Account</a>
-    </div>
-    <div class="menu-item">
-      <a href="#">Account</a>
-    </div>
-    <div class="menu-item">
-      <a href="#">Account</a>
-    </div>
+    <ul style="margin: 0px; padding: 0px;">
+      <li class="menu-item" v-for="(category,index) in this.categories" :key="index">
+        <a @click="loadProductByCategoryID(category.id)">{{ category.categoryName }}</a>
+      </li>
+    </ul>
+    
   </div>
 </template>
 <script>
+import store from '@/store';
+import { mapActions } from 'vuex';
+
+export default {
+  data() {
+    return {
+      categories: store.state.product.categories,
+    }
+  },
+  methods: {
+    ...mapActions('product', ['changeCategory']),
+    loadProductByCategoryID(id) {
+      this.changeCategory(id)
+      this.$router.push("/productList");
+    },
+  }
+}
 </script>
 <style scoped>
 
@@ -55,18 +60,20 @@ h3 {
   height: 80px;
 }
 .menu-item {
-  text-align: center;
-  background-color: #fff;
-  height: 30px;
-  margin-bottom: 1px;
-  padding-top: 10px;
+  list-style-type: none;
 }
 
 .menu-item a {
-  margin-top: 10px;
-  color: black;
+  display: block;
+  box-sizing: border-box;
+  text-transform: uppercase;
+  color: #444;
   font-size: 18px;
   text-decoration: none;
+  background-color: #fff;
+  margin-bottom: 1px;
+  padding: 5px 0px 5px 15px;
+  cursor: pointer;
 }
 
 .menu-item a:hover {

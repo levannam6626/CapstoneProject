@@ -20,7 +20,7 @@ export default class index {
   }
   requestRegister() {
     var header = {
-      "Content-Type": "application/json",
+      "Content-Type": "multipart/form-data",
     };
     const instance = axios.create({
       baseURL: url,
@@ -28,9 +28,9 @@ export default class index {
     });
     return instance;
   }
-  requestCampaign() {
+  requestProduct() {
     var header = {
-      "Content-Type": "multipart/form-data ",
+      "Content-Type": "application/json",
     };
     if (store.state.auth.token) {
       header.Authorization = `Bearer ${store.state.auth.token}`;

@@ -13,7 +13,7 @@ export default {
   },
   mutations: {
     deToken(state, data) {
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('token', data);
       state.token = localStorage.getItem('token')
     },
     clearStore(state) {

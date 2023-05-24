@@ -67,6 +67,8 @@ export default {
       firstName: '',
       lastName: '',
       address: '',
+      role: 'CUSTOMER',
+      gender: 'Male',
       phone: '',
       password: '',
       confirmPassword: '',
@@ -138,11 +140,14 @@ export default {
       if (this.validated()) {
         const objRegister = {
           email: this.email,
-          firstName: this.firstName,
-          lastName: this.lastName,
+          firstname: this.firstName,
+          lastname: this.lastName,
           address: this.address,
           phone: this.phone,
           password: this.password,
+          confirmPassword: this.confirmPassword,
+          gender: this.gender,
+          role: this.role,
         };
         await this.registerAction(objRegister);
         this.isRegister = store.state.account.registerStatus;

@@ -40,6 +40,7 @@ import store from '@/store';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
 library.add(faEnvelope,faLock)
+
 export default {
   data() {
     return {
@@ -61,7 +62,7 @@ export default {
   },
   methods: {
     ...mapActions('auth', ['deToken']),
-    ...mapActions('account', ['loginAction']),
+    ...mapActions('account', ['loginAction','getUser']),
 
     loadFormData() {
       this.email = store.state.account.loginForm.email;
@@ -91,19 +92,19 @@ export default {
           password: this.password,
         };
         await this.loginAction(objLogin);
-        await store.state.account.userAccount.then(array => {
-          if(array.status === 200){
-            this.isLogin = true;
-            this.deTokenData = array.data;
+        if (store.state.account.loginStatus === true) {
+          await this.deToken(store.state.account.loginData.token);
+          await this.getUser(store.state.account.loginData.id);
+          if (store.state.account.userAccount.role === "ADMIN") {
+            this.$router.push("admin");
           }
-        });
-        if (this.isLogin === true) {
-          this.deToken(this.deTokenData);
-          this.$router.push("/");
-          alert("Login success !!!");
+          else {
+            this.$router.push("/");
+          }
+          alert("Login success");
         }
         else {
-          alert("Login failed !!!");
+          alert("Incorrect email or password !!!");
         }
       }
     },
