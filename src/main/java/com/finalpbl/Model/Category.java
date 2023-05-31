@@ -26,7 +26,4 @@ public class Category {
     @Column(name = "category_name")
     private @NotBlank String categoryName;
 
-    @Column(name = "image_url")
-    private @NotBlank String imageUrl;
-
 }

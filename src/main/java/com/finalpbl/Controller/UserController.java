@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,10 +27,16 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @GetMapping(path = "/all")
-    public ResponseEntity<?> getAllUser()
+    @GetMapping(path = "/get-by-search/{email}")
+    public ResponseEntity<?> getUsersSearch(@PathVariable(name = "email") String email)
     {
-        List<UserDto> userDtos = userService.getAllUsers();
+        List<UserDto> userDtos;
+        if(email.equals("all")){
+            userDtos = userService.getUsersSearch("");
+        }
+        else{
+            userDtos = userService.getUsersSearch(email);
+        }
         return ResponseEntity.ok(userDtos);
     }
 
@@ -45,6 +52,17 @@ public class UserController {
     {
         String msg = userService.createUser(userRequest);
         if(msg.equals("Validation OK"))
+        {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().body(msg);
+    }
+
+    @PostMapping(path = "delete-account/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable(name = "id") Long id)
+    {
+        String msg = userService.deleteUser(id);
+        if(msg.equals("Delete Success"))
         {
             return ResponseEntity.ok().build();
         }

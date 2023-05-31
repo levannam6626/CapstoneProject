@@ -57,28 +57,38 @@ public class UserServiceImpl implements IUserService{
         return AllUserResponse;
     }
 
+    @Override 
+    public List<UserDto> getUsersSearch(String email)
+    {
+        List<User> users = userRepository.findUserSearch(email, 20);
+        List<UserDto> AllUserResponse = users.stream().map(userMapper).collect(Collectors.toList());
+        return AllUserResponse;
+    }
+
     @Override
     public UserDto getUserbyID(Long id) {
        UserDto userDto = userRepository.findById(id).filter(user -> !user.getIsDeleted()).map(userMapper).orElseThrow(null);
         return userDto;
     }
 
-//     @Override
-//     public void deleteUser(Long id) {
-//        User user = userRepository.findById(id).orElseThrow(null);
-//        user.setIsDeleted(true);
-//        userRepository.save(user);
-//     }
+    @Override
+    public String deleteUser(Long id) {
+       User user = userRepository.findById(id).orElseThrow(null);
+       user.setIsDeleted(true);
+       userRepository.save(user);
+       return "Delete Success";
+    }
 
-//     @Override
-//     public void deleteMultipleUsers(Long[] ids) {
-//         for (Long id : ids)
-//         {
-//             User user = userRepository.findById(id).orElseThrow(null);
-//             user.setIsDeleted(true);
-//             userRepository.save(user);   
-//         }
-//     }
+    // @Override
+    // public String deleteMultipleUsers(Long[] ids) {
+    //     for (Long id : ids)
+    //     {
+    //         User user = userRepository.findById(id).orElseThrow(null);
+    //         user.setIsDeleted(true);
+    //         userRepository.save(user);   
+    //     }
+    //     return "Delete Success";
+    // }
 
     @Override
     public String createUser(UserRequest userRequest) {

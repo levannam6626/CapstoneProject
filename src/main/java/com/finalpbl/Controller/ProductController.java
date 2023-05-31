@@ -25,10 +25,16 @@ public class ProductController {
     @Autowired
     private IProductService iProductService;
 
-    @GetMapping(path = "/all")
-    public ResponseEntity<?> getAllProducts()
+    @GetMapping(path = "/get-by-search/{name}")
+    public ResponseEntity<?> getProductsSearch(@PathVariable(name = "name") String name)
     {
-        List<Products> products = iProductService.getAllProducts();
+        List<Products> products;
+        if(name.equals("all")){
+            products = iProductService.getProductsSearch("");
+        }
+        else{
+            products = iProductService.getProductsSearch(name);
+        }
         return ResponseEntity.ok(products);
     }
 
