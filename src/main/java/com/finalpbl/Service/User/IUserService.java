@@ -8,9 +8,10 @@ import com.finalpbl.Dto.UserRequest;
 public interface IUserService {
     //public List<User> getUsers();
     public List<UserDto> getAllUsers();
+    public List<UserDto> getUsersSearch(String email);
     public UserDto getUserbyID(Long id);
-    // public void deleteUser(Long id);
-    // public void deleteMultipleUsers(Long[] ids);
+    public String deleteUser(Long id);
+    //public String deleteMultipleUsers(Long[] ids);
     public String createUser(UserRequest userRequest);
     // public Boolean updateUser(Long id, UserDto userDto);
 }

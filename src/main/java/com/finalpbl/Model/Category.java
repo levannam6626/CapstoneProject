@@ -26,5 +26,4 @@ public class Category {
     @Column(name = "category_name")
     private @NotBlank String categoryName;
 
-
 }

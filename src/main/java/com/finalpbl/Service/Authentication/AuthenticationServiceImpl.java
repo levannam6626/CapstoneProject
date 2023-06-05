@@ -35,6 +35,7 @@ public class AuthenticationServiceImpl implements IAuththenticationService {
         var jwtToken = jwtUtils.generateToken(userDetailsImpl);
         return AuthResponse.builder()
             .token(jwtToken)
+            .id(user.getId())
             .build();
       }
 }

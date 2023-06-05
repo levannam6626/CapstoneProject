@@ -21,6 +21,12 @@ public class ProductService implements IProductService{
     }
 
     @Override
+    public List<Products> getProductsSearch(String name) {
+        List<Products> products = productsRepository.getProductsSearch(name);
+        return products;
+    }
+
+    @Override
     public Products getProductbyID(Long id) {
         Products product = productsRepository.findById(id).orElseThrow(null);
         return product;
