@@ -1,53 +1,149 @@
 package com.finalpbl.Service.Products;
 
+import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import com.cloudinary.Cloudinary;
+import com.cloudinary.Singleton;
+import com.cloudinary.utils.ObjectUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.finalpbl.Dto.ProductDto;
+import com.finalpbl.Mapper.ProductResponseMapper;
+import com.finalpbl.Model.Category;
 import com.finalpbl.Model.Products;
+import com.finalpbl.Repository.CategoryRepository;
 import com.finalpbl.Repository.ProductsRepository;
+import com.finalpbl.Service.Category.CategoryServiceImpl;
+
 
 @Service
 public class ProductService implements IProductService{
 
     @Autowired
     private ProductsRepository productsRepository;
+    
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ProductResponseMapper productMapper;
+
+    @Autowired
+    private CategoryServiceImpl categoryServiceImpl;
+
+    private final Cloudinary cloudinary = Singleton.getCloudinary();
 
     @Override
-    public List<Products> getAllProducts() {
+    public List<ProductDto> getAllProducts() {
         List<Products> products = productsRepository.findAll();
-        return products;
+        List<ProductDto> productsResponse = products.stream().map(productMapper).collect(Collectors.toList());
+        return productsResponse;
     }
 
     @Override
-    public List<Products> getProductsSearch(String name) {
+    public List<ProductDto> getProductsSearch(String name) {
         List<Products> products = productsRepository.getProductsSearch(name);
-        return products;
+        List<ProductDto> productsResponse = products.stream().map(productMapper).collect(Collectors.toList());
+        return productsResponse;
     }
 
     @Override
-    public Products getProductbyID(Long id) {
+    public List<ProductDto> getProductsByCategoryName(String name) {
+        Category category = categoryRepository.findByCategoryName(name).orElse(null);
+        List<Products> products = productsRepository.getProductsByCategoryId(category.getId());
+        List<ProductDto> productsResponse = products.stream().map(productMapper).collect(Collectors.toList());
+        return productsResponse;
+    }
+
+    @Override
+    public ProductDto getProductbyID(Long id) {
         Products product = productsRepository.findById(id).orElseThrow(null);
-        return product;
+        ProductDto productResponse = 
+            new ProductDto(
+                product.getProductId(),
+                product.getCategory().getId(),
+                product.getProductName(),
+                product.getProductDescription(),
+                product.getProductImage(),
+                product.getUpdateDate(),
+                product.getProductPrice()
+            );
+        return productResponse;
+    }
+
+    public String uploadImg(MultipartFile file) {
+        try {
+            Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+            String publicId = uploadResult.get("public_id").toString();
+            return publicId;
+        } catch (Exception ex) {
+            return "" + ex;
+        }
+    }
+
+    public boolean deleteImg(String id) {
+        try {
+            Map result = cloudinary.uploader()
+                    .destroy(id,
+                            ObjectUtils.emptyMap());
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     @Override
-    public String addProduct(Products product) {
-        Products productValidate = productsRepository.findByProductName(product.getProductName()).orElse(null);
+    public String addProduct(ProductDto productRequest, MultipartFile file) throws ParseException {
+        Products productValidate = productsRepository.findByProductName(productRequest.getProductName()).orElse(null);
         if(productValidate == null)
         {
-            Products product1 = new Products();
-            product1.setProductName(product.getProductName());
-            product1.setProductImage(product.getProductImage());
-            product1.setProductPrice(product.getProductPrice());
-            product1.setUpdateDate(product.getUpdateDate());
-            product1.setProductDescription(product.getProductDescription());
-            product1.setCategory(product.getCategory());
-            productsRepository.save(product1);
-            return "STATUS OK";
+            Products product = new Products();
+            product.setProductName(productRequest.getProductName());
+            product.setProductImage(uploadImg(file));
+            product.setProductPrice(productRequest.getProductPrice());
+            product.setUpdateDate(productRequest.getUpdateDate());
+            product.setProductDescription(productRequest.getProductDescription());
+            product.setCategory(categoryServiceImpl.getCategoryByID(productRequest.getCategoryId()));
+            product.setIsDeleted(false);
+            productsRepository.save(product);
+            return "CREATE SUCCESS";
         }
         return "FAILED WHEN ADD PRODUCT";
     }
-    
+    @Override
+    public String editProduct(ProductDto productRequest, MultipartFile file) throws ParseException {
+        Products productValidate = productsRepository.findProductsByProductIdAndIsDeleted(productRequest.getProductId(), false);
+        if(productValidate == null) {
+            return "PRODUCT DOES NOT EXIST";
+        } else {
+            productValidate.setProductName(productRequest.getProductName());
+            productValidate.setCategory(categoryServiceImpl.getCategoryByID(productRequest.getCategoryId()));
+            productValidate.setProductDescription(productRequest.getProductDescription());
+            productValidate.setProductPrice(productRequest.getProductPrice());
+            productValidate.setUpdateDate(productRequest.getUpdateDate());
+            if(file != null) {
+                productValidate.setProductImage(uploadImg(file));
+                deleteImg(productRequest.getProductImage());
+            }
+            productsRepository.save(productValidate);
+            return "EDIT SUCCESS";
+        }
+    }
+    @Override
+    public String deleteProductsByid(List<Long> ids) {
+        for (Long id : ids)
+        {
+            Products product = productsRepository.findById(id).orElseThrow(null);
+            product.setIsDeleted(true);
+            productsRepository.save(product);   
+        }
+        return "Delete Success";
+    }
 }
+

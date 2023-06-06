@@ -11,7 +11,11 @@ import com.finalpbl.Model.Products;
 
 public interface ProductsRepository extends JpaRepository<Products,Long>{
     public Optional<Products> findByProductName(String product_name);
+    public Products findProductsByProductIdAndIsDeleted(Long id, boolean delete);
 
-    @Query(value = "SELECT * FROM products WHERE  (:product_name is null or product_name like %:product_name%)", nativeQuery = true)
+    @Query(value = "SELECT * FROM products WHERE  (:product_name is null or product_name like %:product_name%) and is_deleted = 0", nativeQuery = true)
     List<Products> getProductsSearch(@Param("product_name") String product_name);
+
+    @Query(value = "SELECT * FROM products WHERE category_id = :category_id and is_deleted = 0", nativeQuery = true)
+    List<Products> getProductsByCategoryId(@Param("category_id") Long category_id);
 }
