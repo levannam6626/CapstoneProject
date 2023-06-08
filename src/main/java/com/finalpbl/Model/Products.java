@@ -35,13 +35,13 @@ public class Products {
     @JoinColumn(name = "category_id")
     Category category;
 
+    @Column(name = "product_description", length = 255)
+    @NotNull
+    private String productDescription;
+
     @Column(name = "product_name")
     @NotNull
     private String productName;
-
-    @Column(name = "product_description")
-    @NotNull
-    private String productDescription;
 
     @Column(name = "product_image")
     @NotNull
@@ -54,6 +54,9 @@ public class Products {
     @Column(name = "product_price")
     @NotNull
     private double productPrice;
+
+    @Column(nullable = false)
+    private Boolean isDeleted;
 }
 
 
