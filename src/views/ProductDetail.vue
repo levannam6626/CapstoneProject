@@ -1,7 +1,7 @@
 <template>
   <div class="product">
     <figure class="product-img">
-        <img src="../assets/signin-image.jpg" alt="">
+        <img :src="this.url + this.product.productImage" alt="">
     </figure>
     <div class="product-detail">
       <div class="product-name">
@@ -15,7 +15,7 @@
       </div>
       <div class="product-price">
         <p>{{ this.product.productPrice }}</p>
-        <button @click="addToCart()"><font-awesome-icon icon="fa-solid fa-cart-shopping" /> ADD TO CART</button>
+        <button @click="addProductToCart()"><font-awesome-icon icon="fa-solid fa-cart-shopping" /> ADD TO CART</button>
       </div>
     </div>
 </div>
@@ -26,7 +26,7 @@
   library.add( faCartShopping)
 
   import { mapActions } from 'vuex';
-  //import store from '@/store';
+  import store from '@/store';
 
   export default ({
     props: {
@@ -35,18 +35,25 @@
         required: true
       }
     },
+    data() {
+      return {
+        url: store.state.product.url,
+      }
+    },
     methods: {
       ...mapActions('auth', ['deToken']),
       ...mapActions('login', ['loginAction']),
-      addToCart() {
+      addProductToCart() {
         const loggedIn = localStorage.getItem('token');
         if (!loggedIn) {
-            return this.$router.push("login");
+            return this.$router.push("/login");
         }else{
           alert("LoggedIn")
         }
       },
-    }
+    },
+    mounted() {
+    },
   })
 </script>
 <style scoped>

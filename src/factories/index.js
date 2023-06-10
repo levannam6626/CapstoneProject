@@ -41,5 +41,28 @@ export default class index {
     });
     return instance;
   }
+  requestFormData() {
+    var header = {
+      "Content-Type": "multipart/form-data",
+    };
+    if (store.state.auth.token) {
+      header.Authorization = `Bearer ${store.state.auth.token}`;
+    }
+    const instance = axios.create({
+      baseURL: url,
+      headers: header,
+    });
+    return instance;
+  }
+  requestCategory() {
+    var header = {
+      "Content-Type": "multipart/form-data",
+    };
+    const instance = axios.create({
+      baseURL: url,
+      headers: header,
+    });
+    return instance;
+  }
 }
 

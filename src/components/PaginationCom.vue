@@ -126,11 +126,9 @@ export default {
   align-items: center;
   align-content: center;
 }
-
 .pagination-item {
   display: inline-block;
 }
-
 button[type='button'] {
   color: #42baee;
   font-size: 17px;
@@ -138,12 +136,10 @@ button[type='button'] {
   height: 30px;
   background-color: white;
 }
-
 button[disabled] {
   font-weight: bold;
   color: #42baee;
 }
-
 button[id='true'] {
   font-weight: normal;
   color: #468FAF;

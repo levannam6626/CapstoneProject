@@ -3,7 +3,7 @@
     <h3>PRODUCT CATEGORY</h3>
     <ul style="margin: 0px; padding: 0px;">
       <li class="menu-item" v-for="(category,index) in this.categories" :key="index">
-        <a @click="loadProductByCategoryID(category.id)">{{ category.categoryName }}</a>
+        <a :href="'/' + category.categoryName ">{{ category.categoryName }}</a>
       </li>
     </ul>
     
@@ -16,15 +16,20 @@ import { mapActions } from 'vuex';
 export default {
   data() {
     return {
-      categories: store.state.product.categories,
+      categories: [],
     }
   },
   methods: {
     ...mapActions('product', ['changeCategory']),
-    loadProductByCategoryID(id) {
-      this.changeCategory(id)
-      this.$router.push("/productList");
-    },
+    ...mapActions('product', ['loadCategoriesAction']),
+
+    async loadCategories(id) {
+      await this.loadCategoriesAction(id);
+      this.categories = store.state.product.categories;
+    }
+  },
+  created() {
+    this.loadCategories('all');
   }
 }
 </script>
@@ -41,7 +46,6 @@ h3 {
   margin: 0px;
   margin-bottom: 2px;
 }
-
 .menu {
   height: 100%;
   overflow: auto;
@@ -54,6 +58,7 @@ h3 {
   white-space: normal;
   float: none;
   outline: 0;
+  min-width: 220px;
 }
 .menu label {
   background-color: red;
@@ -62,7 +67,6 @@ h3 {
 .menu-item {
   list-style-type: none;
 }
-
 .menu-item a {
   display: block;
   box-sizing: border-box;
@@ -72,10 +76,9 @@ h3 {
   text-decoration: none;
   background-color: #fff;
   margin-bottom: 1px;
-  padding: 5px 0px 5px 15px;
+  padding: 10px 0px 10px 15px;
   cursor: pointer;
 }
-
 .menu-item a:hover {
   color: brown;
 }

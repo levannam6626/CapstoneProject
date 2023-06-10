@@ -1,34 +1,35 @@
 <template>
   <div class="container">
-    <div class="signin">
-      <div class="signin-image">
-        <figure>
-          <img src="../assets/signin-image.jpg" alt="">
-        </figure>
-        <a href="register" class="signin-image-link">Create an account</a>
-      </div>
-      <div>
-        <form @submit.prevent="login">
-          <div>
-            <h1> SIGN IN </h1>
+    <div class="content">
+      <h1> SIGN IN </h1>
+      <div class="signin">
+        <div class="signin-image">
+          <figure>
+            <img src="../assets/signin-image.jpg" alt="">
+          </figure>
+          <a href="register" class="signin-image-link">Create an account</a>
+        </div>
+        <div class="form-login">
+          <form @submit.prevent="login">
+            <div class="email">
+              <font-awesome-icon class="email-icon" icon="fa-solid fa-envelope" />
+              <input type="email" placeholder="Email" v-model="email">
+            </div>
+            <span class="message">{{ this.messages.email }}</span>
+            <div class="password" >
+              <font-awesome-icon class="password-icon" icon="fa-solid fa-lock" />
+              <input type="password" placeholder="Password" v-model="password">
+            </div>
+            <span class="message">{{ this.messages.password }}</span>
+            <div class="submit">
+              <button type="submit">Login</button>
+            </div>
+          </form>
+          <div class="media-btn">
+            <button class="facebook-btn" ><font-awesome-icon class="icon" icon="fa-brands fa-facebook" /></button>
+            <button class="google-btn" ><font-awesome-icon class="icon" icon="fa-brands fa-google" /></button>
           </div>
-          <div class="email">
-            <font-awesome-icon class="email-icon" icon="fa-solid fa-envelope" />
-            <input type="email" placeholder="Email" v-model="email">
-          </div>
-          <span class="message">{{ this.messages.email }}</span>
-          <div class="password" >
-            <font-awesome-icon class="password-icon" icon="fa-solid fa-lock" />
-            <input type="password" placeholder="Password" v-model="password">
-          </div>
-          <span class="message">{{ this.messages.password }}</span>
-          <div class="submit">
-            <button type="submit">Login</button>
-          </div>
-        </form>
-        <div class="media-btn" style="margin-top: 25px; margin-left: 8px;">
-          <input class="facebook-btn" style="margin-right: 25px; border-radius: 5px;" type="button" value="Facebook">
-          <input class="google-btn" style="border-radius: 5px;" type="button" value="Google">
+          <a href="register">Create an account</a>
         </div>
       </div>
     </div>
@@ -39,7 +40,8 @@ import { mapActions } from 'vuex';
 import store from '@/store';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
-library.add(faEnvelope,faLock)
+import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons'
+library.add(faEnvelope, faLock, faFacebook, faGoogle)
 
 export default {
   data() {
@@ -61,8 +63,7 @@ export default {
     this.loadFormData();
   },
   methods: {
-    ...mapActions('auth', ['deToken']),
-    ...mapActions('account', ['loginAction','getUser']),
+    ...mapActions('auth', ['deToken','loginAction','getUser']),
 
     loadFormData() {
       this.email = store.state.account.loginForm.email;
@@ -92,10 +93,10 @@ export default {
           password: this.password,
         };
         await this.loginAction(objLogin);
-        if (store.state.account.loginStatus === true) {
-          await this.deToken(store.state.account.loginData.token);
-          await this.getUser(store.state.account.loginData.id);
-          if (store.state.account.userAccount.role === "ADMIN") {
+        if (store.state.auth.loginStatus === true) {
+          await this.deToken(store.state.auth.loginData.token);
+          await this.getUser(store.state.auth.loginData.id);
+          if (store.state.auth.userAccount.role === "ADMIN") {
             this.$router.push("admin");
           }
           else {
@@ -119,18 +120,10 @@ export default {
   align-items: center;
   height: 100%;
 }
-.signin-image{
-  margin: 70px 40px 0px 30px;
-}
-.signin-image figure{
-  margin: 0px;
-  margin-bottom: 30px;
-}
-.signin-image-link {
-  color: red;
-}
-.signin {
-  padding: 30px 35px 50px 5px;
+.content {
+  display: grid;
+  box-sizing: border-box;
+  padding-bottom: 50px;
   background-color: #fff;
   text-align: center;
   box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, 
@@ -140,43 +133,71 @@ export default {
   rgba(0, 0, 0, 0.07) 0px 16px 32px,
   rgba(0, 0, 0, 0.07) 0px 32px 64px;
   border-radius: 6px;
-  display: flex;
+  width: 65%;
+  max-width: 600px;
+  min-width: 270px;
 }
-
-.signin h1 {
+.content h1 {
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  width: 100%;
 }
-
-.signin .password {
+.signin {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.signin-image{
+  margin: 20px 0px 0px 30px;
+  box-sizing: border-box;
+  width: 50%;
+}
+.signin-image figure{
+  margin: 0px;
+  margin-bottom: 30px;
+  width: 90%;
+}
+.signin-image figure img{
+  width: 100%;
+}
+a {
+  color: red;
+}
+.form-login {
+  display: grid;
+  gap: 20px;
+  box-sizing: border-box;
+  padding: 0px 20px;
+}
+.email, .password  {
+  position: relative;
+  width: 100%;
+}
+.password {
   margin-top: 20px;
 }
-.signin .submit {
+.submit {
   margin-top: 25px;
+  width: 100%;
 }
-.signin .email {
-  position: relative;
-}
-.signin .email .email-icon{
+.email-icon{
   position: absolute;
   top: 12px;
 }
-.signin .password {
-  position: relative;
-}
-.signin .password .password-icon{
+.password .password-icon{
   position: absolute;
   top: 13px;
 }
-.signin input[type="email"], .signin input[type="password"] {
+input[type="email"], input[type="password"] {
 	border: none;
   border-bottom: 2px groove #D1D1D4;
   background: none;
   height: 40px;
   padding-left: 25px;
+  width: 85%;
 }
 
-.signin .submit button {
-  width: 240px;
+.submit button {
+  width: 85%;
   height: 40px;
   background-color: #468FAF;
   border: none;
@@ -186,11 +207,10 @@ export default {
   font-size: 15px;
   cursor: pointer;
 }
-.signin .submit button:hover {
+.submit button:hover {
   transform: scale(1.05);
 }
 .signin input {
-  width: 220px;
   font-size: 15px;
 }
 .signin input[type="email"]:active, .signin input[type="password"]:active,
@@ -205,28 +225,54 @@ export default {
 }
 .media-btn {
   display: flex;
+  width: 100%;
+  gap: 20px;
 }
 
-.media-btn input {
-  width: 105px;
+.media-btn button {
+  width: 45%;
   height: 40px;
-
+  font-size: 22px;
 }
 
-.facebook-btn {
-  background-color: #4795FF;
+.facebook-btn, .google-btn {
   color: #fff;
   border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.facebook-btn {
+  background-color: #4795FF;
 }
 
 .google-btn {
   background-color: #EA4336;
-  color: #fff;
-  border: none;
 }
 .signin span {
   display: block;
   width: 240px;
+}
+.form-login > a {
+    display: none;
+  }
+@media screen and (max-width: 680px) {
+  .signin-image {
+    display: none;
+  }
+  .form-login {
+    width: 95%;
+  }
+  .form-login > a {
+    display: block;
+  }
+}
+@media screen and (max-width: 430px) {
+  .form-login {
+    width: 100%;
+  }
+  .form-login > a {
+    display: block;
+  }
 }
 </style>
 

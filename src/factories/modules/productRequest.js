@@ -3,17 +3,78 @@ import request from "..";
 const ENTITY_PATH = "/api/v1/products";
 
 class loadProductList extends request {
-    async loadProduct(id) {
-        try {
-          const res = await this.requestProduct().get(`${ENTITY_PATH}${id}`);
-          return res;
-        } catch (err) {
-          if (err.response.status === 401) {
-            localStorage.clear();
-            this.$router.push("/");
-          }
-          return { err: err };
-        }
+  async createProduct(product) {
+    try {
+      const res = await this.requestFormData().post(`${ENTITY_PATH}/create-product`, product);
+      return res;
+    } catch (err) {
+      if (err.response.status === 401) {
+        localStorage.clear();
+        this.$router.push("/");
       }
+      return { err: err };
+    }
+  }
+  async loadProductById(productId) {
+    try {
+      const res = await this.requestProduct().get(`${ENTITY_PATH}/${productId}`);
+      return res;
+    } catch (err) {
+      if (err.response.status === 401) {
+        localStorage.clear();
+        this.$router.push("/");
+      }
+      return { err: err };
+    }
+  }
+  async searchProduct(name) {
+    try {
+      const res = await this.requestProduct().get(`${ENTITY_PATH}/get-by-search/${name}`);
+      return res;
+    } catch (err) {
+      if (err.response.status === 401) {
+        localStorage.clear();
+        this.$router.push("/");
+      }
+      return { err: err };
+    }
+  }
+  async searchProductByCategoryName(name) {
+    try {
+      const res = await this.requestProduct().get(`${ENTITY_PATH}/get-by-categoryname/${name}`);
+      return res;
+    } catch (err) {
+      if (err.response.status === 401) {
+        localStorage.clear();
+        this.$router.push("/");
+      }
+      return { err: err };
+    }
+  }
+  async editProduct(product) {
+    try {
+      const res = await this.requestFormData().post(`${ENTITY_PATH}/edit-product`, product );
+      return res;
+    } catch (err) {
+      if (err.status === 401) {
+        localStorage.clear();
+        this.$router.push("/");
+      }
+      return { err: err };
+    }
+  }
+  async deleteProductsById(ids) {
+    try {
+      const res = await this.requestProduct().post(`${ENTITY_PATH}/delete-product`, ids );
+      return res;
+    } catch (err) {
+      if (err.response.status === 401) {
+        localStorage.clear();
+        this.$router.push("/");
+      }
+      return { err: err };
+    }
+  }
 }
 export default new loadProductList();
+

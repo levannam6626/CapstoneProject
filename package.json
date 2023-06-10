@@ -21,7 +21,9 @@
     "vue-sidebar-menu": "^5.2.6",
     "vue-sidebar-menu-akahon": "^1.0.2",
     "vue3-icon": "^2.1.0",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "vuex-persistedstate": "^4.1.0",
+    "vuex-plugin-persistedstate": "^1.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

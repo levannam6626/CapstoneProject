@@ -8,6 +8,8 @@ import IntroduceView from "@/views/IntroduceView.vue";
 import ProductDetail from "@/views/ProductDetail.vue";
 import AddProduct from "@/views/AddProduct.vue";
 import EditProduct from "@/views/EditProduct.vue";
+import TestView from "@/views/TestView.vue";
+import store from "@/store";
 
 const routes = [
   {
@@ -22,27 +24,16 @@ const routes = [
   },
   {
     path: '/',
-    alias: ['/homePage'],
     name: 'homePage',
     component: HomePageView,
     children: [
       {
-        path: '/',
-        alias: ['/homePage'],
-        name: '',
-        component: ProductList,
-        children: [{
-          path: 'productDetail',
-          name: 'productDetail',
-          component: ProductDetail,
-        }],
-      },
-      {
-        path: '/productList',
+        path: '/:categoryName',
+        alias: ['/','/:categoryName/:productName'],
         name: 'productList',
         component: ProductList,
         children: [{
-          path: '/productDetail',
+          path: '/:categoryName/:productName',
           name: 'productDetail',
           component: ProductDetail,
         }],
@@ -55,12 +46,18 @@ const routes = [
       {
         path: '/addProduct',
         name: 'addProduct',
-        component: AddProduct,
+        components: {
+          default: ProductList,
+          productAction: AddProduct,
+        }
       },
       {
         path: '/editProduct/:productId',
         name: 'editProduct',
-        component: EditProduct
+        components: {
+          default: ProductList,
+          productAction: EditProduct,
+        }
       },
     ],
   },
@@ -69,24 +66,35 @@ const routes = [
     name: 'admin',
     component: AdminPage,
   },
+  {
+    path: '/test',
+    name: 'test',
+    component: TestView,
+  },
 ]
 const router = createRouter({
   history: createWebHistory(),
   routes,
 });
-// router.beforeEach((to, from, next) => {
-//   const publicPages = ['/register','/login','/'];
-//   const authRequired = !publicPages.includes(to.path);
-//   const loggedIn = localStorage.getItem('token');
+router.beforeEach((to, from, next) => {
+  const publicPages = ['/register','/login','/','/introduce','/#contact'];
+  const authRequired = !publicPages.includes(to.path);
+  const loggedIn = store.state.auth.token;
+  const loginRole = store.state.auth.userAccount.role;
 
-//   if (authRequired && !loggedIn) {
-//     return next('/login');
-//     //return next('/register');
-//   }
-//   if (to.name === "login" && loggedIn) {
-//     return next('/admin')
-//   }
-//   next();
-// })
+  if(to.params.categoryName !== undefined) {
+    next();
+  }else if (authRequired && !loggedIn) {
+    return next('/login');
+  }if(to.path === '/admin') {
+    if(loginRole === 'ADMIN') {
+      next();
+    }else {
+      next('/');
+    }
+  }else{
+    next();
+  }
+})
 export default router
 

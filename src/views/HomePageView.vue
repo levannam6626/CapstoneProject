@@ -1,6 +1,6 @@
 <template>
-  <div class="homepage">
-    <div class="contact">
+  <div class="homepage" ref="homepage">
+    <div class="contact" id="contact">
       <div class="move">
         <div class="address">
           <font-awesome-icon
@@ -15,34 +15,36 @@
         </div>
       </div>
     </div>
-    <header class="banner">
+    <header class="banner" id="banner">
       <figure>
         <img src="../assets/banner-e-commerce1.png" alt="" />
       </figure>
     </header>
-    <div class="navbar" style="display: flex">
-      <NavBar v-on:showMenuUpdated="showMenuUpdatedInParent" />
+    <div id="navbar" style="display: flex">
+      <NavBar v-on:showMenuUpdated="showMenuUpdatedInParent" @searchProduct="searchProduct" @actionForm="actionForm"/>
     </div>
-    <div class="content">
-      <div class="content-left" v-show="showMenu">
+    <div class="content" id="content">
+      <div class="product" @click="closeForm($event)" v-show="showForm">
+        <router-view class="product-action" name="productAction" @reloadProductList="reloadProductList" @actionForm="actionForm"></router-view>
+      </div>
+      <div class="content-left" v-show="showMenu" id="content-left">
         <TheMenu />
       </div>
       <div class="content-right">
-        <router-view></router-view>
+        <router-view :productNameSearch="productNameSearch" :reloadProduct="reloadProduct" @actionForm="actionForm"></router-view>
       </div>
     </div>
-    <footer id="contact">
+    <footer id="footer-contact">
       <div class="footer-connect">
         <h2>Connect</h2>
         <hr>
         <div class="connect-icon">
-          <font-awesome-icon icon="fa-brands fa-facebook" />
-          <font-awesome-icon icon="fa-brands fa-instagram" />
-          <font-awesome-icon icon="fa-brands fa-google" />
-          <font-awesome-icon icon="fa-brands fa-telegram" />
-          <font-awesome-icon icon="fa-brands fa-twitter" />
+          <font-awesome-icon class="icon" icon="fa-brands fa-facebook" />
+          <font-awesome-icon class="icon" icon="fa-brands fa-instagram" />
+          <font-awesome-icon class="icon" icon="fa-brands fa-google" />
+          <font-awesome-icon class="icon" icon="fa-brands fa-telegram" />
+          <font-awesome-icon class="icon" icon="fa-brands fa-twitter" />
         </div>
-        
       </div>
       <div class="footer-information">
         <h2>Contact</h2>
@@ -79,19 +81,95 @@ library.add(faLocationDot, faEnvelope, faUser, faPhone, faFacebook, faInstagram,
 export default {
   data() {
     return {
-  
+      productNameSearch: '',
+      reloadProduct: false,
       showMenu: true,
+      showForm: false,
+      sticky: null,
+      banner: null,
     };
+  },
+  watch: {
+    productNameSearch() {
+      if(this.productNameSearch === '')
+      {
+        this.$router.push('/');
+      }else {
+        this.$router.push('/search-product/' + this.productNameSearch);
+      }
+    },
+    reloadProduct() {
+      this.$router.push('/');
+      console.log(this.reloadProduct);
+    }
+  },
+  created () {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  mounted() {
+    this.focusTop();
+  },
+  unmounted () {
+    window.removeEventListener('scroll', this.handleScroll);
   },
   components: {
     TheMenu,
     NavBar,
   },
   methods: {
-    showMenuUpdatedInParent: function (showMenu) {
-      this.showMenu = showMenu;
+    focusTop() {
+      this.$refs.homepage.scrollIntoView({behavior: 'smooth'});
     },
-  },
+    handleScroll() {
+      var navbar = document.getElementById("navbar");
+      var newBanner = document.getElementById("banner");
+      if(this.showForm === true) {
+        navbar.classList.remove("sticky");
+      }else{
+        if(this.banner === null) {
+          this.banner = newBanner.offsetHeight;
+        }
+        if(this.sticky === null || this.banner !== newBanner.offsetHeight) {
+          this.sticky = newBanner.offsetHeight-10;
+          this.banner = newBanner.offsetHeight;
+        }
+        if (window.scrollY >= this.sticky) {
+          navbar.classList.add("sticky")
+        } else {
+          navbar.classList.remove("sticky");
+        }
+      }
+    },
+    showMenuUpdatedInParent: function () {
+      const contentLeft = document.getElementById('content-left');
+      console.log(contentLeft.style.display)
+      if(contentLeft.style.display === 'none') {
+        this.showMenu = true;
+      }else {
+        this.showMenu = false;
+      }
+    },
+    searchProduct(productName) {
+      this.productNameSearch = productName;
+    },
+    reloadProductList() {
+      this.reloadProduct = !this.reloadProduct;
+    },
+    actionForm(status) {
+      this.showForm = status;
+      var navbar = document.getElementById("navbar");
+      navbar.classList.remove("sticky");
+      // if(!status) {
+      //   this.$router.push(this.$router.options.history.state.back);
+      // }
+    },
+    closeForm(event) {
+      if (event.target.className === "product") {
+        this.$router.push('/');
+        this.showForm = false;
+      }
+    },
+  }
 };
 </script>
 <style scoped>
@@ -125,6 +203,7 @@ export default {
   margin-left: 5px;
 }
 .homepage {
+  position: relative;
   width: 100%;
   background-color: #dadada;
 }
@@ -142,8 +221,18 @@ export default {
 .banner figure img {
   width: 100%;
 }
-.navbar {
+.sticky {
+  position: fixed;
+  top: 35px;
+  width: 100%;
+  border-top: solid 2px #fff;
+  z-index: 1;
+}
+#navbar {
   margin-top: -5px;
+}
+.sticky + .content {
+  padding-top: 76px;
 }
 .content {
   display: flex;
@@ -156,9 +245,21 @@ export default {
   width: 100%;
   height: 100%;
 }
-.content-left {
-  width: 22%;
-  min-width: 211px;
+.product {
+  position: absolute;
+  background-color: rgba(0,0,0,0.5);
+  left: 0;
+  top: 0px;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+.product-action {
+  position: absolute;
+  top: 10%;
+  left: 15%;
+  width: 70%;
+  z-index: 1;
 }
 footer {
   width: 100%;
@@ -166,12 +267,12 @@ footer {
   display: flex;
   justify-content: space-between;
   box-sizing: border-box;
-  height: 250px;
+  height: 280px;
   padding: 10px 40px;
   color: white;
   margin-top: 15px;
 }
-#contact h2{
+footer #contact h2{
   box-sizing: border-box;
   padding-left: 10px;
 }
@@ -191,7 +292,12 @@ footer hr {
   cursor: pointer;
   box-sizing: border-box;
   padding: 0px 10px;
-  font-size: 20px;
+  font-size: 24px;
+  transition: .5s;
+  flex-wrap: wrap;
+}
+.connect-icon .icon:hover {
+  color: red;
 }
 .information {
   display: grid;
@@ -211,12 +317,18 @@ footer hr {
     left: 50%;
   }
 }
-@media screen and (max-width: 750px) {
+@media screen and (max-width: 950px) {
   .content-left {
     display: none;
   }
   .content-right {
     margin: 0px;
   }
+  .content {
+    gap: 0px;
+  }
+}@media screen and (min-width: 950px) {
+  
 }
 </style>
+

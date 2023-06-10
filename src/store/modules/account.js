@@ -1,65 +1,65 @@
 import accountRequest from "@/factories/modules/accountRequest";
 
+const initialStateAccount = () => ({
+  userList:[],
+  loginForm: {
+    email: '',
+    password: '',
+  },
+  registerStatus: false,
+  deleteMessage: '',
+})
+
 export default {
   namespaced: true,
-  state: {
-    userAccount: {},
-    loginForm: {
-      email: '',
-      password: '',
-    },
-    loginData:[],
-    loginStatus: false,
-    registerStatus: false,
-  },
+  state: initialStateAccount,
   actions: {
-    async loginAction(content, data) {
-      let dataRes = accountRequest.login(data);
-      await dataRes.then(array => {
-        if(array.status === 200){
-          content.commit('loginMutation', array.data);
+    resetLoginDataAction(content) {
+      content.commit('resetLoginDataMutation');
+    },
+    async registerAction(content, objRegister) {
+      let status = accountRequest.register(objRegister);
+      await status.then(result => {
+        if(result === true){
+          content.commit('setLoginFormMutation', objRegister);
+        }else {
+          content.commit('setRegisterStatusMutation', result);
         }
       });
     },
-    logoutAction(content) {
-      content.commit('logoutMutation');
-    },
-    resetLoginDataAction(content) {
-      content.commit('resetLoginDataAction');
-    },
-    registerAction(content, objRegister) {
-      let status = accountRequest.register(objRegister);
-      if(status){
-        content.commit('registerAction', objRegister);
+    async getUserListAction(content, id) {
+      let userRes = await accountRequest.getUsersSearch(id);
+      if(userRes.status === 200) {
+        await content.commit('getUserListMutation',userRes.data);
       }
     },
-    async getUser(content,id) {
-      let userRes = await accountRequest.getUserByID(id);
-      await content.commit('getUser',userRes.data);
+    async deleteAccountsAction(content, accounts) {
+      let res = await accountRequest.deleteAccount(accounts);
+      if(res.status === 200) {
+        content.commit('deleteAccountMutation', "Delete Success");
+      }
     }
   },
   mutations: {
-    loginMutation(state, loginData) {
-      state.loginData = loginData;
-      state.loginStatus = true;
-    },
-    logoutMutation(state) {
-      state.userAccount = {};
-      state.loginData = [];
-      state.loginStatus = false;
-    },
-    resetLoginDataAction(state) {
-      state.loginForm.email = '';
-      state.loginForm.password = '';
-    },
-    registerAction(state, objRegister) {
+    setLoginFormMutation(state, objRegister) {
       state.loginForm.email = objRegister.email;
       state.loginForm.password = objRegister.password;
       state.registerStatus = true;
     },
-    getUser(state, user) {
-      state.userAccount = user;
-    }
+    setRegisterStatusMutation(state, status) {
+      state.registerStatus = status;
+    },
+    resetLoginDataMutation(state) {
+      state.loginForm.email = '';
+      state.loginForm.password = '';
+      state.registerStatus = false;
+    },
+    getUserListMutation(state, users) {
+      state.userList = users;
+    },
+    deleteAccountMutation(state, deleteMessage){
+      state.deleteMessage = deleteMessage;
+    },
   },
 };
 
