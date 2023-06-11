@@ -74,11 +74,11 @@ export default {
         productName: "",
         productDescription: "",
         productPrice: 0,
-        category: store.state.product.categories[0],
+        category: store.state.category.categories[0],
         updateDate: new Date().toJSON().slice(0,16),
         productImage: "",
       },
-      categories: store.state.product.categories,
+      categories: store.state.category.categories,
       newImage: "",
       showE: {
         product: true,

@@ -1,11 +1,9 @@
-import categoryRequest from "@/factories/modules/categoryRequest";
 import productRequest from "@/factories/modules/productRequest";
 
 export default {
   namespaced: true,
   state: {
     products:[],
-    categories:[],
     messages: {
       edit: '',
       add: '',
@@ -54,14 +52,6 @@ export default {
         }
       });
     },
-    async loadCategoriesAction(content, id) {
-      let data = categoryRequest.loadCategories(id);
-      await data.then(array => {
-        if(array.status === 200){
-          content.commit('loadCategoriesMutation', array.data);
-        }
-      });
-    },
     async deleteProductsAction(content, ids) {
       let res = productRequest.deleteProductsById(ids);
       console.log(res);
@@ -93,9 +83,6 @@ export default {
     },
     searchProductByCategoryNameMutation(state, data) {
       state.products = data;
-    },
-    loadCategoriesMutation(state, data) {
-      state.categories = data;
     },
     deleteProductsMutation(state, message) {
       state.messages.delete = message;

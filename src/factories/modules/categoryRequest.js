@@ -16,6 +16,17 @@ class categoryRequest extends request {
       return { err: err };
     }
   }
+  async createCategory(objCategory) {
+    try {
+      const res = await this.requestFormData().post(`${ENTITY_PATH}`, objCategory);
+      return res;
+    } catch (err) {
+      if (err.response.status === 400) {
+        alert("CategoryName is already exist")
+      }
+      return { err: err };
+    }
+  }
 }
 export default new categoryRequest();
 

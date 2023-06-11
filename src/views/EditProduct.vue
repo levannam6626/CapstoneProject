@@ -70,7 +70,7 @@ export default {
   data() {
     return {
       product: {},
-      categories: store.state.product.categories,
+      categories: store.state.category.categories,
       newImage: '',
       showE: {
         product: true,

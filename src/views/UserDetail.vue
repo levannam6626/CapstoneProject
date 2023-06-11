@@ -118,6 +118,7 @@ export default {
 h2 {
   color: #fff;
   text-align: center;
+  cursor: context-menu;
 }
 table {
   border-collapse: collapse;
@@ -133,7 +134,7 @@ td, th {
   padding-left: 6px;
 }
 td {
-  width: 60%;
+  width: 62%;
 }
 input, select {
   width: 98%;

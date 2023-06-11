@@ -41,14 +41,17 @@
       }
     },
     methods: {
-      ...mapActions('auth', ['deToken']),
-      ...mapActions('login', ['loginAction']),
-      addProductToCart() {
-        const loggedIn = localStorage.getItem('token');
-        if (!loggedIn) {
-            return this.$router.push("/login");
+      ...mapActions('product',['addProductToCartAction']),
+      async addProductToCart() {
+        const loggedIn = store.state.auth.token;
+        if (loggedIn) {
+          const objOrder = {
+            customerId: store.state.auth.userAccount.id,
+            product: this.product
+          }
+          await this.addProductToCartAction(objOrder);
         }else{
-          alert("LoggedIn")
+          return this.$router.push("/login");
         }
       },
     },

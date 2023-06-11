@@ -267,8 +267,8 @@ footer {
   display: flex;
   justify-content: space-between;
   box-sizing: border-box;
-  height: 280px;
-  padding: 10px 40px;
+  height: auto;
+  padding: 10px;
   color: white;
   margin-top: 15px;
 }
@@ -293,11 +293,12 @@ footer hr {
   box-sizing: border-box;
   padding: 0px 10px;
   font-size: 24px;
-  transition: .5s;
+  transition: 1.5s;
   flex-wrap: wrap;
 }
 .connect-icon .icon:hover {
   color: red;
+  transform: scale(1.5);
 }
 .information {
   display: grid;
@@ -327,8 +328,14 @@ footer hr {
   .content {
     gap: 0px;
   }
-}@media screen and (min-width: 950px) {
-  
+}
+@media screen and (max-width: 775px) {
+  .connect-icon {
+    gap: 10px;
+  }
+  .information {
+    padding-left: 0px;
+  }
 }
 </style>
 

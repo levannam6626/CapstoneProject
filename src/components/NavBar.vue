@@ -56,7 +56,7 @@ export default {
     return {
       loggedIn: store.state.auth.loginStatus,
       account: store.state.auth.userAccount,
-      categories: store.state.product.categories,
+      categories: store.state.category.categories,
       productName: '',
       showUserDetail: false,
     }
@@ -75,7 +75,7 @@ export default {
     UserDetail,
   },
   methods: {
-    ...mapActions('product',['loadCategoriesAction']),
+    ...mapActions('category',['loadCategoriesAction']),
     
     changeShowMenu() {
       this.$emit('showMenuUpdated');
@@ -88,7 +88,7 @@ export default {
     },
     async loadCategories(id) {
       await this.loadCategoriesAction(id);
-      this.categories = store.state.product.categories;
+      this.categories = store.state.category.categories;
     },
     showDetail(event) {
       if(event.target.className === 'account detail' || event.target.id === 'name') {
