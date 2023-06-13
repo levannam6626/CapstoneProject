@@ -29,5 +29,8 @@ public class UserDto {
     private String phone;
 
     @NotBlank
+    private String gender;
+
+    @NotBlank
     private String role;
 }

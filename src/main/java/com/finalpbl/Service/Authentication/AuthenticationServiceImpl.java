@@ -24,6 +24,7 @@ public class AuthenticationServiceImpl implements IAuththenticationService {
     private AuthenticationManager authenticationManager;
     
     public AuthResponse authenticate(AuthRequest request) {
+        System.out.println('1');
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 request.getEmail(),

@@ -104,4 +104,17 @@ public class ProductController {
         }
         return ResponseEntity.badRequest().body(msg);
     }
+    @PostMapping(path = "/add-product-to-cart")
+    public ResponseEntity<?> addProductToCart(@RequestBody List<Long> ids)
+    {
+        // System.out.println(ids);
+        // String msg = iProductService.deleteProductsByid(ids);
+        // if(msg.equals("Delete Success"))
+        // {
+        //     return ResponseEntity.ok().build();
+        // }
+        // return ResponseEntity.badRequest().body(msg);
+        System.out.println("hi");
+        return ResponseEntity.ok().build();
+    }
 }
