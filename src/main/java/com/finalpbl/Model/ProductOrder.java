@@ -1,6 +1,7 @@
 package com.finalpbl.Model;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -8,28 +9,38 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "category")
+@Table(name = "product_order")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Category {
+public class ProductOrder {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id")
+    @Column(name = "po_id")
     private long id;
 
-    @Column(name = "category_name", length = 20)
-    private String categoryName;
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
 
-    @OneToMany(mappedBy = "category")
-    private List<Products> products;
+    @Column(name = "total_price")
+    private Double totalPrice;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToMany(mappedBy = "productorder")
+    private List<OrderItem> orderItem;
+
 }

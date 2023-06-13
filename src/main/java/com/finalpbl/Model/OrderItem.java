@@ -1,35 +1,37 @@
 package com.finalpbl.Model;
 
-
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "category")
+@Table(name = "order_item")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Category {
+public class OrderItem {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id")
-    private long id;
+    @Column(name = "id")
+    private long ID;
 
-    @Column(name = "category_name", length = 20)
-    private String categoryName;
+    @ManyToOne
+    @JoinColumn(name = "po_id")
+    private ProductOrder productorder;
 
-    @OneToMany(mappedBy = "category")
-    private List<Products> products;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Products products;
+
+    @Column(name = "quantity")
+    private int qty;
 }
