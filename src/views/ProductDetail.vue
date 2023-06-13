@@ -14,7 +14,7 @@
         {{ this.product.productCategory }}
       </div>
       <div class="product-price">
-        <p>{{ this.product.productPrice }}</p>
+        <p>${{ this.product.productPrice }}</p>
         <button @click="addProductToCart()"><font-awesome-icon icon="fa-solid fa-cart-shopping" /> ADD TO CART</button>
       </div>
     </div>
@@ -85,6 +85,7 @@ figure img:hover {
 .product-detail {
   display: grid;
   width: 50%;
+  min-width: 200px;
   border: solid 2px rgb(150, 149, 149);
   box-sizing: border-box;
   padding: 10px 15px 0px;
@@ -94,11 +95,13 @@ figure img:hover {
   font-size: 1.5em;
   color: black;
   font-weight: bold;
-  height: 30px;
+  height: auto;
+  margin-bottom: 10px;
 }
 .product-description {
   height: auto;
   min-height: 80px;
+  margin-bottom: 10px;
 
 }
 .product-price {
@@ -109,6 +112,7 @@ figure img:hover {
   font-weight: bold;
 }
 button {
+  margin-left: 5px;
   height: 40px;
   border-color: red;
   font-weight: bold;

@@ -277,7 +277,7 @@ footer #contact h2{
   padding-left: 10px;
 }
 footer hr {
-  border:solid 2px red;
+  border: solid 2px red;
 }
 .footer-connect {
   width: 30%;

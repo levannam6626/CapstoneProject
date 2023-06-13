@@ -1,9 +1,9 @@
 <template>
   <div class="menu" style="margin:0px;">
-    <h3>PRODUCT CATEGORY</h3>
+    <h3 >PRODUCT CATEGORY</h3>
     <ul style="margin: 0px; padding: 0px;">
-      <li class="menu-item" v-for="(category,index) in this.categories" :key="index">
-        <a :href="'/' + category.categoryName ">{{ category.categoryName }}</a>
+      <li class="menu-item" v-for="(category,index) in this.categories" :key="index" >
+        <a :href="'/' + category.categoryName " :class="category.categoryName">{{ category.categoryName }}</a>
       </li>
       <li class="menu-item add" v-if="userAccount.role === 'SELLER'">
         <a @click="this.showAddCategory = true" id="add">
@@ -29,6 +29,7 @@ export default {
       showAddCategory: false,
       inputString: "",
       userAccount: store.state.auth.userAccount,
+      categoryName: this.$route.params.categoryName,
     }
   },
   methods: {
@@ -37,6 +38,13 @@ export default {
     async loadCategories(id) {
       await this.loadCategoriesAction(id);
       this.categories = store.state.category.categories;
+    },
+    setSelectedCategory() {
+      if(this.categoryName !== undefined) {
+        let a = this.$refs.Hi[0].querySelector('a');
+        console.log(a)
+        // a.style.backgroundColor = "#90AA00";
+      }
     },
     async addCategory() {
       if(this.inputString !== "") {
@@ -62,6 +70,17 @@ export default {
   },
   created() {
     this.loadCategories('all');
+  },
+  mounted() {
+    if(this.categoryName !== undefined) {
+      window.addEventListener('load', () => {
+        const elements = document.getElementsByClassName(this.categoryName);
+        elements[0].style.backgroundColor = "#90AA00";
+        elements[0].style.color = "red";
+        elements[1].style.backgroundColor = "#90AA00";
+        elements[1].style.color = "red";
+      });
+    }
   }
 }
 </script>
@@ -112,7 +131,8 @@ h3 {
   cursor: pointer;
 }
 .menu-item a:hover {
-  color: brown;
+  color: red;
+  background-color: #90AA00;
 }
 .add {
   text-align: center;

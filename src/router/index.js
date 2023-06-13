@@ -8,8 +8,15 @@ import IntroduceView from "@/views/IntroduceView.vue";
 import ProductDetail from "@/views/ProductDetail.vue";
 import AddProduct from "@/views/AddProduct.vue";
 import EditProduct from "@/views/EditProduct.vue";
+
+import TheMenu from "@/components/TheMenu.vue";
+import BannerImg from "@/components/BannerImg.vue";
+
 import TestView from "@/views/TestView.vue";
+import CartList from "@/views/CartList.vue";
+
 import store from "@/store";
+import UserDetail from "@/views/UserDetail.vue";
 
 const routes = [
   {
@@ -31,12 +38,21 @@ const routes = [
         path: '/:categoryName',
         alias: ['/','/:categoryName/:productName'],
         name: 'productList',
-        component: ProductList,
+        components: {
+          default: ProductList,
+          banner: BannerImg,
+          theMenu: TheMenu
+        },
         children: [{
           path: '/:categoryName/:productName',
           name: 'productDetail',
           component: ProductDetail,
         }],
+      },
+      {
+        path: '/user-infor',
+        name: 'userInfor',
+        component: UserDetail,
       },
       {
         path: '/introduce',
@@ -70,6 +86,11 @@ const routes = [
     path: '/test',
     name: 'test',
     component: TestView,
+  },
+  {
+    path: '/cart-list',
+    name: 'cartList',
+    component: CartList,
   },
 ]
 const router = createRouter({

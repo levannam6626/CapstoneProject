@@ -11,7 +11,7 @@
           <a @click="changeShowMenu()" style="min-width: 500px;">PRODUCT CATEGORY</a>
           <ul class="sub-menu">
             <li class="sub-menu-item" v-for="(category,index) in this.categories" :key="index">
-              <a :href="'/' + category.categoryName">{{ category.categoryName }}</a>
+              <a :href="'/' + category.categoryName" :class="category.categoryName">{{ category.categoryName }}</a>
             </li>
           </ul>
         </li>
@@ -179,6 +179,7 @@ nav {
   box-shadow: 0px 5px 5px 0px;
 }
 .sub-menu a:hover {
+  color: red;
   background-color: #90AA00;
 }
 .sub-menu-item {

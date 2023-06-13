@@ -11,7 +11,7 @@
       <p>{{ this.product.productDescription }}</p>
     </div>
     <div class="product-price">
-      <label>{{ this.product.productPrice }}</label>
+      <label>${{ this.product.productPrice }}</label>
       <button v-if="this.account.role === 'SELLER'" @click="editProduct()"> Edit</button>
       <button v-else @click="addProductToCart()"><font-awesome-icon icon="fa-solid fa-cart-shopping" /> Add<span v-show="isOrderedByThisUser">ed</span> To Cart</button>
     </div>
@@ -111,7 +111,7 @@
   overflow: hidden;
   margin: 0px;
   padding: 0px;
-  height: 200px;
+  height: 170px;
 }
 .product img {
   transition: .5s;
@@ -129,7 +129,6 @@
   display: flex;
   justify-content: space-between;
   box-sizing: border-box;
-  padding: 0px 10px;
   align-items: center;
 }
 .product-name {

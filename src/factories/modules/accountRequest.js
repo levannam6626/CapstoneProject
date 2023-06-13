@@ -50,7 +50,7 @@ class accountRequest extends request {
     try {
       var res;
       accounts.forEach((account) =>{
-        res = this.requestLogin().post(`${ENTITY_PATH}account/delete-account/${account.id}`);
+        res = this.requestLogin().delete(`${ENTITY_PATH}account/delete-account/${account.id}`);
       });
       return res;
     } catch (err) {

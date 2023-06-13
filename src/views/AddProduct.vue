@@ -29,7 +29,7 @@
         </div>
         <div class="price" v-show="this.showE.price">
           <label for="price">Price:</label>
-          <input type="number" id="price" min="0" max="10000000000" step=".01" v-model="this.product.productPrice" required/>
+          <input type="number" id="price" min="0" max="1000000" step=".01" v-model="this.product.productPrice" required/>
         </div>
         <div class="create-product-item">
           <p>Creative</p>

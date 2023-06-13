@@ -142,7 +142,7 @@ h3 {
 }
 .content {
   display: grid;
-  grid-template-columns:repeat(auto-fit, minmax(286px,1fr));
+  grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
   gap: 20px;
   box-sizing: border-box;
   padding-top: 20px;
