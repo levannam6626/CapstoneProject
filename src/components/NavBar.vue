@@ -227,13 +227,13 @@ nav {
 .search {
   width: 100%;
   box-sizing: border-box;
-  padding: 10px;
+  padding: 10px 0;
   position: relative;
   min-width: 60px;
 }
 .search-icon {
   position: absolute;
-  left: 10px;
+  left: 4px;
   top: 15px;
   padding: 6px 3px;
   border: solid 1px white;
@@ -245,7 +245,7 @@ nav {
   border: 0px;
   border-radius: 10px;
   height: 40px;
-  padding-left: 25px;
+  padding-left: 27px;
   width: 100%;
 }
 .search input[type="search"]:focus {
@@ -308,7 +308,7 @@ nav {
 }
 .button-toggle {
   display: none;
-  min-width: 300px;
+  min-width: 285px;
   cursor: pointer;
 }
 .button-toggle button, .button-toggle #icon {
@@ -378,6 +378,20 @@ nav {
   }
   .search {
     padding: 10px 0;
+  }
+}
+@media screen and (max-width: 365px) {
+  .user-detail {
+    right: 10px;
+    top: 48px;
+  }
+}
+@media screen and (max-width: 320px) {
+  nav {
+    padding: 0 10px;
+  }
+  .button-toggle {
+    padding: 0px 10px !important;
   }
 }
 </style>

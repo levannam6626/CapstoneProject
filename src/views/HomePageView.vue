@@ -16,8 +16,8 @@
           </div>
         </div>
       </div>
-      <BannerImg v-if="this.loginRole !== 'SELLER'"/>
-      <div v-if="this.loginRole === 'SELLER'" style="background-color:#fff; width: 100%; height: 2px;"></div>
+      <router-view name="banner" v-if="this.loginRole !== 'SELLER'"></router-view>
+      <div v-if="this.loginRole === 'SELLER' || this.checkProductName === true" style="background-color: #fff; width: 100%; height: 2px;"></div>
       <div id="navbar">
         <NavBar v-on:showMenuUpdated="showMenuUpdatedInParent" @searchProduct="searchProduct" />
       </div>
@@ -65,8 +65,8 @@
   </div>
 </template>
 <script>
+
 import NavBar from "@/components/NavBar.vue";
-import BannerImg from "@/components/BannerImg.vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faLocationDot, faEnvelope, faUser, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { faFacebook, faInstagram, faGoogle, faTelegram, faTwitter } from '@fortawesome/free-brands-svg-icons'
@@ -84,6 +84,15 @@ export default {
       sticky: null,
       banner: null
     };
+  },
+  computed: {
+    checkProductName() {
+      if(this.$route.params.productName !== undefined) {
+        return true;
+      }else {
+        return false;
+      }
+    }
   },
   watch: {
     productNameSearch() {
@@ -109,8 +118,7 @@ export default {
     window.removeEventListener('scroll', this.handleScroll);
   },
   components: {
-    NavBar,
-    BannerImg
+    NavBar
   },
   methods: {
     focusTop() {
@@ -122,7 +130,10 @@ export default {
       let navbar = document.getElementById("navbar");
       let content = document.getElementById("content");
       let newBanner = document.getElementById("banner");
-      if(this.$store.state.auth.userAccount.role === 'SELLER'){
+      if(newBanner === null){
+        navbar.classList.remove("sticky-navbar");
+        contact.classList.remove("sticky-contact");
+        content.style.paddingTop = '20px';
         if (window.scrollY > header.offsetTop) {
           header.classList.add("sticky-header")
         }else {
@@ -139,11 +150,10 @@ export default {
         if (window.scrollY > this.sticky) {
           navbar.classList.add("sticky-navbar")
           if(window.innerWidth <= 920) {
-            content.style.paddingTop = (this.sticky + 155) + 'px';
+            content.style.paddingTop ='122px';
           }else {
-            content.style.paddingTop = (this.sticky + 114) + 'px';
+            content.style.paddingTop ='82px';
           }
-          newBanner.style.display = 'none';
         } else {
           navbar.classList.remove("sticky-navbar");
           content.style.paddingTop = '20px';
@@ -187,7 +197,7 @@ export default {
   width: 100%;
 }
 .sticky-header + .content {
-  padding-top: 112px;
+  padding-top: 112px !important;
 }
 .contact {
   background-color: red;
@@ -250,9 +260,6 @@ export default {
   width: 100%;
   border-top: solid 2px #fff;
   z-index: 1;
-}
-.sticky-navbar + .content {
-  padding-top: 110px;
 }
 .content {
   display: flex;
@@ -331,7 +338,7 @@ footer hr {
 }
 @media screen and (max-width: 920px) {
   .sticky-header + .content {
-    padding-top: 152px;
+    padding-top: 152px !important;
   }
   .content-left {
     display: none;

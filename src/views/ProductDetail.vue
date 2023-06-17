@@ -33,7 +33,7 @@
         <label>Product Category: </label>{{categoryName }}
       </div>
       <div class="product-left">
-        <p>{{ this.product.productQuantity }} products left</p>
+        <p>Products left: {{ this.product.productQuantity }}</p>
       </div>
       <div class="product-action" v-if="this.$store.state.auth.userAccount.role !== 'SELLER'">
         <div class="product-quantity">
@@ -163,6 +163,7 @@ p {
 }
 .product-detail {
   display: grid;
+  width: 100%;
   min-width: 200px;
   border: solid 1px rgb(150, 149, 149);
   box-sizing: border-box;

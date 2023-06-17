@@ -7,12 +7,10 @@
         </figure>
         <h1>ADMIN</h1>
       </div>
-      <div class="menu">
-        <!-- <ul>
-          <li><a href="">Dashboard</a></li>
-          <li></li>
-        </ul> -->
-      </div>
+      <ul class="menu">
+        <li><a href="/admin">Dashboard</a></li>
+        <li></li>
+      </ul>
     </aside>
     <div class="content">
       <div class="header">
@@ -51,7 +49,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(user, index) in this.users" :key="index" >
+            <tr v-for="(user, index) in this.displayedUsers" :key="index" >
               <td style="box-sizing: border-box; padding-left: 5px; text-align: left;">{{ user.email }}</td>
               <td>{{ user.firstname }}</td>
               <td>{{ user.lastname }}</td>
@@ -62,6 +60,11 @@
             </tr>
           </tbody>
         </table>
+        <div class="navigation-table">
+          <button @click="currentPage--" :disabled="currentPage === 1">Prev</button>
+          <span>{{ currentPage }}</span>
+          <button @click="currentPage++" :disabled="currentPage === this.totalPages">Next</button>
+        </div>
       </div>
       <div class="register-form" v-show="this.showAddUserForm" @click="closeRegisterForm($event)">
         <RegisterForm :logedinRole = "'ADMIN'" class="adduser" @closeForm="closeFormInParent"/>
@@ -83,13 +86,26 @@ export default ({
     return {
       showAside: true,
       users: [],
+      currentPage: 1,
+      usersPerPage: 10,
       userCount: 0,
       customerCount: 0,
       sellerCount: 0,
       selectedOptions: [],
       deleteAccountAction: false,
       emailSearch: "",
-      showAddUserForm: false,
+      showAddUserForm: false
+    }
+  },
+  computed: {
+    displayedUsers() {
+      const startIndex = (this.currentPage - 1) * this.usersPerPage;
+      const endIndex = startIndex + this.usersPerPage;
+      console.log(this.totalPages);
+      return this.users.slice(startIndex, endIndex);
+    },
+    totalPages() {
+      return Math.max(Math.ceil(this.users.length / this.usersPerPage), 1);
     }
   },
   components: {
@@ -171,17 +187,20 @@ export default ({
   height: 100%;
 }
 aside {
-  width: 20%;
+  width: 18%;
   height: 100%;
-  background-color: rgb(231, 227, 227);
+  background-color: #6c7ee1;
+  box-sizing: border-box;
+  margin: 0px;
 }
 .account {
-  height: 170px;
-  display: grid;
+  height: 179px;
   box-sizing: border-box;
+  display: grid;
   padding: 10px;
   background-color: #6c7ee1;
   justify-content: center;
+  border-bottom: solid 2px rgb(231, 227, 227);
 }
 .account figure {
   padding: 0px;
@@ -198,6 +217,32 @@ aside {
 .account h1 {
   text-align: center;
   width: 100px;
+  color: #fff;
+}
+.menu {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  margin-top: 2px;
+  display: grid;
+}
+.menu li {
+  list-style-type: none;
+  width: 100%;
+  border-bottom: solid 1px rgb(231, 227, 227);
+}
+.menu li a {
+  display: inline-block;
+  text-decoration: none;
+  font-size: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #6c7ee1;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  padding-left: 30px;
+  margin-bottom: 2px;
   color: #fff;
 }
 .content {
@@ -351,6 +396,12 @@ td {
 }
 td {
   text-align: center;
+}
+.navigation-table {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
 }
 .register-form {
   width: 100%;

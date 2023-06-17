@@ -135,7 +135,7 @@ h3 {
 }
 .content {
   display: grid;
-  grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
+  grid-template-columns:repeat(auto-fill, minmax(200px,1fr));
   gap: 20px;
   box-sizing: border-box;
   padding-top: 20px;
@@ -161,15 +161,5 @@ footer button:hover {
 footer button:active {
   border: solid 2px red ;
 }
-/* @media (max-width: 1200px){
-  .content {
-    grid-template-columns: repeat(2,1fr);
-  }
-}
-@media (max-width: 500px){
-  .content {
-    grid-template-columns: repeat(1,1fr);
-  }
-} */
 </style>
 
