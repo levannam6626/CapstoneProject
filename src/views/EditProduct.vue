@@ -1,10 +1,6 @@
 <template>
   <div class="edit-product" id="product" ref="product">
-    <form @submit.prevent="saveProduct">
-      <div class="component-close">
-        <span>Edit Product</span>
-        <a style="text-decoration: none" @click="$emit('actionForm',false);this.$router.push('/');">X</a>
-      </div>
+    <form @submit.prevent="saveProduct" class="edit-product-form">
       <div class="content">
         <div class="edit-product-item">
           <p>Product</p>
@@ -16,20 +12,20 @@
             <input type="text" id="name" style=" width: 65%; border-radius: 5px; border: solid 1px black; height: 30px; "
               v-model="this.product.productName" maxlength="80" required />
           </div>
+          <div class="price">
+            <label for="price">Price:</label>
+            <input type="number" id="price" min="0" max="1000000" step=".01" v-model="this.product.productPrice" required/>
+          </div>
+          <div class="quantity">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" min="0" max="1000" v-model="this.product.productQuantity" required/>
+          </div>
           <div class="product-category">
             <label for="product-category">Category:</label>
             <select name="product-category" id="product-category" v-model="this.product.categoryId" >
               <option v-for="(category, index) in categories" :key="index" :value="category.id">{{category.categoryName }}</option>
             </select>
           </div>
-        </div>
-        <div class="edit-product-item">
-          <p>Price</p>
-          <input type="button" value="&#8744;" v-on:click="this.showE.price = !this.showE.price" />
-        </div>
-        <div class="price" v-show="this.showE.price">
-          <label for="price">Price:</label>
-          <input type="number" id="price" min="0" max="10000000000" step=".01" v-model="this.product.productPrice" required/>
         </div>
         <div class="edit-product-item">
           <p>Creative</p>
@@ -70,7 +66,6 @@ export default {
   data() {
     return {
       product: {},
-      categories: store.state.category.categories,
       newImage: '',
       showE: {
         product: true,
@@ -79,15 +74,16 @@ export default {
       }
     };
   },
+  computed: {
+    categories() {
+      return store.state.category.categories;
+    }
+  },
   mounted: function () {
-    this.focusTop();
     this.loadProductById(this.$route.params.productId);
   },
   methods: {
     ...mapActions("product", ["editProductAction","loadProductByIdAction"]),
-    focusTop() {
-      this.$refs.product.scrollIntoView({behavior: 'smooth'});
-    },
     async loadProductById(productId) {
       await this.loadProductByIdAction(productId);
       this.product = store.state.product.product;
@@ -100,6 +96,7 @@ export default {
         categoryId: this.product.categoryId,
         updateDate: new Date().toJSON().slice(0,16),
         productPrice: this.product.productPrice,
+        productQuantity: this.product.productQuantity,
         productDescription: this.product.productDescription,
       };
       const objproductDB = new FormData();
@@ -112,7 +109,7 @@ export default {
       await this.editProductAction(objproductDB);
       this.$el.querySelector('#submit').style.cursor = 'pointer';
       if(store.state.product.messages.edit === "Success") {
-        this.$emit('actionForm', false);
+        this.$router.push('/');
         this.$emit('reloadProductList');
       } else{
         alert("edit failed");
@@ -134,11 +131,18 @@ export default {
 </script>
 <style scoped>
 .edit-product {
-  background-color: white;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.edit-product-form {
   border-radius: 8px;
   border: solid 1px rgb(189, 186, 186);
+  width: 75%;
+  min-width: 251px;
+  background-color: white;
 }
-
 .content {
   box-sizing: border-box;
   padding: 20px;
@@ -221,6 +225,7 @@ input[type="datetime-local"] {
 
 .name,
 .price,
+.quantity,
 .product-category {
   display: flex;
   width: 100%;
@@ -240,9 +245,10 @@ input[type="datetime-local"] {
 .name > label,
 .product-category > label,
 .price > label,
+.quantity >label,
 .description > label,
 .creative-preview > label{
-  padding-right: 50px;
+  padding-right: 7%;
   text-align: right;
   width: 30%;
   height: 30px;
@@ -253,7 +259,7 @@ input[type="datetime-local"] {
   height: 30px;
 }
 label[for='final-url'] {
-  padding-right: 50px;
+  padding-right: 7%;
 }
 label {
   padding-top: 5px;

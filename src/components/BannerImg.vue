@@ -8,7 +8,9 @@
 <style scoped>
 .banner {
   text-align: center;
-	margin-bottom: -2px;
+	margin-bottom: -4px;
+  min-height: 1px;
+  background-color: #fff;
 }
 .banner figure {
   padding: 0px;

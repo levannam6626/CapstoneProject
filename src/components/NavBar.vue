@@ -1,27 +1,21 @@
 <template>
   <nav>
     <div class="nav-left">
-      <a style="background-color: #252525; font-size: 31px; padding: 12px 27px;" href="/"><font-awesome-icon icon="fa-solid fa-house" /></a>
-      <ul class="menu">
+      <a style="background-color: #252525; text-align: center; font-size: 31px; padding: 12px 5px; width: 40%;min-width: 35px; max-width: 70px;" href="/"><font-awesome-icon icon="fa-solid fa-house" /></a>
+      <ul class="menu" id="menu">
         <li class="menu-item">
-          <a @click="$emit('actionForm', true);this.$router.push('/addProduct')" v-if="this.account.role === 'SELLER'">CREATE PRODUCT</a>
+          <a href="/add-product" v-if="this.account.role === 'SELLER'">CREATE PRODUCT</a>
           <a href="/introduce" v-else>INTRODUCE</a>
         </li>
         <li class="menu-item">
-          <a @click="changeShowMenu()" style="min-width: 500px;">PRODUCT CATEGORY</a>
-          <ul class="sub-menu">
-            <li class="sub-menu-item" v-for="(category,index) in this.categories" :key="index">
-              <a :href="'/' + category.categoryName" :class="category.categoryName">{{ category.categoryName }}</a>
-            </li>
-          </ul>
+          <a @click="showProductCategory()" style="padding-right: 25px;">PRODUCT CATEGORY</a>
+          <TheMenu class="sub-menu" id="sub-menu" :showh3="false"/>
         </li>
         <li class="menu-item" v-if="this.account.role !== 'SELLER'">
           <a href="/#footer-contact">CONTACT</a>
         </li>
       </ul>
-      <button @click="changeShowMenu()" ><font-awesome-icon icon="fa-solid fa-bars" /></button>
     </div>
-    
     <div class="user">
       <div class="search">
         <input type="search" placeholder="Search by name ..." v-on:keyup.enter="this.$emit('searchProduct',this.productName)" v-model="this.productName">
@@ -40,15 +34,19 @@
       <UserDetail class="user-detail" v-show="showUserDetail"/>
     </div>
   </nav>
+  <div class="button-toggle" @click="changeShowMenu()">
+    <button ><font-awesome-icon icon="fa-solid fa-bars" /></button>
+    <font-awesome-icon icon="fa-solid fa-chevron-up" id="icon" />
+  </div>
 </template>
 <script>
 import UserDetail from '../views/UserDetail.vue';
+import TheMenu from '@/components/TheMenu.vue';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faMagnifyingGlass, faBars, faHouse } from '@fortawesome/free-solid-svg-icons';
-library.add(faMagnifyingGlass, faBars, faHouse);
+import { faMagnifyingGlass, faBars, faHouse, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+library.add(faMagnifyingGlass, faBars, faHouse, faChevronUp);
 
-import { mapActions } from 'vuex';
 import store from '@/store';
 
 export default {
@@ -56,7 +54,6 @@ export default {
     return {
       loggedIn: store.state.auth.loginStatus,
       account: store.state.auth.userAccount,
-      categories: store.state.category.categories,
       productName: '',
       showUserDetail: false,
     }
@@ -66,19 +63,33 @@ export default {
       return store.state.product.productsCart.length;
     },
   },
-  // watch: {
-  //   cartCount() {
-  //     alert('hi');
-  //   }
-  // },
   components: {
+    TheMenu,
     UserDetail,
   },
   methods: {
-    ...mapActions('category',['loadCategoriesAction']),
     
     changeShowMenu() {
-      this.$emit('showMenuUpdated');
+      let icon = document.getElementById('icon');
+      let menu = document.getElementById('menu');
+      if(menu.className === 'menu') {
+        menu.className += ' responsive';
+      }else {
+        menu.className = 'menu';
+      }
+      if(icon.style.transform === 'rotate(90deg)') {
+        icon.style.transform = 'rotate(180deg)'
+      }else {
+        icon.style.transform = 'rotate(90deg)'
+      }
+    },
+    showProductCategory() {
+      let subMenu = document.getElementById('sub-menu');
+      if(subMenu.className === 'menu sub-menu') {
+        subMenu.className += ' category';
+      }else {
+        subMenu.className = 'menu sub-menu';
+      }
     },
     login() {
       this.$router.push("/login");
@@ -86,28 +97,19 @@ export default {
     cartList() {
 
     },
-    async loadCategories(id) {
-      await this.loadCategoriesAction(id);
-      this.categories = store.state.category.categories;
-    },
     showDetail(event) {
       if(event.target.className === 'account detail' || event.target.id === 'name') {
         this.showUserDetail = !this.showUserDetail;
-        if(this.showUserDetail === true ) {
-          this.$el.querySelector(".detail").style.color = "#fff";
-          this.$el.querySelector(".detail").style.backgroundColor = "red";
-        }else {
-          this.$el.querySelector(".detail").style.color = "red";
-          this.$el.querySelector(".detail").style.backgroundColor = "#fff";
-        }
+        // if(this.showUserDetail === true ) {
+        //   this.$el.querySelector(".detail").style.color = "#fff";
+        //   this.$el.querySelector(".detail").style.backgroundColor = "red";
+        // }else {
+        //   this.$el.querySelector(".detail").style.color = "red";
+        //   this.$el.querySelector(".detail").style.backgroundColor = "#fff";
+        // }
       }
     }
   },
-  created() {
-    this.loadCategories('all');
-  },
-  mounted() {
-  }
 };
 </script>
 <style scoped>
@@ -116,7 +118,7 @@ nav {
   background-color: red;
   display: flex;
   box-sizing: border-box;
-  padding: 0px 40px;
+  padding: 0px 25px;
   gap: 10px;
   justify-content: space-between;
 }
@@ -127,7 +129,7 @@ nav {
   padding: 0px;
   align-self: center;
   gap: 5px;
-  min-width: 550px;
+  min-width: 544px;
 }
 .menu {
   display: flex;
@@ -135,48 +137,47 @@ nav {
   padding: 0px;
   align-items: center;
 }
-.menu > li {
-  margin: 0px 2px;
-}
 .menu li {
   list-style: none;
 }
 .menu li a {
   text-decoration-line: none;
 }
-.menu > li > a {
-  color: white;
-  font-size: 18px;
-}
 .menu-item {
   position: relative;
+  height: 100%;
 }
 .menu-item > a {
   box-sizing: border-box;
   cursor: pointer;
   width: auto;
-  padding: 20px 10px;
+  padding: 0px 10px;
+  color: white;
+  font-size: 18px;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 .menu-item > a:hover {
   background-color: #252525;
 }
-.menu-item:hover > .sub-menu {
-  display: inline-block;
+.category {
+  display: inline-block !important;
 }
 .sub-menu {
   position: absolute;
   background-color: white;
-  width: 200px;
   left: 0px;
-  top: 40px;
+  top: 60px;
   display: none;
   box-sizing: border-box;
   padding: 0;
-  text-align: center;
   padding-top: 10px;
   border-radius: 5px;
   border: solid rgb(54, 54, 54) 1px;
   box-shadow: 0px 5px 5px 0px;
+  height: auto;
+  z-index: 2;
 }
 .sub-menu a:hover {
   color: red;
@@ -214,7 +215,7 @@ nav {
   height: 37px;
   margin-top: 10px;
   display: none;
-  margin-left: 30px;
+  margin-left: 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -224,11 +225,11 @@ nav {
   background-color: grey;
 }
 .search {
-  width: 70%;
-  min-width: 100px;
+  width: 100%;
   box-sizing: border-box;
   padding: 10px;
   position: relative;
+  min-width: 60px;
 }
 .search-icon {
   position: absolute;
@@ -251,7 +252,8 @@ nav {
   outline: none;
 }
 .user {
-  width: 40%;
+  width: 100%;
+  max-width: 550px;
   display: flex;
   gap: 10px;
   position: relative;
@@ -304,19 +306,78 @@ nav {
   border-radius: 10px;
   z-index: 2;
 }
-@media screen and ( max-width: 950px) {
-  .user {
-    width: 60%;
+.button-toggle {
+  display: none;
+  min-width: 300px;
+  cursor: pointer;
+}
+.button-toggle button, .button-toggle #icon {
+  color: #fff;
+  font-size: 25px;
+  cursor: pointer;
+}
+.button-toggle button {
+  background-color: red;
+  border: 0;
+  padding: 0;
+}
+.button-toggle #icon{
+  transform: rotate(180deg);
+}
+@media screen and ( max-width: 920px) {
+  nav {
+    position: relative;
+    gap: 0 !important;
+  }
+  .responsive .menu-item a{
+    height: 40px;
+    background-color: #252525;
+    color: #fff;
+  }
+  .responsive {
+    display: block !important;
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 60px;
+    width: 100%;
+    min-width: 300px;
+    box-sizing: border-box;
+    margin-top: 40px;
+    border-bottom: solid 2px #252525;
+  }
+  .responsive a {
+    padding: 0 25px;
+  }
+  .responsive a:hover {
+    background-color: #DDDDDD !important;
+    color: black !important;
+  }
+  .category {
+    right: 0px;
+    top: 40px;
   }
   .nav-left {
-    min-width: 135px;
+    min-width: 50px;
     width: 40%;
   }
   .nav-left .menu {
     display: none;
   }
-  .nav-left > button {
+  nav + .button-toggle {
+    border-top: 2px solid #fff;
     display: block;
+    width: 100%;
+    background-color: red;
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 0 25px;
+    align-items: center;
+  }
+  .search {
+    padding: 10px 0;
   }
 }
 </style>

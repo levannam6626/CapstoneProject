@@ -10,6 +10,11 @@
     <div class="product-description">
       <p>{{ this.product.productDescription }}</p>
     </div>
+    <div class="product-quantity" v-if="this.account.role !== 'SELLER'">
+      <button @click="this.quantity = Math.max((this.quantity - 1), 0)">-</button>
+      <input type="text" maxlength="3" v-model="this.quantityString"/>
+      <button @click="this.quantity = Math.min((this.quantity + 1), this.product.productQuantity)">+</button>
+    </div>
     <div class="product-price">
       <label>${{ this.product.productPrice }}</label>
       <button v-if="this.account.role === 'SELLER'" @click="editProduct()"> Edit</button>
@@ -42,12 +47,23 @@
           id:'',
           status: false
         },
+        quantity: 1,
         isOrderedByThisUser: false,
       };
     },
+    computed: {
+      quantityString: {
+        get() {
+          return this.quantity.toString();
+        },
+        set(newQuantity) {
+          this.quantity = parseInt(newQuantity);
+        }
+      }
+    },
     methods: {
       ...mapActions('category',['getCategoryByIdAction']),
-      ...mapActions('product',['addProductToCartAction']),
+      ...mapActions('product',['addProductToCartAction','productDetailAction']),
       checkbox(event) {
         this.checkedProduct.id = event.target.value;
         this.checkedProduct.status = this.checked;
@@ -65,16 +81,24 @@
           this.isOrderedByThisUser = true;
         }
       },
-      showDetail() {
+      async showDetail() {
         this.$emit('showDetail',this.product);
-        this.$router.push({ name: 'productDetail', params: { categoryName: this.categoryName, productName: this.product.productName } });
+        this.$router.push({ 
+          name: 'productDetail',
+          params: {
+            categoryName: this.categoryName,
+            productName: this.product.productName,
+          },
+        });
+        this.productDetailAction(this.product);
       },
       async addProductToCart() {
         const loggedIn = store.state.auth.token;
-        if (loggedIn) {
+        if (loggedIn === true) {
           const objOrder = {
-            customerId: store.state.auth.userAccount.id,
-            product: this.product
+            product: this.product,
+            quantity: this.quantity,
+            user: store.state.auth.userAccount
           }
           await this.addProductToCartAction(objOrder);
         }else{
@@ -82,8 +106,7 @@
         }
       },
       editProduct() {
-        this.$emit('actionForm',true);
-        this.$router.push({name: 'editProduct', params:{productId: this.product.productId}, hash:"product"})
+        this.$router.push({name: 'editProduct', params:{productId: this.product.productId}})
       },
       async getCategoryById(id) {
         await this.getCategoryByIdAction(id);
@@ -97,6 +120,10 @@
   }
 </script>
 <style scoped>
+p {
+  padding: 0;
+  margin: 0;
+}
 .product {
   display: grid;
   text-align: center;
@@ -104,14 +131,14 @@
   box-sizing: border-box;
   padding: 20px;
   gap: 5px;
-  height: 500px;
+  height: 430px;
 }
 .product figure {
   width: 100%;
   overflow: hidden;
   margin: 0px;
   padding: 0px;
-  height: 170px;
+  height: 130px;
 }
 .product img {
   transition: .5s;
@@ -122,8 +149,38 @@
   transform: scale(1.2);
 }
 .product-description {
-  height: 160px;
+  height: 108px;
   text-align: left;
+  overflow: hidden;
+}
+.product-quantity {
+  display: flex;
+  color: red;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+}
+.product-quantity button {
+  font-size: 21px;
+  padding: 0px 8px;
+  background-color: #fff;
+  border: solid 1px rgb(192, 188, 188);
+  cursor: pointer;
+}
+.product-quantity button:hover {
+  background-color: rgb(226, 222, 222);
+}
+.product-quantity input{
+  text-align: center;
+  height: 22px;
+  width: 22px;
+  border: 0;
+  border-top: solid 1px rgb(192, 188, 188);
+  border-bottom: solid 1px rgb(192, 188, 188);
+  background-color: rgb(226, 222, 222);
+}
+.product-quantity input:focus {
+  outline: none;
 }
 .product-price {
   display: flex;

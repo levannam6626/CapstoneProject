@@ -27,7 +27,7 @@ const routes = [
   {
     path: '/register',
     name: 'register',
-    component: RegisterView,
+    component: RegisterView
   },
   {
     path: '/',
@@ -36,61 +36,55 @@ const routes = [
     children: [
       {
         path: '/:categoryName',
-        alias: ['/','/:categoryName/:productName'],
+        alias: ['/','/search-product/:productName'],
         name: 'productList',
         components: {
           default: ProductList,
           banner: BannerImg,
           theMenu: TheMenu
-        },
-        children: [{
-          path: '/:categoryName/:productName',
-          name: 'productDetail',
-          component: ProductDetail,
-        }],
+        }
+      },
+      {
+        path: '/:categoryName/:productName',
+        name: 'productDetail',
+        component: ProductDetail
       },
       {
         path: '/user-infor',
         name: 'userInfor',
-        component: UserDetail,
+        component: UserDetail
       },
       {
         path: '/introduce',
         name: 'introduce',
-        component: IntroduceView,
+        component: IntroduceView
       },
       {
-        path: '/addProduct',
+        path: '/add-product',
         name: 'addProduct',
-        components: {
-          default: ProductList,
-          productAction: AddProduct,
-        }
+        component: AddProduct
       },
       {
-        path: '/editProduct/:productId',
+        path: '/edit-product/:productId',
         name: 'editProduct',
-        components: {
-          default: ProductList,
-          productAction: EditProduct,
-        }
+        component: EditProduct
       },
     ],
   },
   {
     path: '/admin',
     name: 'admin',
-    component: AdminPage,
+    component: AdminPage
   },
   {
     path: '/test',
     name: 'test',
-    component: TestView,
+    component: TestView
   },
   {
     path: '/cart-list',
     name: 'cartList',
-    component: CartList,
+    component: CartList
   },
 ]
 const router = createRouter({

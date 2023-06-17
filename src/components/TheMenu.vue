@@ -1,8 +1,8 @@
 <template>
   <div class="menu" style="margin:0px;">
-    <h3 >PRODUCT CATEGORY</h3>
+    <h3 v-show="showh3">PRODUCT CATEGORY</h3>
     <ul style="margin: 0px; padding: 0px;">
-      <li class="menu-item" v-for="(category,index) in this.categories" :key="index" >
+      <li class="menu-item" v-for="(category, index) in this.categories" :key="index" >
         <a :href="'/' + category.categoryName " :class="category.categoryName">{{ category.categoryName }}</a>
       </li>
       <li class="menu-item add" v-if="userAccount.role === 'SELLER'">
@@ -23,6 +23,12 @@ import store from '@/store';
 import { mapActions } from 'vuex';
 
 export default {
+  props: {
+    showh3: {
+      type: Boolean,
+      default: true
+    }
+  },
   data() {
     return {
       categories: [],
@@ -39,13 +45,6 @@ export default {
       await this.loadCategoriesAction(id);
       this.categories = store.state.category.categories;
     },
-    setSelectedCategory() {
-      if(this.categoryName !== undefined) {
-        let a = this.$refs.Hi[0].querySelector('a');
-        console.log(a)
-        // a.style.backgroundColor = "#90AA00";
-      }
-    },
     async addCategory() {
       if(this.inputString !== "") {
         const categoryName = this.capitalizeString(this.inputString)
@@ -56,6 +55,7 @@ export default {
         await this.addCategoryAction(objCategory);
         this.$el.querySelector('#add').style.cursor = 'pointer';
         this.categories = store.state.category.categories;
+        this.inputString = "";
       }
       this.showAddCategory = false;
     },
@@ -72,13 +72,15 @@ export default {
     this.loadCategories('all');
   },
   mounted() {
-    if(this.categoryName !== undefined) {
+    if(this.categoryName !== undefined && this.categoryName !== 'add-product') {
       window.addEventListener('load', () => {
         const elements = document.getElementsByClassName(this.categoryName);
-        elements[0].style.backgroundColor = "#90AA00";
-        elements[0].style.color = "red";
-        elements[1].style.backgroundColor = "#90AA00";
-        elements[1].style.color = "red";
+        if(elements.length > 0) {
+          for (let index = 0; index < elements.length; index++) {
+            elements[index].style.backgroundColor = "#90AA00";
+            elements[index].style.color = "red";
+          }
+        }
       });
     }
   }
@@ -100,14 +102,10 @@ h3 {
 .menu {
   height: 100%;
   overflow: auto;
-  text-align: center;
-  width: 100%;
-  display: block;
   padding: 0px;
   text-align: left;
   border: none;
   white-space: normal;
-  float: none;
   outline: 0;
   min-width: 220px;
 }
@@ -126,7 +124,7 @@ h3 {
   font-size: 18px;
   text-decoration: none;
   background-color: #fff;
-  margin-bottom: 1px;
+  border-bottom: 1px solid #DDDDDD;
   padding: 10px;
   cursor: pointer;
 }

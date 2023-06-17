@@ -17,12 +17,12 @@
   </header>
   <div class="content" v-if="showList===true">
     <div v-for="(product, index) in this.products" :key="index">
-      <ProductItem v-on:showDetail="showDetailInparend" :product="product" @actionForm="actionForm" @checkedProduct="checkedProductInparent"/>
+      <ProductItem :product="product" @checkedProduct="checkedProductInparent"/>
     </div>
   </div>
-  <div class="detail" v-else>
+  <!-- <div class="detail" v-else>
     <router-view :product="this.product"></router-view>
-  </div>
+  </div> -->
   <footer>
     <button @click="deleteProducts" v-if="checkedProductIds.length > 0">Delete</button>
   </footer>
@@ -77,16 +77,9 @@ export default {
         this.checkedProductIds = this.checkedProductIds.filter(item => item !== checkedProduct.id);
       }
     },
-    actionForm(status) {
-      this.$emit('actionForm',status);
-    },
     async searchProductByCategoryName(name) {
       await this.searchProductByCategoryNameAction(name);
       this.products = store.state.product.products;
-    },
-    showDetailInparend(selectedProduct) {
-      this.product = selectedProduct;
-      this.showList = false;
     },
     async searchProduct(name) {
       await this.searchProductAction(name);
@@ -142,7 +135,7 @@ h3 {
 }
 .content {
   display: grid;
-  grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+  grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
   gap: 20px;
   box-sizing: border-box;
   padding-top: 20px;

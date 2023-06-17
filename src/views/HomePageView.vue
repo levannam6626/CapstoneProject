@@ -1,40 +1,34 @@
 <template>
   <div class="homepage" ref="homepage">
-    <div class="contact" id="contact">
-      <div class="move">
-        <div class="address">
-          <font-awesome-icon
-            class="address-icon"
-            icon="fa-solid fa-location-dot"
-          />
-          <span>85 NguyenLuongBang - HoaKhanhBac - LienChieu - DaNang </span>
-        </div>
-        <div class="email">
-          <font-awesome-icon class="email-icon" icon="fa-solid fa-envelope" />
-          <span>vannamka6626@gmail.com</span>
+    <header id="header">
+      <div class="contact" id="contact">
+        <div class="move">
+          <div class="address">
+            <font-awesome-icon
+              class="address-icon"
+              icon="fa-solid fa-location-dot"
+            />
+            <span>85 NguyenLuongBang - HoaKhanhBac - LienChieu - DaNang </span>
+          </div>
+          <div class="email">
+            <font-awesome-icon class="email-icon" icon="fa-solid fa-envelope" />
+            <span>vannamka6626@gmail.com</span>
+          </div>
         </div>
       </div>
-    </div>
-    <header class="banner" id="banner">
-      <figure>
-        <img src="../assets/banner-e-commerce1.png" alt="" />
-      </figure>
+      <BannerImg v-if="this.loginRole !== 'SELLER'"/>
+      <div v-if="this.loginRole === 'SELLER'" style="background-color:#fff; width: 100%; height: 2px;"></div>
+      <div id="navbar">
+        <NavBar v-on:showMenuUpdated="showMenuUpdatedInParent" @searchProduct="searchProduct" />
+      </div>
     </header>
-    <div id="navbar" style="display: flex">
-      <NavBar v-on:showMenuUpdated="showMenuUpdatedInParent" @searchProduct="searchProduct" @actionForm="actionForm"/>
-    </div>
     <div class="content" id="content">
-      <div class="product" @click="closeForm($event)" v-show="showForm">
-        <router-view class="product-action" name="productAction" @reloadProductList="reloadProductList" @actionForm="actionForm"></router-view>
-      </div>
-      <div class="content-left" v-show="showMenu" id="content-left">
-        <TheMenu />
-      </div>
+      <router-view name="theMenu" class="content-left" id="content-left"></router-view>
       <div class="content-right">
-        <router-view :productNameSearch="productNameSearch" :reloadProduct="reloadProduct" @actionForm="actionForm"></router-view>
+        <router-view :productNameSearch="productNameSearch" :reloadProduct="reloadProduct" ></router-view>
       </div>
     </div>
-    <footer id="footer-contact">
+    <footer id="footer-contact" v-if="this.$store.state.auth.userAccount.role !== 'SELLER'">
       <div class="footer-connect">
         <h2>Connect</h2>
         <hr>
@@ -71,22 +65,24 @@
   </div>
 </template>
 <script>
-import TheMenu from '../components/TheMenu.vue';
 import NavBar from "@/components/NavBar.vue";
+import BannerImg from "@/components/BannerImg.vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faLocationDot, faEnvelope, faUser, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { faFacebook, faInstagram, faGoogle, faTelegram, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import store from "@/store";
 library.add(faLocationDot, faEnvelope, faUser, faPhone, faFacebook, faInstagram, faGoogle, faTelegram, faTwitter);
 
 export default {
   data() {
     return {
+      loginRole: store.state.auth.userAccount.role,
       productNameSearch: '',
       reloadProduct: false,
       showMenu: true,
       showForm: false,
       sticky: null,
-      banner: null,
+      banner: null
     };
   },
   watch: {
@@ -113,30 +109,50 @@ export default {
     window.removeEventListener('scroll', this.handleScroll);
   },
   components: {
-    TheMenu,
     NavBar,
+    BannerImg
   },
   methods: {
     focusTop() {
       this.$refs.homepage.scrollIntoView({behavior: 'smooth'});
     },
     handleScroll() {
-      var navbar = document.getElementById("navbar");
-      var newBanner = document.getElementById("banner");
-      if(this.showForm === true) {
-        navbar.classList.remove("sticky");
+      let header = document.getElementById("header");
+      let contact = document.getElementById("contact");
+      let navbar = document.getElementById("navbar");
+      let content = document.getElementById("content");
+      let newBanner = document.getElementById("banner");
+      if(this.$store.state.auth.userAccount.role === 'SELLER'){
+        if (window.scrollY > header.offsetTop) {
+          header.classList.add("sticky-header")
+        }else {
+          header.classList.remove("sticky-header");
+        }
       }else{
         if(this.banner === null) {
           this.banner = newBanner.offsetHeight;
         }
-        if(this.sticky === null || this.banner !== newBanner.offsetHeight) {
-          this.sticky = newBanner.offsetHeight-10;
+        if(this.sticky === null || (this.banner !== newBanner.offsetHeight && newBanner.offsetHeight !== 0)) {
+          this.sticky = newBanner.offsetHeight-37;
           this.banner = newBanner.offsetHeight;
         }
-        if (window.scrollY >= this.sticky) {
-          navbar.classList.add("sticky")
+        if (window.scrollY > this.sticky) {
+          navbar.classList.add("sticky-navbar")
+          if(window.innerWidth <= 920) {
+            content.style.paddingTop = (this.sticky + 155) + 'px';
+          }else {
+            content.style.paddingTop = (this.sticky + 114) + 'px';
+          }
+          newBanner.style.display = 'none';
         } else {
-          navbar.classList.remove("sticky");
+          navbar.classList.remove("sticky-navbar");
+          content.style.paddingTop = '20px';
+          newBanner.style.display = 'block';
+        }
+        if (window.scrollY > contact.offsetTop) {
+          contact.classList.add("sticky-contact")
+        } else {
+          contact.classList.remove("sticky-contact");
         }
       }
     },
@@ -155,14 +171,6 @@ export default {
     reloadProductList() {
       this.reloadProduct = !this.reloadProduct;
     },
-    actionForm(status) {
-      this.showForm = status;
-      var navbar = document.getElementById("navbar");
-      navbar.classList.remove("sticky");
-      // if(!status) {
-      //   this.$router.push(this.$router.options.history.state.back);
-      // }
-    },
     closeForm(event) {
       if (event.target.className === "product") {
         this.$router.push('/');
@@ -173,17 +181,32 @@ export default {
 };
 </script>
 <style scoped>
+.sticky-header {
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+}
+.sticky-header + .content {
+  padding-top: 112px;
+}
 .contact {
   background-color: red;
   color: #fff;
   width: 100%;
   height: 30px;
-  position: fixed;
   z-index: 1;
-  top: 0px;
-  left: 0px;
   box-sizing: border-box;
   padding: 6px 15px;
+  overflow: hidden;
+}
+.sticky-contact {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 1;
+}
+.sticky-contact + .banner {
+  padding-top: 30px;
 }
 .move {
   display: flex;
@@ -206,9 +229,9 @@ export default {
   position: relative;
   width: 100%;
   background-color: #dadada;
+  min-height: 100%;
 }
 .banner {
-  margin-top: 27px;
   text-align: center;
 }
 .banner figure {
@@ -221,36 +244,24 @@ export default {
 .banner figure img {
   width: 100%;
 }
-.sticky {
+.sticky-navbar {
   position: fixed;
-  top: 35px;
+  top: 30px;
   width: 100%;
   border-top: solid 2px #fff;
   z-index: 1;
 }
-#navbar {
-  margin-top: -5px;
-}
-.sticky + .content {
-  padding-top: 76px;
+.sticky-navbar + .content {
+  padding-top: 110px;
 }
 .content {
   display: flex;
   gap: 20px;
   width: 100%;
   box-sizing: border-box;
-  padding: 20px 40px 0px;
+  padding: 20px 25px;
 }
 .content-right {
-  width: 100%;
-  height: 100%;
-}
-.product {
-  position: absolute;
-  background-color: rgba(0,0,0,0.5);
-  left: 0;
-  top: 0px;
-  z-index: 0;
   width: 100%;
   height: 100%;
 }
@@ -312,13 +323,16 @@ footer hr {
 }
 @keyframes addressmove {
   from {
-    left: 0px;
+    transform: translateX(0);
   }
   to {
-    left: 50%;
+    transform: translateX(50%);
   }
 }
-@media screen and (max-width: 950px) {
+@media screen and (max-width: 920px) {
+  .sticky-header + .content {
+    padding-top: 152px;
+  }
   .content-left {
     display: none;
   }

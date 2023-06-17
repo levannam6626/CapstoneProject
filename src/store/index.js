@@ -15,7 +15,7 @@ export default createStore({
   },
   plugins: [createPersistedState({
     key: 'vuex',              
-    paths:['auth'],
+    paths:['auth','product'],
   })],
 });
 

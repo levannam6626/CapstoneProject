@@ -226,7 +226,7 @@ span {
   display: flex;
   width: 60%;
   max-width: 750px;
-  min-width: 300px;
+  min-width: 250px;
 }
 
 .signup h1 {
@@ -366,7 +366,7 @@ select:focus {
   }
   .signup form {
     width: 100%;
-    padding: 0px 30px 50px 50px;
+    padding: 0px 30px 50px 30px;
   }
   .image-link {
     display: block;

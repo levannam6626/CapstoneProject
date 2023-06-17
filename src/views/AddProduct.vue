@@ -1,20 +1,24 @@
 <template>
   <div class="create-product" ref="createProduct">
-    <form @submit.prevent="saveProduct">
-      <div class="component-close">
-        <span>Create Product</span>
-        <a style="text-decoration: none" @click="$emit('actionForm',false);this.$router.push('/');">X</a>
-      </div>
+    <form @submit.prevent="saveProduct" class="create-product-form">
       <div class="content">
         <div class="create-product-item">
           <p>Product</p>
-          <input type="button" value="&#8744;" v-on:click="this.showE.product = !this.showE.product" />
+          <!-- <input type="button" value="&#8744;" v-on:click="this.showE.product = !this.showE.product" /> -->
         </div>
         <div class="product" v-show="this.showE.product">
           <div class="name">
             <label for="name">Name:</label>
-            <input type="text" id="name" style=" width: 65%; border-radius: 5px; border: solid 1px black; height: 30px; "
+            <input type="text" id="name" style=" width: 65%; border-radius: 5px; border: solid 1px black; "
               v-model="this.product.productName" maxlength="80" required />
+          </div>
+          <div class="product-price">
+            <label for="price">Price:</label>
+            <input type="number" id="price" min="0" max="1000000" step=".01" v-model="this.product.productPrice" required/>
+          </div>
+          <div class="quantity">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" min="0" max="1000" v-model="this.product.productQuantity" required/>
           </div>
           <div class="product-category">
             <label for="product-category">Category:</label>
@@ -24,30 +28,22 @@
           </div>
         </div>
         <div class="create-product-item">
-          <p>Price</p>
-          <input type="button" value="&#8744;" v-on:click="this.showE.price = !this.showE.price" />
-        </div>
-        <div class="price" v-show="this.showE.price">
-          <label for="price">Price:</label>
-          <input type="number" id="price" min="0" max="1000000" step=".01" v-model="this.product.productPrice" required/>
-        </div>
-        <div class="create-product-item">
-          <p>Creative</p>
-          <input type="button" value="&#8744;" v-on:click="this.showE.creative = !this.showE.creative" />
+          <p>Creative Image</p>
+          <!-- <input type="button" value="&#8744;" v-on:click="this.showE.creative = !this.showE.creative" /> -->
         </div>
         <div class="creative" v-show="this.showE.creative">
-          <div class="description" style="margin-top: 25px;">
+          <div class="description">
             <label for="description">Description:</label>
             <textarea id="description" v-model="this.product.productDescription"  maxlength="255" required ></textarea>
           </div>
-          <div class="creative-preview" style="margin-top: 25px;margin-bottom: 5px;">
+          <div class="creative-preview">
             <label >Creative preview:</label>
             <div class="creative-preview-image" >
               <img :src="newImage" required/>
             </div>
           </div>
           <span class="message" v-show="!this.image.status">{{ this.image.message }}</span>
-          <div class="final-url" style="margin-top: 25px;">
+          <div class="final-url">
             <label>Image:</label>
             <label for="upload">Import image
               <input type="file" accept="image/*" id="upload" style="display: none;" @change="upload($event)" />
@@ -91,14 +87,8 @@ export default {
       },
     };
   },
-  mounted: function(){
-    this.focusTop();
-  },
   methods: {
     ...mapActions("product", ["createProductAction"]),
-    focusTop() {
-      this.$refs.createProduct.scrollIntoView({behavior: 'smooth'});
-    },
     async saveProduct() {
       if(this.image.status) {
         const objproduct = {
@@ -143,9 +133,17 @@ export default {
 </script>
 <style scoped>
 .create-product {
-  background-color: white;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.create-product-form {
   border-radius: 8px;
   border: solid 1px rgb(189, 186, 186);
+  width: 75%;
+  background-color: white;
 }
 
 .content {
@@ -154,7 +152,7 @@ export default {
 }
 
 .component-close {
-  height: 40px;
+  height: 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -178,35 +176,13 @@ export default {
   cursor: pointer;
 }
 
-.component-close a:hover {
-  color: red;
-}
-
 input[type="button"] {
   background-color: #468faf;
   border: none;
   box-sizing: border-box;
   font-size: 20px;
   color: #fff;
-  padding-top: 8px;
 }
-
-input[type="button"]:hover {
-  color: red;
-}
-
-input[type="datetime-local"] {
-  height: 26px;
-  border-top: 0px;
-  border-right: 0px;
-  border-left: 0px;
-  border-bottom: solid 2px rgb(180, 171, 171);
-  font-size: 15px;
-  box-sizing: border-box;
-  width: 100%;
-  margin-left: 5px;
-}
-
 .create-product-item {
   display: flex;
   justify-content: space-between;
@@ -217,15 +193,12 @@ input[type="datetime-local"] {
   padding: 0px 15px;
   box-sizing: border-box;
   color: white;
+  align-items: center;
 }
 
 .product {
   float: left;
   width: 100%;
-}
-
-.creative {
-  height: 300px;
 }
 
 .message {
@@ -238,7 +211,8 @@ input[type="datetime-local"] {
 }
 
 .name,
-.price,
+.product-price,
+.quantity,
 .product-category {
   display: flex;
   width: 100%;
@@ -256,22 +230,23 @@ input[type="datetime-local"] {
   text-transform: uppercase;
 }
 .product label,
-.price>label,
+.product-price>label,
+.quantity >label,
 .description>label,
 .creative-preview>label,
 .final-url>label {
   padding-right: 5%;
   text-align: right;
   width: 30%;
-  height: 30px;
 }
 label[for='final-url'] {
   padding-right: 50px;
 }
 label {
-  padding-top: 5px;
   box-sizing: border-box;
   font-weight: 555;
+  height: 30px;
+  padding-top: 3px;
 }
 input[type="text"] {
   padding-left: 15px;
@@ -286,11 +261,15 @@ input[type="number"] {
   box-sizing: border-box;
 }
 .description,
+.creative-preview {
+  height: 100px;
+}
+.description,
 .creative-preview,
 .final-url {
   width: 100%;
-  height: 100px;
   display: flex;
+  margin-top: 15px;
 }
 .description textarea {
   width: 65%;
@@ -298,7 +277,7 @@ input[type="number"] {
   resize: none;
 }
 .final-url label[for='upload'] {
-  background-color: #468FAF;
+  background-color: #468faf;
   border-radius: 5px;
   width: 65%;
   text-align: center;
@@ -306,24 +285,24 @@ input[type="number"] {
   cursor: pointer;
 }
 .final-url label[for='upload']:hover {
-  background-color: red;
+  background-color: blue;
 }
 .creative input[type="text"] {
   width: 65%;
-  height: 30px;
+  height: 26px;
   border-radius: 5px;
   border: solid 1px black;
 }
 .creative-preview-image {
   width: 65%;
-  height: 100px;
+  height: 90px;
   margin-bottom: 20px;
   border: solid 2px black;
   text-align: center;
   border-radius: 5px;
 }
 .creative-preview img {
-  height: 100px;
+  height: 100%;
   width: 65%;
   border-radius: 5px;
 }
@@ -351,7 +330,7 @@ input[type="number"] {
   cursor: pointer;
 }
 .component-cancel-save a:hover, .component-cancel-save button:hover {
-  background-color: red;  
+  background-color: blue;  
 }
 .component-cancel-save button {
   height: 30px;
