@@ -19,6 +19,7 @@ public class UserResponseMapper implements Function<User, UserDto>{
             user.getEmail(),
             user.getAddress(),
             user.getPhone(),
+            user.getGender(),
             user.getRole().name());
     }
     

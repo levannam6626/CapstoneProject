@@ -59,6 +59,19 @@ public class UserController {
         return ResponseEntity.badRequest().body(msg);
     }
 
+    @RequestMapping(path = "/edit", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<?> editUser(@ModelAttribute UserDto user)
+    {
+        System.out.println(user.getEmail());
+        String msg = userService.editUser(user);
+        if(msg.equals("Edit Success"))
+        {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().body(msg);
+    }
+
+
     @DeleteMapping(path = "delete-account/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable(name = "id") Long id)
     {
