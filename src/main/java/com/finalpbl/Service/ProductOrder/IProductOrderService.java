@@ -2,7 +2,7 @@ package com.finalpbl.Service.ProductOrder;
 
 import java.util.List;
 
-import com.finalpbl.Dto.ProductOrderDto;
+import com.finalpbl.Dto.Order.ProductOrderDto;
 import com.finalpbl.Model.ProductOrder;
 
 public interface IProductOrderService {

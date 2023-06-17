@@ -24,14 +24,14 @@ public class CategoryController {
     @Autowired
     private ICategoryService categoryService;
 
-    @GetMapping(path = "/all")
+    @GetMapping(path = "view/all")
     public ResponseEntity<?> getAllCategory()
     {
         List<Category> categories = categoryService.getAllCategory();
         return ResponseEntity.ok(categories);
     }
 
-    @GetMapping(path = "{id}")
+    @GetMapping(path = "view/{id}")
     public ResponseEntity<?> getCategoryByID(@PathVariable(name = "id") Long id)
     {
         Category category = categoryService.getCategoryByID(id);
@@ -39,7 +39,7 @@ public class CategoryController {
     }
 
     @RequestMapping(path = "", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> addProduct(@ModelAttribute Category category)
+    public ResponseEntity<?> addCategory(@ModelAttribute Category category)
     {
         String msg = categoryService.addCategory(category);
         if(msg.equals("OK") )

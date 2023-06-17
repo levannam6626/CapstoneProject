@@ -1,4 +1,4 @@
-package com.finalpbl.Dto;
+package com.finalpbl.Dto.Auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.finalpbl.Dto;
+package com.finalpbl.Dto.Product;
 
 import java.time.LocalDateTime;
 
@@ -33,4 +33,7 @@ public class ProductDto {
     
     @NotBlank
     private double productPrice;
+
+    @NotBlank
+    private int quantity;
 }

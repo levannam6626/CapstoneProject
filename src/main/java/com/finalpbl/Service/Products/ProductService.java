@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.finalpbl.Dto.ProductDto;
+import com.finalpbl.Dto.Product.ProductDto;
 import com.finalpbl.Mapper.ProductResponseMapper;
 import com.finalpbl.Model.Category;
 import com.finalpbl.Model.Products;
@@ -34,8 +34,6 @@ public class ProductService implements IProductService{
     @Autowired
     private ProductResponseMapper productMapper;
 
-    @Autowired
-    private CategoryServiceImpl categoryServiceImpl;
 
     private final Cloudinary cloudinary = Singleton.getCloudinary();
 
@@ -72,7 +70,8 @@ public class ProductService implements IProductService{
                 product.getProductDescription(),
                 product.getProductImage(),
                 product.getUpdateDate(),
-                product.getProductPrice()
+                product.getProductPrice(),
+                product.getQuantity()
             );
         return productResponse;
     }
@@ -100,6 +99,7 @@ public class ProductService implements IProductService{
 
     @Override
     public String addProduct(ProductDto productRequest, MultipartFile file) throws ParseException {
+        Category category = categoryRepository.findById(productRequest.getCategoryId()).orElseThrow();
         Products productValidate = productsRepository.findByProductName(productRequest.getProductName()).orElse(null);
         if(productValidate == null)
         {
@@ -109,8 +109,9 @@ public class ProductService implements IProductService{
             product.setProductPrice(productRequest.getProductPrice());
             product.setUpdateDate(productRequest.getUpdateDate());
             product.setProductDescription(productRequest.getProductDescription());
-            product.setCategory(categoryServiceImpl.getCategoryByID(productRequest.getCategoryId()));
+            product.setCategory(category);
             product.setIsDeleted(false);
+            product.setQuantity(productRequest.getQuantity());
             productsRepository.save(product);
             return "CREATE SUCCESS";
         }
@@ -118,12 +119,13 @@ public class ProductService implements IProductService{
     }
     @Override
     public String editProduct(ProductDto productRequest, MultipartFile file) throws ParseException {
+        Category category = categoryRepository.findById(productRequest.getCategoryId()).orElseThrow();
         Products productValidate = productsRepository.findProductsByProductIdAndIsDeleted(productRequest.getProductId(), false);
         if(productValidate == null) {
             return "PRODUCT DOES NOT EXIST";
         } else {
             productValidate.setProductName(productRequest.getProductName());
-            productValidate.setCategory(categoryServiceImpl.getCategoryByID(productRequest.getCategoryId()));
+            productValidate.setCategory(category);
             productValidate.setProductDescription(productRequest.getProductDescription());
             productValidate.setProductPrice(productRequest.getProductPrice());
             productValidate.setUpdateDate(productRequest.getUpdateDate());

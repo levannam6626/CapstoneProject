@@ -6,8 +6,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 
 import com.finalpbl.Config.UserDetailsImpl;
-import com.finalpbl.Dto.AuthRequest;
-import com.finalpbl.Dto.AuthResponse;
+import com.finalpbl.Dto.Auth.AuthRequest;
+import com.finalpbl.Dto.Auth.AuthResponse;
 import com.finalpbl.Repository.UserRepository;
 import com.finalpbl.Utils.JwtUtils;
 

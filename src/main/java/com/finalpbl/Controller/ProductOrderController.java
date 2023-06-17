@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.finalpbl.Config.UserDetailsImpl;
-import com.finalpbl.Dto.ProductOrderDto;
+import com.finalpbl.Dto.Order.ProductOrderDto;
 import com.finalpbl.Model.ProductOrder;
 import com.finalpbl.Service.ProductOrder.IProductOrderService;
 

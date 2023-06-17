@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.finalpbl.Dto.ProductOrderDto;
+import com.finalpbl.Dto.Order.ProductOrderDto;
 import com.finalpbl.Model.ProductOrder;
 import com.finalpbl.Model.User;
 import com.finalpbl.Repository.ProductOrderRepository;
