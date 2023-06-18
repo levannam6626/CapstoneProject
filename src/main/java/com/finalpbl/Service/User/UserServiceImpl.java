@@ -11,8 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import com.finalpbl.Dto.UserDto;
-import com.finalpbl.Dto.UserRequest;
+import com.finalpbl.Dto.User.UserDto;
+import com.finalpbl.Dto.User.UserRequest;
 import com.finalpbl.Mapper.UserResponseMapper;
 import com.finalpbl.Model.User;
 import com.finalpbl.Repository.UserRepository;
@@ -105,23 +105,24 @@ public class UserServiceImpl implements IUserService{
             }
             return "Password Invalid";
         }
-        return "Email has been registered";
+        return "Email Invalid";
     }
 
-    @Override
-    public String editUser(UserDto user) {
-        User userValidate = userRepository.findByEmail(user.getEmail()).orElse(null);
-        if(userValidate == null) {
-            return "User does not exist";
-        }
-        else {
-            userValidate.setFirstname(user.getFirstname());
-            userValidate.setLastname(user.getLastname());
-            userValidate.setAddress(user.getAddress());
-            userValidate.setPhone(user.getPhone());
-            userValidate.setGender(user.getGender());
-            userRepository.save(userValidate);
-            return "Edit Success";
-        }
-    }
+//     @Override
+//     public Boolean updateUser(Long id, UserDto userDto) {
+//         User user = userRepository.findById(id).orElseThrow(null);
+//         if(user != null)
+//         {
+//             user.setFirstname(userDto.getFirstname());
+//             user.setLastname(userDto.getLastname());
+//             user.setEmail(userDto.getEmail());
+//             user.setRole(Role.valueOf(userDto.getRole()));
+//             user.setPhone(userDto.getPhone());
+//             user.setAddress(userDto.getAddress());
+//             userRepository.save(user);
+//             return RESPONSE_OK;
+//         }
+//         return RESPONSE_REJECT;
+//     }
+
 }

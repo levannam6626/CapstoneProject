@@ -35,13 +35,16 @@ public class Cart {
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
+    @Column(name = "quantity")
+    private int qty;
+
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "product_id")
     private Products products;
 
     @JsonIgnore
-    @OneToOne
+    @ManyToOne
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 }

@@ -23,7 +23,7 @@ import com.finalpbl.Service.Category.CategoryServiceImpl;
 
 
 @Service
-public class ProductService implements IProductService{
+public class ProductServiceImpl implements IProductService{
 
     @Autowired
     private ProductsRepository productsRepository;

@@ -10,5 +10,5 @@ import com.finalpbl.Model.User;
 public interface CartRepository extends JpaRepository<Cart, Long>{
     public List<Cart> findByUserOrderByCreatedDateDesc(User user);
 
-    Cart deleteByUser(User user);
+    public List<Cart> deleteByUser(User user);
 }

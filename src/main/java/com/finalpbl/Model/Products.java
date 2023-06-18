@@ -71,7 +71,7 @@ public class Products {
 
     @OneToMany(mappedBy = "products", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<OrderItem> cartItems;
+    private List<OrderItem> orderItems;
 
     @OneToMany(mappedBy = "products", cascade = CascadeType.ALL)
     @JsonManagedReference

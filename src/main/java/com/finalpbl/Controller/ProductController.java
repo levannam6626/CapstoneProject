@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.finalpbl.Dto.ProductDto;
+import com.finalpbl.Dto.Product.ProductDto;
 import com.finalpbl.Service.Products.IProductService;
 
 import jakarta.validation.Valid;
@@ -103,18 +103,5 @@ public class ProductController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().body(msg);
-    }
-    @PostMapping(path = "/add-product-to-cart")
-    public ResponseEntity<?> addProductToCart(@RequestBody List<Long> ids)
-    {
-        // System.out.println(ids);
-        // String msg = iProductService.deleteProductsByid(ids);
-        // if(msg.equals("Delete Success"))
-        // {
-        //     return ResponseEntity.ok().build();
-        // }
-        // return ResponseEntity.badRequest().body(msg);
-        System.out.println("hi");
-        return ResponseEntity.ok().build();
     }
 }

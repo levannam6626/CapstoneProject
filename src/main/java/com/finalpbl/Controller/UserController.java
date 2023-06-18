@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.finalpbl.Dto.UserDto;
-import com.finalpbl.Dto.UserRequest;
+import com.finalpbl.Dto.User.UserDto;
+import com.finalpbl.Dto.User.UserRequest;
 import com.finalpbl.Service.User.IUserService;
 
 @RestController
@@ -59,17 +59,17 @@ public class UserController {
         return ResponseEntity.badRequest().body(msg);
     }
 
-    @RequestMapping(path = "/edit", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> editUser(@ModelAttribute UserDto user)
-    {
-        System.out.println(user.getEmail());
-        String msg = userService.editUser(user);
-        if(msg.equals("Edit Success"))
-        {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().body(msg);
-    }
+    // @RequestMapping(path = "/edit", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    // public ResponseEntity<?> editUser(@ModelAttribute UserDto user)
+    // {
+    //     System.out.println(user.getEmail());
+    //     String msg = userService.editUser(user);
+    //     if(msg.equals("Edit Success"))
+    //     {
+    //         return ResponseEntity.ok().build();
+    //     }
+    //     return ResponseEntity.badRequest().body(msg);
+    // }
 
 
     @DeleteMapping(path = "delete-account/{id}")

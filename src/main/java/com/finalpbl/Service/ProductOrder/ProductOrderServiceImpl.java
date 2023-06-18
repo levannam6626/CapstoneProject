@@ -12,7 +12,7 @@ import com.finalpbl.Repository.ProductOrderRepository;
 import com.finalpbl.Repository.UserRepository;
 
 @Service
-public class ProductOrderService implements IProductOrderService{
+public class ProductOrderServiceImpl implements IProductOrderService{
 
     @Autowired
     private ProductOrderRepository productOrderRepository;

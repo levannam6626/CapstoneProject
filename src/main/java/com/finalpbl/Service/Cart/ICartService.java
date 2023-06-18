@@ -1,11 +1,12 @@
 package com.finalpbl.Service.Cart;
 
-import java.util.List;
-
-import com.finalpbl.Model.Cart;
-import com.finalpbl.Model.User;
+import com.finalpbl.Dto.Cart.AddEditCartDto;
+import com.finalpbl.Dto.Cart.CartDto;
 
 public interface ICartService {
-    public List<Cart> findByUserOrderByCreatedDateDesc(User user);
-    public String AddCartItem();
+    public CartDto findByUserOrderByCreatedDateDesc(String email);
+    public String AddCartItem(AddEditCartDto cartItemDto, String email);
+    public String UpdateCart(AddEditCartDto cartItemDto);
+    public String DeleteCart(long CartId);
+    public String DeleteCartByUser(String email);
 }
