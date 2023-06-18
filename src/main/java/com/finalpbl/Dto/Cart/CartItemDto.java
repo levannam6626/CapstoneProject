@@ -17,5 +17,5 @@ public class CartItemDto {
 
     private int quantity;
 
-    private ProductDto products;
+    private Products products;
 }

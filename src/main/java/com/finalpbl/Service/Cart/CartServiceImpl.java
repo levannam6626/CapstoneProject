@@ -45,7 +45,7 @@ public class CartServiceImpl implements ICartService{
         {
             CartItemDto cartItemDto = new CartItemDto();
             cartItemDto.setId(cart.getId());
-            cartItemDto.setProducts(modelMapper.map(cart.getProducts(), ProductDto.class));
+            cartItemDto.setProducts(cart.getProducts());
             cartItemDto.setQuantity(cart.getQty());
             cartItems.add(cartItemDto);
         }

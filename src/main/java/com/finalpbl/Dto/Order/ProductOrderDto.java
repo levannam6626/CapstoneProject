@@ -14,8 +14,6 @@ import lombok.Setter;
 public class ProductOrderDto {
     private long ID;
 
-    private LocalDateTime createdDate;
-
     private Double totalPrice;
 }
     

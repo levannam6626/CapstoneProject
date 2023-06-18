@@ -26,7 +26,7 @@ public class CartController {
     @Autowired
     private ICartService cartService;
 
-    @PostMapping(path = "/addCart")
+    @PostMapping(path = "/add")
     public ResponseEntity<?> AddCart(@ModelAttribute AddEditCartDto cartItemDto, @AuthenticationPrincipal UserDetailsImpl user)
     {
         String msg = cartService.AddCartItem(cartItemDto, user.getUsername());
@@ -37,14 +37,14 @@ public class CartController {
         return ResponseEntity.badRequest().body("Cannot Add Cart Item");
     }
 
-    @GetMapping(path = "/getCart")
+    @GetMapping(path = "/get")
     public ResponseEntity<?> GetCart(@AuthenticationPrincipal UserDetailsImpl user)
     {
         CartDto cartDto = cartService.findByUserOrderByCreatedDateDesc(user.getUsername());
         return ResponseEntity.ok(cartDto);
     }   
 
-    @PostMapping(path = "/updateCart")
+    @PostMapping(path = "/update")
     public ResponseEntity<?> updateCart(@ModelAttribute AddEditCartDto cartItemDto)
     {
         String msg = cartService.UpdateCart(cartItemDto);
@@ -55,7 +55,7 @@ public class CartController {
         return ResponseEntity.badRequest().body("Cannot Edit Cart Item");
     }
 
-    @DeleteMapping(path = "/deleteCart/{id}")
+    @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<?> deleteCart(@PathVariable(name = "id") long ID)
     {
         String msg = cartService.DeleteCart(ID);

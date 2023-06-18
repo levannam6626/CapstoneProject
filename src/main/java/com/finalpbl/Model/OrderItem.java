@@ -28,6 +28,12 @@ public class OrderItem {
     @Column(name = "id")
     private long ID;
 
+    @Column(name = "price")
+    private double price;
+    
+    @Column(name = "quantity")
+    private int qty;
+
     @ManyToOne
     @JoinColumn(name = "po_id")
     @JsonBackReference
@@ -38,6 +44,5 @@ public class OrderItem {
     @JsonBackReference
     private Products products;
 
-    @Column(name = "quantity")
-    private int qty;
+
 }

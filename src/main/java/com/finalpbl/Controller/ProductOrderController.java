@@ -40,10 +40,17 @@ public class ProductOrderController {
         return ResponseEntity.ok(order);
     }
 
-    @PostMapping(path = "/create", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> createOrder(@ModelAttribute ProductOrderDto order, @AuthenticationPrincipal UserDetailsImpl user)
+    @GetMapping(path = "/get")
+    public ResponseEntity<?> getOrderByUser(@AuthenticationPrincipal UserDetailsImpl user)
     {
-        String msg = iProductOrderService.addOrder(order, user.getUsername());
+        List<ProductOrder> orders = iProductOrderService.getOrdersByUser(user.getUsername());
+        return ResponseEntity.ok(orders);
+    }
+
+    @PostMapping(path = "/create")
+    public ResponseEntity<?> createOrder(@AuthenticationPrincipal UserDetailsImpl user)
+    {
+        String msg = iProductOrderService.PlaceOrder(user.getUsername());
         if(msg.equals("Add Order Success"))
         {
             return ResponseEntity.ok().body(msg);
