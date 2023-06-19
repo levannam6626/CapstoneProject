@@ -33,4 +33,7 @@ public class ProductDto {
     
     @NotBlank
     private double productPrice;
+
+    @NotBlank
+    private int productQuantity;
 }

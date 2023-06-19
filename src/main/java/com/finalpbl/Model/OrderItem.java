@@ -1,5 +1,7 @@
 package com.finalpbl.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,16 +24,17 @@ public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long ID;
+    private long id;
 
     @ManyToOne
     @JoinColumn(name = "po_id")
-    private ProductOrder productorder;
+    private ProductOrder productOrder;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "product_id")
     private Products products;
 
     @Column(name = "quantity")
-    private int qty;
+    private int quantity;
 }

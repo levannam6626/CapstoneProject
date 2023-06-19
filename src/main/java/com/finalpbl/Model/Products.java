@@ -4,10 +4,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -53,13 +56,19 @@ public class Products {
     @NotNull
     private double productPrice;
 
+    @Column(name = "product_quantity")
+    @NotNull
+    private int productQuantity;
+
     @Column(nullable = false)
     private Boolean isDeleted;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JsonBackReference
+    @JoinColumn(name = "category_id" )
     private Category category;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "products")
     private List<OrderItem> cartItems;
     

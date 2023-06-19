@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.finalpbl.Constant.Role;
 
 import jakarta.persistence.CascadeType;
@@ -67,6 +68,7 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "user")
     private List<ProductOrder> orders;
 

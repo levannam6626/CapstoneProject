@@ -72,7 +72,8 @@ public class ProductService implements IProductService{
                 product.getProductDescription(),
                 product.getProductImage(),
                 product.getUpdateDate(),
-                product.getProductPrice()
+                product.getProductPrice(),
+                product.getProductQuantity()
             );
         return productResponse;
     }
@@ -126,6 +127,7 @@ public class ProductService implements IProductService{
             productValidate.setCategory(categoryServiceImpl.getCategoryByID(productRequest.getCategoryId()));
             productValidate.setProductDescription(productRequest.getProductDescription());
             productValidate.setProductPrice(productRequest.getProductPrice());
+            productValidate.setProductQuantity(productRequest.getProductQuantity());
             productValidate.setUpdateDate(productRequest.getUpdateDate());
             if(file != null) {
                 productValidate.setProductImage(uploadImg(file));

@@ -19,6 +19,7 @@ public class ProductResponseMapper implements Function<Products, ProductDto>{
             product.getProductDescription(),
             product.getProductImage(),
             product.getUpdateDate(),
-            product.getProductPrice());
+            product.getProductPrice(),
+            product.getProductQuantity());
     }
 }
