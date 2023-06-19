@@ -1,4 +1,4 @@
-package com.finalpbl.Dto;
+package com.finalpbl.Dto.Order;
 
 import java.time.LocalDateTime;
 
@@ -13,8 +13,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductOrderDto {
     private long ID;
-
-    private LocalDateTime createdDate;
 
     private Double totalPrice;
 }

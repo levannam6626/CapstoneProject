@@ -24,6 +24,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,6 +34,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -68,9 +70,13 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<ProductOrder> orders;
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Cart> carts;
 
     public User(String firstname, String lastname, String password, String email, String address, String phone, Boolean isDeleted, Role role, String gender) {
         this.firstname = firstname;

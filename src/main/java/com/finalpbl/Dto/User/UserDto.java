@@ -1,4 +1,4 @@
-package com.finalpbl.Dto;
+package com.finalpbl.Dto.User;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

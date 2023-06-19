@@ -1,4 +1,4 @@
-package com.finalpbl.Dto;
+package com.finalpbl.Dto.Product;
 
 import java.time.LocalDateTime;
 

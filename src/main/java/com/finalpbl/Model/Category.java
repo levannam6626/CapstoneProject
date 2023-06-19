@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,8 +23,8 @@ import lombok.Setter;
 @Table(name = "category")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Category {
     
     @Id
@@ -36,7 +35,7 @@ public class Category {
     @Column(name = "category_name", length = 20)
     private String categoryName;
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "category")
+    @JsonManagedReference
     private List<Products> products;
 }

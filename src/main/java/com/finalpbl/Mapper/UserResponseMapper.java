@@ -4,7 +4,7 @@ import java.util.function.Function;
 
 import org.springframework.stereotype.Service;
 
-import com.finalpbl.Dto.UserDto;
+import com.finalpbl.Dto.User.UserDto;
 import com.finalpbl.Model.User;
 
 @Service

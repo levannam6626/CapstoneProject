@@ -1,4 +1,4 @@
-package com.finalpbl.Dto;
+package com.finalpbl.Dto.Auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthRequest {
-    private String email;
-    private String password;
+public class AuthResponse {
+    private String token;
+    private Long id;
 }

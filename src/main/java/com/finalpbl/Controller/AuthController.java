@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.finalpbl.Dto.AuthRequest;
-import com.finalpbl.Dto.AuthResponse;
+import com.finalpbl.Dto.Auth.AuthRequest;
+import com.finalpbl.Dto.Auth.AuthResponse;
 import com.finalpbl.Service.Authentication.AuthenticationServiceImpl;
 
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,4 +1,4 @@
-package com.finalpbl.Dto;
+package com.finalpbl.Dto.Cart;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,15 +7,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class OrderItemRequest {
-
+@AllArgsConstructor
+public class AddEditCartDto {
+    
     private long id;
 
     private int quantity;
 
-    private ProductDto product;
-
-    private UserDto user;
+    private long productID;
 }

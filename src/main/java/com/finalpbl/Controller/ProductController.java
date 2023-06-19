@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.finalpbl.Dto.ProductDto;
+import com.finalpbl.Dto.Product.ProductDto;
 import com.finalpbl.Service.Products.IProductService;
 
 import jakarta.validation.Valid;
@@ -34,7 +34,7 @@ public class ProductController {
     @Autowired
     private IProductService iProductService;
 
-    @GetMapping(path = "/get-by-search/{name}")
+    @GetMapping(path = "view/get-by-search/{name}")
     public ResponseEntity<?> getProductsSearch(@PathVariable(name = "name") String name)
     {
         List<ProductDto> products;
@@ -47,7 +47,7 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping(path = "/get-by-categoryname/{name}")
+    @GetMapping(path = "view/get-by-categoryname/{name}")
     public ResponseEntity<?> getProductsByCategoryName(@PathVariable(name = "name") String name)
     {
         System.out.println(name);
@@ -56,7 +56,7 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "view/{id}")
     public ResponseEntity<?> getProductbyID(@PathVariable(name = "id") Long id)
     {
         ProductDto product = iProductService.getProductbyID(id);

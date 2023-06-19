@@ -1,14 +1,19 @@
 package com.finalpbl.Model;
 
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,31 +21,30 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "order_item")
+@Table(name = "cart")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderItem {
-    
+public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "cart_id")
     private long id;
 
-    @Column(name = "price")
-    private double price;
-    
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
+
     @Column(name = "quantity")
-    private int quantity;
+    private int qty;
 
     @ManyToOne
-    @JoinColumn(name = "po_id")
     @JsonBackReference
-    private ProductOrder productOrder;
-
-    @ManyToOne
     @JoinColumn(name = "product_id")
-    @JsonBackReference
     private Products products;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(nullable = false, name = "user_id")
+    private User user;
 }

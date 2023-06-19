@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.finalpbl.Config.UserDetailsImpl;
-import com.finalpbl.Dto.OrderItemRequest;
-import com.finalpbl.Dto.ProductOrderDto;
-import com.finalpbl.Model.OrderItem;
+import com.finalpbl.Dto.Order.ProductOrderDto;
 import com.finalpbl.Model.ProductOrder;
 import com.finalpbl.Service.ProductOrder.IProductOrderService;
 
@@ -43,27 +41,21 @@ public class ProductOrderController {
         return ResponseEntity.ok(order);
     }
 
-    @PostMapping(path = "/add-to-cart")
-    public ResponseEntity<?> addToCart(@RequestBody OrderItemRequest orderItem)
+    @GetMapping(path = "/get")
+    public ResponseEntity<?> getOrderByUser(@AuthenticationPrincipal UserDetailsImpl user)
     {
-        String msg = iProductOrderService.addToCart(orderItem);
-        if(msg.equals("Add To Cart Success"))
+        List<ProductOrder> orders = iProductOrderService.getOrdersByUser(user.getUsername());
+        return ResponseEntity.ok(orders);
+    }
+
+    @PostMapping(path = "/create")
+    public ResponseEntity<?> createOrder(@AuthenticationPrincipal UserDetailsImpl user)
+    {
+        String msg = iProductOrderService.PlaceOrder(user.getUsername());
+        if(msg.equals("Add Order Success"))
         {
             return ResponseEntity.ok().body(msg);
         }
-        return ResponseEntity.badRequest().body(msg);
-    }
-
-    @PostMapping(path = "/create", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> createOrder(@ModelAttribute ProductOrderDto order, @AuthenticationPrincipal UserDetailsImpl user)
-    {
-        String msg = "hi";
-        System.out.println(user.getID());
-        // String msg = iProductOrderService.addOrder(order, user.getUsername());
-        // if(msg.equals("Add Order Success"))
-        // {
-        //     return ResponseEntity.ok().body(msg);
-        // }
         return ResponseEntity.badRequest().body(msg);
     }
 }

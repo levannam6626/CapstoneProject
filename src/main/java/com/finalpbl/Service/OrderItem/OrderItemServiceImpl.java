@@ -9,7 +9,7 @@ import com.finalpbl.Model.OrderItem;
 import com.finalpbl.Repository.OrderItemRepository;
 import com.finalpbl.Repository.ProductOrderRepository;
 @Service
-public class OrderItemService implements IOrderItemService{
+public class OrderItemServiceImpl implements IOrderItemService{
 
     @Autowired
     private OrderItemRepository orderItemRepository;

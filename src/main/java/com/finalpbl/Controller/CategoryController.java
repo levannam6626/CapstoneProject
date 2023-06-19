@@ -24,14 +24,14 @@ public class CategoryController {
     @Autowired
     private ICategoryService categoryService;
 
-    @GetMapping(path = "/all")
+    @GetMapping(path = "view/all")
     public ResponseEntity<?> getAllCategory()
     {
         List<Category> categories = categoryService.getAllCategory();
         return ResponseEntity.ok(categories);
     }
 
-    @GetMapping(path = "{id}")
+    @GetMapping(path = "view/{id}")
     public ResponseEntity<?> getCategoryByID(@PathVariable(name = "id") Long id)
     {
         Category category = categoryService.getCategoryByID(id);

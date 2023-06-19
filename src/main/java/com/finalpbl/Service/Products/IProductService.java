@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.finalpbl.Dto.ProductDto;
+import com.finalpbl.Dto.Product.ProductDto;
 
 public interface IProductService {
     public List<ProductDto> getAllProducts();
