@@ -39,7 +39,7 @@ public class Cart {
     private int qty;
 
     @Column(name = "selected")
-    private boolean selected;
+    private Boolean selected;
 
     @ManyToOne
     @JsonBackReference
@@ -50,4 +50,5 @@ public class Cart {
     @ManyToOne
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
+
 }

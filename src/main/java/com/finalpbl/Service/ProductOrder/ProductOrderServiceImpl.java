@@ -69,14 +69,17 @@ public class ProductOrderServiceImpl implements IProductOrderService{
 
         for(CartItemDto items: cartItemDtos)
         {
-            OrderItem orderItem = new OrderItem();
-            orderItem.setPrice(items.getProducts().getProductPrice());
-            orderItem.setProductorder(order);
-            orderItem.setProducts(items.getProducts());
-            orderItem.setQty(items.getQuantity());
-            orderItemRepository.save(orderItem);
+            if(items.isSelected() == true)
+            {
+                OrderItem orderItem = new OrderItem();
+                orderItem.setPrice(items.getProducts().getProductPrice());
+                orderItem.setProductorder(order);
+                orderItem.setProducts(items.getProducts());
+                orderItem.setQty(items.getQuantity());
+                orderItemRepository.save(orderItem);
+            }
         }
-        cartService.DeleteCartByUser(email);
+        cartService.DeleteOrderdItem(email);
         return "Add Order Success";
     }
 

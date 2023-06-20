@@ -47,6 +47,7 @@ public class CartServiceImpl implements ICartService{
             cartItemDto.setId(cart.getId());
             cartItemDto.setProducts(cart.getProducts());
             cartItemDto.setQuantity(cart.getQty());
+            cartItemDto.setSelected(cart.getSelected());
             cartItems.add(cartItemDto);
         }
         double totalCost = 0;
@@ -71,13 +72,18 @@ public class CartServiceImpl implements ICartService{
             cart.setSelected(false);
             cart.setCreatedDate(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
             cartRepository.save(cart);
+            return "Add Success";
         }
         else
         {
-            cart.setQty(cartItemDto.getQuantity() + 1);
-            cartRepository.save(cart);
+            if((cart.getQty() + cartItemDto.getQuantity()) <= products.getQuantity())
+            {
+                cart.setQty(cart.getQty() + cartItemDto.getQuantity());
+                cartRepository.save(cart);
+                return "Add Success";
+            }
+            return "Quantity more than allow";
         }
-        return "Add Success";
     }
 
     @Override
@@ -104,6 +110,14 @@ public class CartServiceImpl implements ICartService{
     public String DeleteCartByUser(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(null);
         cartRepository.deleteByUser(user);
+        return "Delete Success";
+    }
+
+    @Override
+    public String DeleteOrderdItem(String email)
+    {
+        User user = userRepository.findByEmail(email).orElseThrow(null);
+        cartRepository.deleteBySelectedAndUser(user.getId());
         return "Delete Success";
     }
 

@@ -9,4 +9,5 @@ public interface ICartService {
     public String UpdateCart(AddEditCartDto cartItemDto);
     public String DeleteCart(long CartId);
     public String DeleteCartByUser(String email);
+    public String DeleteOrderdItem(String email);
 }
