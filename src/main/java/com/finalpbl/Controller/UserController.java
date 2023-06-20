@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.finalpbl.Config.UserDetailsImpl;
 import com.finalpbl.Dto.User.UserDto;
 import com.finalpbl.Dto.User.UserRequest;
 import com.finalpbl.Service.User.IUserService;
@@ -59,17 +62,17 @@ public class UserController {
         return ResponseEntity.badRequest().body(msg);
     }
 
-    // @RequestMapping(path = "/edit", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    // public ResponseEntity<?> editUser(@ModelAttribute UserDto user)
-    // {
-    //     System.out.println(user.getEmail());
-    //     String msg = userService.editUser(user);
-    //     if(msg.equals("Edit Success"))
-    //     {
-    //         return ResponseEntity.ok().build();
-    //     }
-    //     return ResponseEntity.badRequest().body(msg);
-    // }
+    @RequestMapping(path = "/edit", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<?> editUser(@ModelAttribute UserDto user, @AuthenticationPrincipal UserDetailsImpl userDetails)
+    {
+        System.out.println(user.getEmail());
+        String msg = userService.updateUser(userDetails.getUsername(),user);
+        if(msg.equals("Edit Success"))
+        {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().body(msg);
+    }
 
 
     @DeleteMapping(path = "delete-account/{id}")

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.finalpbl.Constant.Role;
 import com.finalpbl.Dto.User.UserDto;
 import com.finalpbl.Dto.User.UserRequest;
 import com.finalpbl.Mapper.UserResponseMapper;
@@ -108,21 +109,21 @@ public class UserServiceImpl implements IUserService{
         return "Email Invalid";
     }
 
-//     @Override
-//     public Boolean updateUser(Long id, UserDto userDto) {
-//         User user = userRepository.findById(id).orElseThrow(null);
-//         if(user != null)
-//         {
-//             user.setFirstname(userDto.getFirstname());
-//             user.setLastname(userDto.getLastname());
-//             user.setEmail(userDto.getEmail());
-//             user.setRole(Role.valueOf(userDto.getRole()));
-//             user.setPhone(userDto.getPhone());
-//             user.setAddress(userDto.getAddress());
-//             userRepository.save(user);
-//             return RESPONSE_OK;
-//         }
-//         return RESPONSE_REJECT;
-//     }
+    @Override
+    public String updateUser(String email, UserDto userDto) {
+        User user = userRepository.findByEmail(email).orElseThrow(null);
+        if(user != null)
+        {
+            user.setFirstname(userDto.getFirstname());
+            user.setLastname(userDto.getLastname());
+            user.setEmail(userDto.getEmail());
+            user.setRole(Role.valueOf(userDto.getRole()));
+            user.setPhone(userDto.getPhone());
+            user.setAddress(userDto.getAddress());
+            userRepository.save(user);
+            return "Edit user success";
+        }
+        return "Edit failure";
+    }
 
 }
