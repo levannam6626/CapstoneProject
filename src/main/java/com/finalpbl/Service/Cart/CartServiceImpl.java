@@ -61,12 +61,22 @@ public class CartServiceImpl implements ICartService{
     public String AddCartItem(AddEditCartDto cartItemDto, String email) {
         User user = userRepository.findByEmail(email).orElseThrow();
         Products products = productsRepository.findById(cartItemDto.getProductID()).orElseThrow();
-        Cart cart = new Cart();
-        cart.setProducts(products);
-        cart.setQty(cartItemDto.getQuantity());
-        cart.setUser(user);
-        cart.setCreatedDate(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
-        cartRepository.save(cart);
+        Cart cart = cartRepository.findByProductsandUser(products.getProductId(), user.getId()).orElse(null);
+        if(cart == null)
+        {
+            cart = new Cart();
+            cart.setProducts(products);
+            cart.setQty(cartItemDto.getQuantity());
+            cart.setUser(user);
+            cart.setSelected(false);
+            cart.setCreatedDate(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
+            cartRepository.save(cart);
+        }
+        else
+        {
+            cart.setQty(cartItemDto.getQuantity() + 1);
+            cartRepository.save(cart);
+        }
         return "Add Success";
     }
 
@@ -74,7 +84,7 @@ public class CartServiceImpl implements ICartService{
     public String UpdateCart(AddEditCartDto cartItemDto) {
         Cart cart = cartRepository.findById(cartItemDto.getId()).orElseThrow();
         cart.setQty(cartItemDto.getQuantity());
-        cart.setCreatedDate(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
+        cart.setSelected(cartItemDto.isSelected());
         cartRepository.save(cart);
         return "Edit Success";
     }

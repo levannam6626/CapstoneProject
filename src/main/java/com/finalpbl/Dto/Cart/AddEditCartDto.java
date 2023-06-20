@@ -16,4 +16,6 @@ public class AddEditCartDto {
     private int quantity;
 
     private long productID;
+
+    private boolean selected;
 }
