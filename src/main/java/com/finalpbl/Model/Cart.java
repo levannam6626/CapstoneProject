@@ -38,6 +38,9 @@ public class Cart {
     @Column(name = "quantity")
     private int qty;
 
+    @Column(name = "selected")
+    private boolean selected;
+
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "product_id")

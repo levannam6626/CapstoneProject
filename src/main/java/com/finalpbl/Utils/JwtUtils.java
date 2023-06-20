@@ -48,12 +48,6 @@ public class JwtUtils {
       return buildToken(extraClaims, userDetails, jwtExpiration);
     }
   
-    public String generateRefreshToken(
-        UserDetailsImpl userDetails
-    ) {
-      return buildToken(new HashMap<>(), userDetails, refreshExpiration);
-    }
-  
     private String buildToken(
             Map<String, Object> extraClaims,
             UserDetailsImpl userDetails,

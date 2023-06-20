@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.finalpbl.Dto.Auth.AuthRequest;
 import com.finalpbl.Dto.Auth.AuthResponse;
+import com.finalpbl.Dto.Auth.RefreshTokenRequest;
 import com.finalpbl.Service.Authentication.AuthenticationServiceImpl;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,10 +22,17 @@ public class AuthController {
     @Autowired
     private AuthenticationServiceImpl authenticationService;
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest request) {
 
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
+
+    @PostMapping("/refreshToken")
+    public ResponseEntity<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest)
+    {
+        return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequest));
+    }
+
     
 }

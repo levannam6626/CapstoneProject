@@ -18,4 +18,6 @@ public class CartItemDto {
     private int quantity;
 
     private Products products;
+
+    private boolean selected;
 }
