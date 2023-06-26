@@ -1,5 +1,7 @@
 import accountRequest from "@/factories/modules/accountRequest";
 
+import jwtDecode from 'jwt-decode';
+
 const initialStateAuth = () => ({
   token: null,
   userAccount: {},
@@ -33,6 +35,14 @@ export default {
     {
       content.commit('loginMutation','logout');
       content.commit('getUserMutation','logout');
+    },
+    async checkAccessToken({content, state}) {
+      console.log(state.loginData.refreshToken)
+      if (state.loginData.accessToken && jwtDecode(state.loginData.accessToken).exp < Date.now() / 1000) {
+        let res = await accountRequest.refreshToken(state.loginData.refreshToken);
+        console.log(res)
+        content.commit('loginMutation', res.data)
+      }
     },
     deToken(content, data) {
       content.commit('deToken', data);

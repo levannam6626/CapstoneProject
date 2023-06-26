@@ -1,5 +1,6 @@
 <template>
-  <h3>
+  <div class="product-detail">
+    <h3>
     <ul class="router-menu">
       <li>
         <a href="/">Home</a>
@@ -9,16 +10,16 @@
         <a :href="'/' + this.$route.params.categoryName" >{{ this.$route.params.categoryName }}</a>
       </li>
       <span style="margin: 0px 5px;">></span>
-      <span style="width: auto; min-width: 250px;">{{ this.product.productName }}</span>
+      <span style="width: auto;">{{ this.product.productName }}</span>
     </ul>
   </h3>
   <div class="product">
     <div class="product-img">
       <figure>
         <img :src="this.url + this.product.productImage" alt="">
-    </figure>
+      </figure>
     </div>
-    <div class="product-detail">
+    <div class="product-detail-show">
       <div class="product-name">
         {{ this.product.productName }}
       </div>
@@ -43,7 +44,9 @@
         </div>
         <button @click="addProductToCart()"><font-awesome-icon icon="fa-solid fa-cart-shopping" /> ADD TO CART</button>
       </div>
+      <button v-if="this.$store.state.auth.userAccount.role === 'SELLER'" @click="editProduct()"> Edit</button>
     </div>
+  </div>
   </div>
 </template>
 <script>
@@ -74,24 +77,30 @@
       }
     },
     methods: {
-      ...mapActions('product',['addProductToCartAction']),
+      ...mapActions('cart',['addProductToCartAction']),
       async addProductToCart() {
         const loggedIn = store.state.auth.token;
-        if (loggedIn === true) {
+        if (loggedIn) {
           const objOrder = {
-            product: this.product,
-            quantity: this.quantity,
-            user: store.state.auth.userAccount
+            productID: this.product.productId,
+            quantity: this.quantity
           }
           await this.addProductToCartAction(objOrder);
         }else{
           return this.$router.push("/login");
         }
       },
+      editProduct() {
+        this.$router.push({name: 'editProduct', params:{productId: this.product.productId}})
+      },
     },
   })
 </script>
 <style scoped>
+.product-detail {
+  width: 100%;
+  height: 100%;
+}
 h3 {
   background-color: red;
   height: auto;
@@ -103,6 +112,7 @@ h3 {
   box-shadow: black 0px 2px;
   margin: 0px;
   margin-bottom: 2px;
+  display: flex;
 }
 p {
   margin: 0;
@@ -161,7 +171,7 @@ p {
 .zoom-result{
   border: solid 1px rgb(150, 149, 149);
 }
-.product-detail {
+.product-detail-show {
   display: grid;
   width: 100%;
   min-width: 200px;
@@ -189,6 +199,8 @@ p {
   font-size: 18px;
   padding-left: 10px;
   margin-bottom: 15px;
+  text-align: justify;
+  text-justify: newspaper;
 }
 .product-category {
   margin-bottom: 10px;
@@ -253,9 +265,29 @@ p {
   background-color: red;
   color: #fff;
 }
+.product-detail-show > button {
+  box-sizing: border-box;
+  border-radius: 5px;
+  padding: 8px 17px 8px 12px;
+  border: none;
+  color: red;
+  transition: 0.2s;
+  font-size: 15px;
+  font-weight: bold;
+  border: solid 2px red;
+  background-color: white;
+  cursor: pointer;
+  width: 180px;
+  justify-self: center;
+}
+.product-detail-show > button:hover {
+  background-color: red;
+  color: white;
+}
 @media screen and (max-width: 660px) {
   .product {
     display: grid !important;
+    padding: 20px;
   }
   .product-img {
     display: flex;
@@ -263,6 +295,9 @@ p {
   }
 }
 @media screen and (max-width: 444px) {
+  .product {
+    padding: 10px;
+  }
   .product-action {
     display: grid !important;
     justify-content: center;

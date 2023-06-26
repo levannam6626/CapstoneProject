@@ -35,7 +35,7 @@ export default {
       showAddCategory: false,
       inputString: "",
       userAccount: store.state.auth.userAccount,
-      categoryName: this.$route.params.categoryName,
+      categoryName: this.$route.params.categoryName
     }
   },
   methods: {
@@ -72,7 +72,7 @@ export default {
     this.loadCategories('all');
   },
   mounted() {
-    if(this.categoryName !== undefined && this.categoryName !== 'add-product') {
+    if(this.categoryName !== undefined) {
       window.addEventListener('load', () => {
         const elements = document.getElementsByClassName(this.categoryName);
         if(elements.length > 0) {

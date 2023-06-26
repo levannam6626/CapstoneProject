@@ -60,7 +60,7 @@
             </tr>
           </tbody>
         </table>
-        <div class="navigation-table">
+        <div class="pagination-table">
           <button @click="currentPage--" :disabled="currentPage === 1">Prev</button>
           <span>{{ currentPage }}</span>
           <button @click="currentPage++" :disabled="currentPage === this.totalPages">Next</button>
@@ -87,7 +87,7 @@ export default ({
       showAside: true,
       users: [],
       currentPage: 1,
-      usersPerPage: 10,
+      usersPerPage: 6,
       userCount: 0,
       customerCount: 0,
       sellerCount: 0,
@@ -101,7 +101,6 @@ export default ({
     displayedUsers() {
       const startIndex = (this.currentPage - 1) * this.usersPerPage;
       const endIndex = startIndex + this.usersPerPage;
-      console.log(this.totalPages);
       return this.users.slice(startIndex, endIndex);
     },
     totalPages() {
@@ -153,7 +152,6 @@ export default ({
       if(this.selectedOptions.length > 0){
         if(confirm("Do you really want to delete?")){
           await this.deleteAccountsAction(this.selectedOptions);
-          console.log(store.state.account.deleteMessage)
           this.deleteAccountAction = true;
         }
       }
@@ -397,7 +395,7 @@ td {
 td {
   text-align: center;
 }
-.navigation-table {
+.pagination-table {
   display: flex;
   justify-content: center;
   gap: 15px;

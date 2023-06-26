@@ -21,6 +21,7 @@
               <input type="password" placeholder="Password" v-model="password">
             </div>
             <span class="message">{{ this.messages.password }}</span>
+            <span class="message">{{ this.messages.login }}</span>
             <div class="submit">
               <button type="submit">Login</button>
             </div>
@@ -55,7 +56,7 @@ export default {
       messages: {
         email: '',
         password: '',
-        confirmPassword: '',
+        login: ''
       }
     };
   },
@@ -72,6 +73,7 @@ export default {
     resetMessages() {
       this.messages.email = '';
       this.messages.password = '';
+      this.messages.login = '';
     },
     validated() {
       this.resetMessages();
@@ -94,7 +96,7 @@ export default {
         };
         await this.loginAction(objLogin);
         if (store.state.auth.loginStatus === true) {
-          await this.deToken(store.state.auth.loginData.token);
+          await this.deToken(store.state.auth.loginData.accessToken);
           await this.getUser(store.state.auth.loginData.id);
           if (store.state.auth.userAccount.role === "ADMIN") {
             this.$router.push("admin");
@@ -102,10 +104,9 @@ export default {
           else {
             this.$router.push("/");
           }
-          alert("Login success");
         }
         else {
-          alert("Incorrect email or password !!!");
+          this.messages.login = 'Incorrect email or password !!!';
         }
       }
     },

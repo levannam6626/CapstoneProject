@@ -6,7 +6,7 @@ class categoryRequest extends request {
   
   async loadCategories(id) {
     try {
-      const res = await this.requestCategory().get(`${ENTITY_PATH}/${id}`);
+      const res = await this.requestCategory().get(`${ENTITY_PATH}/view/${id}`);
       return res;
     } catch (err) {
       if (err.response.status === 401) {

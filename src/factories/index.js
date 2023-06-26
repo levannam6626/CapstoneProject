@@ -9,9 +9,6 @@ export default class index {
     var header = {
       "Content-Type": "application/json",
     };
-    if (store.state.auth.token) {
-      header.Authorization = `Bearer ${store.state.auth.token}`;
-    }
     const instance = axios.create({
       baseURL: url,
       headers: header,
@@ -44,6 +41,19 @@ export default class index {
   requestFormData() {
     var header = {
       "Content-Type": "multipart/form-data",
+    };
+    if (store.state.auth.token) {
+      header.Authorization = `Bearer ${store.state.auth.token}`;
+    }
+    const instance = axios.create({
+      baseURL: url,
+      headers: header,
+    });
+    return instance;
+  }
+  requestJsonAuth() {
+    var header = {
+      "Content-Type": "application/json",
     };
     if (store.state.auth.token) {
       header.Authorization = `Bearer ${store.state.auth.token}`;

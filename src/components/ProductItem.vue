@@ -11,8 +11,8 @@
       <p>{{ this.product.productDescription }}</p>
     </div>
     <div class="product-quantity" v-if="this.account.role !== 'SELLER'">
-      <button @click="this.quantity = Math.max((this.quantity - 1), 0)">-</button>
-      <input type="text" maxlength="3" v-model="this.quantityString"/>
+      <button @click="this.quantity = Math.max((this.quantity - 1), 1)">-</button>
+      <input type="text" maxlength="3" v-model="this.quantityString" readonly/>
       <button @click="this.quantity = Math.min((this.quantity + 1), this.product.productQuantity)">+</button>
     </div>
     <div class="product-price">
@@ -63,23 +63,24 @@
     },
     methods: {
       ...mapActions('category',['getCategoryByIdAction']),
-      ...mapActions('product',['addProductToCartAction','productDetailAction']),
+      ...mapActions('product',['productDetailAction']),
+      ...mapActions('cart',['addProductToCartAction']),
       checkbox(event) {
         this.checkedProduct.id = event.target.value;
         this.checkedProduct.status = this.checked;
         this.$emit('checkedProduct', this.checkedProduct)
       },
       checkOrdered() {
-        const orderedProducts = store.state.product.productsCart;
-        const person = orderedProducts.find(element => {
-          if (element.product.productId === this.product.productId) {
-            return true;
-          }
-          return false;
-          });
-        if(person !== undefined) {
-          this.isOrderedByThisUser = true;
-        }
+        // const orderedProducts = store.state.product.productsCart;
+        // const person = orderedProducts.find(element => {
+        //   if (element.product.productId === this.product.productId) {
+        //     return true;
+        //   }
+        //   return false;
+        //   });
+        // if(person !== undefined) {
+        //   this.isOrderedByThisUser = true;
+        // }
       },
       async showDetail() {
         this.$emit('showDetail',this.product);
@@ -94,11 +95,10 @@
       },
       async addProductToCart() {
         const loggedIn = store.state.auth.token;
-        if (loggedIn === true) {
+        if (loggedIn) {
           const objOrder = {
-            product: this.product,
-            quantity: this.quantity,
-            user: store.state.auth.userAccount
+            productID: this.product.productId,
+            quantity: this.quantity
           }
           await this.addProductToCartAction(objOrder);
         }else{
@@ -150,8 +150,16 @@ p {
 }
 .product-description {
   height: 108px;
-  text-align: left;
+}
+.product-description p{
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
   overflow: hidden;
+  text-align: justify;
+  text-justify: newspaper;
+
+  height: 108px;
 }
 .product-quantity {
   display: flex;
@@ -194,7 +202,12 @@ p {
 .product-name a {
   color: red;
   font-size: 19px;
+  height: 22px;
   cursor: pointer;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .product-name a:hover {
   font-weight: bold;

@@ -1,5 +1,6 @@
 <template>
-  <header>
+  <div class="product-list">
+    <header>
     <h3 v-if="showList===true">PRODUCT LIST</h3>
     <h3 v-else>
       <ul class="router-menu">
@@ -20,12 +21,10 @@
       <ProductItem :product="product" @checkedProduct="checkedProductInparent"/>
     </div>
   </div>
-  <!-- <div class="detail" v-else>
-    <router-view :product="this.product"></router-view>
-  </div> -->
   <footer>
     <button @click="deleteProducts" v-if="checkedProductIds.length > 0">Delete</button>
   </footer>
+  </div>
 </template>
 <script>
 import { mapActions } from 'vuex';
@@ -35,19 +34,20 @@ export default {
   props: {
     productNameSearch: {
       type: String,
-    },
-    reloadProduct: {
-      type: Boolean,
     }
   },
   data() {
     return {
-      products: [],
       product: {},
       showList: true,
       searchProductName: '',
       checkedProductIds:[],
     };
+  },
+  computed: {
+    products() {
+      return store.state.product.products;
+    }
   },
   watch: {
     productNameSearch() {
@@ -59,10 +59,6 @@ export default {
         this.searchProduct(this.productNameSearch);
         this.showList = true;
       }
-    },
-    reloadProduct() {
-      this.searchProduct('all');
-      this.showList===true
     }
   },
   components: {
@@ -79,33 +75,36 @@ export default {
     },
     async searchProductByCategoryName(name) {
       await this.searchProductByCategoryNameAction(name);
-      this.products = store.state.product.products;
+      //this.products = store.state.product.products;
     },
     async searchProduct(name) {
       await this.searchProductAction(name);
-      this.products = store.state.product.products;
+      //this.products = store.state.product.products;
     },
     async deleteProducts() {
-      console.log(this.checkedProductIds)
       await this.deleteProductsAction(this.checkedProductIds);
       if(store.state.product.messages.delete === "Success") {
         alert('Delete Success');
         await this.searchProduct('all');
-        this.products = store.state.product.products;
+        //this.products = store.state.product.products;
       }
     }
   },
   mounted() {
-    if(this.$route.params.categoryName !== undefined && this.$route.params.categoryName !== "search-product")
+    if(this.$route.params.categoryName !== undefined)
     {
       this.searchProductByCategoryName(this.$route.params.categoryName);
-    }else{
+    }else if(this.$route.params.productName === undefined){
       this.searchProduct('all');
     }
   },
 }
 </script>
 <style scoped>
+.product-list {
+  width: 100%;
+  height: 100%;
+}
 h3 {
   background-color: red;
   height: 50px;

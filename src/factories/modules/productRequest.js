@@ -8,7 +8,7 @@ class loadProductList extends request {
       const res = await this.requestFormData().post(`${ENTITY_PATH}/create-product`, product);
       return res;
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err.response.status === 400) {
         localStorage.clear();
         this.$router.push("/");
       }
@@ -17,10 +17,10 @@ class loadProductList extends request {
   }
   async loadProductById(productId) {
     try {
-      const res = await this.requestProduct().get(`${ENTITY_PATH}/${productId}`);
+      const res = await this.requestProduct().get(`${ENTITY_PATH}/view/${productId}`);
       return res;
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err.response.status === 400) {
         localStorage.clear();
         this.$router.push("/");
       }
@@ -29,7 +29,7 @@ class loadProductList extends request {
   }
   async searchProduct(name) {
     try {
-      const res = await this.requestProduct().get(`${ENTITY_PATH}/get-by-search/${name}`);
+      const res = await this.requestProduct().get(`${ENTITY_PATH}/view/get-by-search/${name}`);
       return res;
     } catch (err) {
       if (err.response.status === 401) {
@@ -41,7 +41,7 @@ class loadProductList extends request {
   }
   async searchProductByCategoryName(name) {
     try {
-      const res = await this.requestProduct().get(`${ENTITY_PATH}/get-by-categoryname/${name}`);
+      const res = await this.requestProduct().get(`${ENTITY_PATH}/view/get-by-categoryname/${name}`);
       return res;
     } catch (err) {
       if (err.response.status === 401) {

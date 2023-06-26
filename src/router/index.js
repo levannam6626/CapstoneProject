@@ -12,8 +12,9 @@ import EditProduct from "@/views/EditProduct.vue";
 import TheMenu from "@/components/TheMenu.vue";
 import BannerImg from "@/components/BannerImg.vue";
 
-import TestView from "@/views/TestView.vue";
+import BillView from "@/views/BillView.vue";
 import CartList from "@/views/CartList.vue";
+import SuccessAlert from "@/components/SuccessAlert.vue";
 
 import store from "@/store";
 import UserDetail from "@/views/UserDetail.vue";
@@ -69,6 +70,16 @@ const routes = [
         name: 'editProduct',
         component: EditProduct
       },
+      {
+        path: '/cart-list',
+        name: 'cartList',
+        component: CartList
+      },
+      {
+        path: '/bills',
+        name: 'bill',
+        component: BillView
+      }
     ],
   },
   {
@@ -77,15 +88,10 @@ const routes = [
     component: AdminPage
   },
   {
-    path: '/test',
-    name: 'test',
-    component: TestView
-  },
-  {
-    path: '/cart-list',
-    name: 'cartList',
-    component: CartList
-  },
+    path: '/success',
+    name: 'success',
+    component: SuccessAlert
+  }
 ]
 const router = createRouter({
   history: createWebHistory(),
@@ -99,16 +105,20 @@ router.beforeEach((to, from, next) => {
 
   if(to.params.categoryName !== undefined) {
     next();
+    return
   }else if (authRequired && !loggedIn) {
     return next('/login');
   }if(to.path === '/admin') {
     if(loginRole === 'ADMIN') {
       next();
+      return
     }else {
       next('/');
+      return
     }
   }else{
     next();
+    return
   }
 })
 export default router

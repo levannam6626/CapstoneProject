@@ -94,7 +94,6 @@ export default {
         productId: this.product.productId,
         productName: this.product.productName,
         categoryId: this.product.categoryId,
-        updateDate: new Date().toJSON().slice(0,16),
         productPrice: this.product.productPrice,
         productQuantity: this.product.productQuantity,
         productDescription: this.product.productDescription,
@@ -109,8 +108,11 @@ export default {
       await this.editProductAction(objproductDB);
       this.$el.querySelector('#submit').style.cursor = 'pointer';
       if(store.state.product.messages.edit === "Success") {
-        this.$router.push('/');
-        this.$emit('reloadProductList');
+        for (let index = 0; index < this.categories.length; index++) {
+          if(this.categories[index].id === this.product.categoryId) {
+            this.$router.push('/' + this.categories[index].categoryName);
+          }
+        }
       } else{
         alert("edit failed");
       }

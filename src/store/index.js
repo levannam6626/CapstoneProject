@@ -5,6 +5,8 @@ import auth from "./modules/auth";
 import account from "./modules/account";
 import product from "./modules/product";
 import category from "./modules/category";
+import cart from "./modules/cart";
+import order from "./modules/order";
 
 export default createStore({
   modules: {
@@ -12,10 +14,12 @@ export default createStore({
     account,
     product,
     category,
+    cart,
+    order
   },
   plugins: [createPersistedState({
     key: 'vuex',              
-    paths:['auth','product'],
+    paths:['auth','product','category'],
   })],
 });
 

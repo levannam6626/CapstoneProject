@@ -5,7 +5,7 @@ const ENTITY_PATH = "/api/v1/";
 class accountRequest extends request {
   async login(obj) {
     try {
-      const res = await this.requestLogin().post(`${ENTITY_PATH}auth`, { ...obj });
+      const res = await this.requestLogin().post(`${ENTITY_PATH}auth/login`, { ...obj });
       return res;
     } catch (err) {
       return { err: err };
@@ -22,9 +22,17 @@ class accountRequest extends request {
       return { err: err };
     }
   }
+  async refreshToken(refreshToken) {
+    try {
+      const res = await this.requestLogin().post(`${ENTITY_PATH}auth/refreshToken`, refreshToken);
+      return res;
+    } catch (err) {
+      return { err: err };
+    }
+  }
   async getUserByID(id) {
     try {
-      const res = await this.requestLogin().get(`${ENTITY_PATH}account/${id}`);
+      const res = await this.requestJsonAuth().get(`${ENTITY_PATH}account/${id}`);
       return res;
     } catch (err) {
       if (err.response.status === 401) {
@@ -36,7 +44,7 @@ class accountRequest extends request {
   }
   async getUsersSearch(email) {
     try {
-      const res = await this.requestLogin().get(`${ENTITY_PATH}account/get-by-search/${email}`);
+      const res = await this.requestJsonAuth().get(`${ENTITY_PATH}account/get-by-search/${email}`);
       return res;
     } catch (err) {
       if (err.response.status === 401) {
@@ -50,7 +58,7 @@ class accountRequest extends request {
     try {
       var res;
       accounts.forEach((account) =>{
-        res = this.requestLogin().delete(`${ENTITY_PATH}account/delete-account/${account.id}`);
+        res = this.requestJsonAuth().delete(`${ENTITY_PATH}account/delete-account/${account.id}`);
       });
       return res;
     } catch (err) {
@@ -64,7 +72,6 @@ class accountRequest extends request {
   async editUser(objUser) {
     try {
       const res = await this.requestFormData().post(`${ENTITY_PATH}account/edit`, objUser);
-      console.log(res);
       return res;
     } catch (err) {
       if (err.response.status === 401) {

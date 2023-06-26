@@ -1,0 +1,33 @@
+import cartRequest from "@/factories/modules/cartRequest";
+export default {
+  namespaced: true,
+  state: {
+    cartList: [],
+  },
+  actions: {
+    async addProductToCartAction(content, objOrder) {
+      await cartRequest.addProductToCart(objOrder);
+      content.dispatch('getCartAction');
+    },
+		async getCartAction(content) {
+			let res = cartRequest.getCart();
+      await res.then((array) => {
+        if(array.status === 200) {
+          content.commit('getCartMutation', array.data);
+        }
+      })
+		},
+    async changeSelectedAction(content, cartItem) {
+      await cartRequest.changeSelected(cartItem)
+    },
+    async delCartItemAction(content, cartItem) {
+      await cartRequest.delCartItem(cartItem);
+      content.dispatch('getCartAction');
+    }
+  },
+  mutations: {
+		getCartMutation(state, cart) {
+			state.cartList = cart;
+		}
+  },
+};

@@ -1,4 +1,3 @@
-import orderRequest from "@/factories/modules/orderRequest";
 import productRequest from "@/factories/modules/productRequest";
 
 export default {
@@ -12,7 +11,6 @@ export default {
     },
     url: "https://res.cloudinary.com/dp5nmrbwu/image/upload/",
     product: {},
-    productsCart: [],
     productDetail: {}
   },
   actions: {
@@ -63,11 +61,6 @@ export default {
         }
       })
     },
-    async addProductToCartAction(content, objOrder) {
-      let res = orderRequest.addProductToCart(objOrder);
-      console.log(res)
-      content.commit('addProductToCartMutation',objOrder);
-    },
     productDetailAction(content, productDetail) {
       content.commit('productDetailMutation',productDetail);
     }
@@ -93,9 +86,6 @@ export default {
     },
     deleteProductsMutation(state, message) {
       state.messages.delete = message;
-    },
-    addProductToCartMutation(state, objOrder) {
-      state.productsCart.push(objOrder);
     },
     productDetailMutation(state, productDetail){
       state.productDetail = productDetail;

@@ -70,8 +70,8 @@ export default {
         productName: "",
         productDescription: "",
         productPrice: 0,
+        productQuantity: 1,
         category: store.state.category.categories[0],
-        updateDate: new Date().toJSON().slice(0,16),
         productImage: "",
       },
       categories: store.state.category.categories,
@@ -94,12 +94,11 @@ export default {
         const objproduct = {
           productName: this.product.productName,
           categoryId: this.product.category.id,
-          updateDate: this.product.updateDate,
           productPrice: this.product.productPrice,
+          productQuantity: this.product.productQuantity,
           productDescription: this.product.productDescription,
         };
         const objproductDB = new FormData();
-        console.log(objproduct)
         objproductDB.append(
           "productRequest",
           new Blob([JSON.stringify(objproduct)], { type: "application/json" })
@@ -108,10 +107,7 @@ export default {
         this.$el.querySelector('#submit').style.cursor = 'progress';
         await this.createProductAction(objproductDB);
         this.$el.querySelector('#submit').style.cursor = 'pointer';
-        if(store.state.product.messages.add === "Success") {
-          this.$emit('actionForm', false);
-          this.$emit('reloadProductList');
-        }
+        this.$router.push('/'+this.product.category.categoryName)
       }else {
         this.image.message = 'Please import product image';
       }

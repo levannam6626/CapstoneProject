@@ -1,15 +1,18 @@
 <template>
   <nav>
     <div class="nav-left">
-      <a style="background-color: #252525; text-align: center; font-size: 31px; padding: 12px 5px; width: 40%;min-width: 35px; max-width: 70px;" href="/"><font-awesome-icon icon="fa-solid fa-house" /></a>
+      <a href="/"><font-awesome-icon icon="fa-solid fa-house" /></a>
       <ul class="menu" id="menu">
         <li class="menu-item">
-          <a href="/add-product" v-if="this.account.role === 'SELLER'">CREATE PRODUCT</a>
-          <a href="/introduce" v-else>INTRODUCE</a>
+          <a @click="this.$router.push('/add-product')" v-if="this.account.role === 'SELLER'">CREATE PRODUCT</a>
+          <a @click="this.$router.push('/introduce')" v-else>INTRODUCE</a>
         </li>
         <li class="menu-item">
-          <a @click="showProductCategory()" style="padding-right: 25px;">PRODUCT CATEGORY</a>
+          <a @click="showProductCategory()" style="min-width: 220px">PRODUCT CATEGORY</a>
           <TheMenu class="sub-menu" id="sub-menu" :showh3="false"/>
+        </li>
+        <li class="menu-item">
+          <a href="/bills" v-if="this.loggedIn === true">BILLS</a>
         </li>
         <li class="menu-item" v-if="this.account.role !== 'SELLER'">
           <a href="/#footer-contact">CONTACT</a>
@@ -21,10 +24,10 @@
         <input type="search" placeholder="Search by name ..." v-on:keyup.enter="this.$emit('searchProduct',this.productName)" v-model="this.productName">
         <font-awesome-icon class="search-icon" icon="fa-solid fa-magnifying-glass" />
       </div>
-      <div class="cart" v-if="this.loggedIn === true && this.account.role === 'CUSTOMER'">
-        <font-awesome-icon class="cart-icon" icon="fa-solid fa-cart-shopping" @click = "cartList()"/>
+      <a @click="this.$router.push('/cart-list')" class="cart" v-if="this.loggedIn === true && this.account.role === 'CUSTOMER'">
+        <font-awesome-icon class="cart-icon" icon="fa-solid fa-cart-shopping"/>
         <span class="cart-count">{{ this.cartCount }}</span>
-      </div>
+      </a>
       <button class="account login" @click="login()" v-if="this.loggedIn === false">
         <span style="font-weight: bold;" >SIGN-IN</span>
       </button>
@@ -48,6 +51,7 @@ import { faMagnifyingGlass, faBars, faHouse, faChevronUp } from '@fortawesome/fr
 library.add(faMagnifyingGlass, faBars, faHouse, faChevronUp);
 
 import store from '@/store';
+import { mapActions } from 'vuex';
 
 export default {
   data() {
@@ -58,17 +62,33 @@ export default {
       showUserDetail: false,
     }
   },
+  emits :{
+    searchProduct: null
+  },
   computed: {
-    cartCount() {
-      return store.state.product.productsCart.length;
+    cart() {
+      return store.state.cart.cartList
     },
+    cartCount() {
+      if(this.cart.cartItems !== undefined) {
+        return this.cart.cartItems.length;
+      }else {
+        return 0;
+      }
+    }
   },
   components: {
     TheMenu,
     UserDetail,
   },
+  mounted() {
+    this.getCart();
+  },
   methods: {
-    
+    ...mapActions('cart',['getCartAction']),
+    async getCart() {
+      await this.getCartAction();
+    },
     changeShowMenu() {
       let icon = document.getElementById('icon');
       let menu = document.getElementById('menu');
@@ -94,19 +114,9 @@ export default {
     login() {
       this.$router.push("/login");
     },
-    cartList() {
-
-    },
     showDetail(event) {
       if(event.target.className === 'account detail' || event.target.id === 'name') {
         this.showUserDetail = !this.showUserDetail;
-        // if(this.showUserDetail === true ) {
-        //   this.$el.querySelector(".detail").style.color = "#fff";
-        //   this.$el.querySelector(".detail").style.backgroundColor = "red";
-        // }else {
-        //   this.$el.querySelector(".detail").style.color = "red";
-        //   this.$el.querySelector(".detail").style.backgroundColor = "#fff";
-        // }
       }
     }
   },
@@ -115,6 +125,7 @@ export default {
 <style scoped>
 nav {
   width: 100%;
+  min-width: 285px;
   background-color: red;
   display: flex;
   box-sizing: border-box;
@@ -129,7 +140,7 @@ nav {
   padding: 0px;
   align-self: center;
   gap: 5px;
-  min-width: 544px;
+  min-width: 600px;
 }
 .menu {
   display: flex;
@@ -211,6 +222,16 @@ nav {
 .sub-menu .sub-menu-item:hover ul{
   display: inline-block;
 }
+.nav-left > a {
+  background-color: #252525;
+  text-align: center;
+  font-size: 31px;
+  padding: 12px 5px;
+  width: 40%;
+  min-width: 35px;
+  max-width: 70px;
+  color: #551A8B;
+}
 .nav-left button {
   height: 37px;
   margin-top: 10px;
@@ -245,7 +266,7 @@ nav {
   border: 0px;
   border-radius: 10px;
   height: 40px;
-  padding-left: 27px;
+  padding-left: 28px;
   width: 100%;
 }
 .search input[type="search"]:focus {
@@ -270,7 +291,9 @@ nav {
 }
 .cart-count {
   position: absolute;
-  left: 45%;
+  width: 22px;
+  text-align: center;
+  left: 30%;
   color: red;
   top: 2px;
   font-weight: bold;

@@ -17,15 +17,15 @@
         </div>
       </div>
       <router-view name="banner" v-if="this.loginRole !== 'SELLER'"></router-view>
-      <div v-if="this.loginRole === 'SELLER' || this.checkProductName === true" style="background-color: #fff; width: 100%; height: 2px;"></div>
+      <div v-if="this.loginRole === 'SELLER' || (this.$route.path !== '/') && this.$route.params.productName === undefined && this.$route.params.categoryName === undefined || this.$route.params.productName !== undefined && this.$route.params.categoryName !== undefined" style="background-color: #fff; width: 100%; height: 2px;"></div>
       <div id="navbar">
-        <NavBar v-on:showMenuUpdated="showMenuUpdatedInParent" @searchProduct="searchProduct" />
+        <NavBar @searchProduct="searchProduct" />
       </div>
     </header>
     <div class="content" id="content">
       <router-view name="theMenu" class="content-left" id="content-left"></router-view>
       <div class="content-right">
-        <router-view :productNameSearch="productNameSearch" :reloadProduct="reloadProduct" ></router-view>
+        <router-view :productNameSearch="productNameSearch" :key="$route.fullPath"></router-view>
       </div>
     </div>
     <footer id="footer-contact" v-if="this.$store.state.auth.userAccount.role !== 'SELLER'">
@@ -65,12 +65,12 @@
   </div>
 </template>
 <script>
-
 import NavBar from "@/components/NavBar.vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faLocationDot, faEnvelope, faUser, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { faFacebook, faInstagram, faGoogle, faTelegram, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import store from "@/store";
+import { mapActions } from 'vuex';
 library.add(faLocationDot, faEnvelope, faUser, faPhone, faFacebook, faInstagram, faGoogle, faTelegram, faTwitter);
 
 export default {
@@ -78,16 +78,15 @@ export default {
     return {
       loginRole: store.state.auth.userAccount.role,
       productNameSearch: '',
-      reloadProduct: false,
-      showMenu: true,
       showForm: false,
       sticky: null,
-      banner: null
+      banner: null,
+      checkBanner: false,
     };
   },
   computed: {
     checkProductName() {
-      if(this.$route.params.productName !== undefined) {
+      if(this.$route.params.productName !== undefined ) {
         return true;
       }else {
         return false;
@@ -102,10 +101,6 @@ export default {
       }else {
         this.$router.push('/search-product/' + this.productNameSearch);
       }
-    },
-    reloadProduct() {
-      this.$router.push('/');
-      console.log(this.reloadProduct);
     }
   },
   created () {
@@ -113,6 +108,13 @@ export default {
   },
   mounted() {
     this.focusTop();
+    let banner = document.getElementById("banner");
+    if(banner !== null) {
+      this.checkBanner = true;
+    }else {
+      this.checkBanner = false;
+    }
+    //this.checkAccessToken();
   },
   unmounted () {
     window.removeEventListener('scroll', this.handleScroll);
@@ -121,8 +123,12 @@ export default {
     NavBar
   },
   methods: {
+    ...mapActions('auth',['checkAccessToken']),
     focusTop() {
       this.$refs.homepage.scrollIntoView({behavior: 'smooth'});
+    },
+    searchProduct(productName) {
+      this.productNameSearch = productName;
     },
     handleScroll() {
       let header = document.getElementById("header");
@@ -165,28 +171,7 @@ export default {
           contact.classList.remove("sticky-contact");
         }
       }
-    },
-    showMenuUpdatedInParent: function () {
-      const contentLeft = document.getElementById('content-left');
-      console.log(contentLeft.style.display)
-      if(contentLeft.style.display === 'none') {
-        this.showMenu = true;
-      }else {
-        this.showMenu = false;
-      }
-    },
-    searchProduct(productName) {
-      this.productNameSearch = productName;
-    },
-    reloadProductList() {
-      this.reloadProduct = !this.reloadProduct;
-    },
-    closeForm(event) {
-      if (event.target.className === "product") {
-        this.$router.push('/');
-        this.showForm = false;
-      }
-    },
+    }
   }
 };
 </script>
@@ -220,17 +205,24 @@ export default {
 }
 .move {
   display: flex;
+  justify-content: left;
+  gap: 10px;
   position: relative;
   animation: addressmove 5s infinite;
 }
-.address {
-  height: 100%;
+.address, .email {
   box-sizing: border-box;
-  min-width: 420px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+.address {
+  max-width: 450px;
 }
 .email {
-  margin-left: 20px;
-  min-width: 280px;
+  width: 45%;
+  max-width: 250px;
 }
 .contact span {
   margin-left: 5px;
@@ -271,6 +263,8 @@ export default {
 .content-right {
   width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: center;
 }
 .product-action {
   position: absolute;
@@ -283,14 +277,15 @@ footer {
   width: 100%;
   background-color: #232F3E;
   display: flex;
+  gap: 5px;
   justify-content: space-between;
   box-sizing: border-box;
   height: auto;
   padding: 10px;
   color: white;
-  margin-top: 15px;
+  padding-bottom: 15px;
 }
-footer #contact h2{
+footer h2{
   box-sizing: border-box;
   padding-left: 10px;
 }
@@ -298,7 +293,10 @@ footer hr {
   border: solid 2px red;
 }
 .footer-connect {
-  width: 30%;
+  width: 35%;
+}
+footer h2 {
+  margin: 5px 0px;
 }
 .footer-information {
   width: 65%;
@@ -306,7 +304,7 @@ footer hr {
 .connect-icon {
   display: flex;
   justify-content: space-between;
-  margin-top: 40px;
+  margin-top: 20px;
   cursor: pointer;
   box-sizing: border-box;
   padding: 0px 10px;
@@ -321,7 +319,6 @@ footer hr {
 .information {
   display: grid;
   gap: 5px;
-  margin-top: 20px;
   box-sizing: border-box;
   padding-left: 20px;
 }
@@ -356,6 +353,11 @@ footer hr {
   }
   .information {
     padding-left: 0px;
+  }
+}
+@media screen and (max-width: 360px) {
+  footer h2 {
+    padding: 0px;
   }
 }
 </style>
