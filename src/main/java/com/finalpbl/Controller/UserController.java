@@ -63,10 +63,10 @@ public class UserController {
     }
 
     @RequestMapping(path = "/edit", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> editUser(@ModelAttribute UserDto user, @AuthenticationPrincipal UserDetailsImpl userDetails)
+    public ResponseEntity<?> editUser(@ModelAttribute UserDto user)
     {
         System.out.println(user.getEmail());
-        String msg = userService.updateUser(userDetails.getUsername(),user);
+        String msg = userService.editUser(user);
         if(msg.equals("Edit Success"))
         {
             return ResponseEntity.ok().build();

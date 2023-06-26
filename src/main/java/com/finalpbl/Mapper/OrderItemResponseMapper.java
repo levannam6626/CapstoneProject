@@ -18,7 +18,7 @@ public class OrderItemResponseMapper implements Function<OrderItem, OrderItemDto
 
     @Override
     public OrderItemDto apply(OrderItem item) {
-       return new OrderItemDto(item.getPrice(), item.getQty(), item.getProductorder().getId(), modelMapper.map(item.getProducts(), ProductDto.class));
+       return new OrderItemDto(item.getPrice(), item.getQuantity(), item.getProductorder().getId(), modelMapper.map(item.getProducts(), ProductDto.class));
     }
     
     

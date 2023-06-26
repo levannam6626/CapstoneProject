@@ -26,13 +26,13 @@ public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long ID;
+    private long id;
 
     @Column(name = "price")
     private double price;
     
     @Column(name = "quantity")
-    private int qty;
+    private int quantity;
 
     @ManyToOne
     @JoinColumn(name = "po_id")
@@ -43,6 +43,4 @@ public class OrderItem {
     @JoinColumn(name = "product_id")
     @JsonBackReference
     private Products products;
-
-
 }

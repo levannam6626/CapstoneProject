@@ -64,9 +64,7 @@ public class ProductOrderServiceImpl implements IProductOrderService{
     @Override
     public String PlaceOrder(String email) {
         CartDto cartDto = cartService.findByUserOrderByCreatedDateDesc(email);
-        System.out.println(email);
         List<CartItemDto> cartItemDtos = cartDto.getCartItems();
-
         ProductOrder order = new ProductOrder();
         order.setCreatedDate(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
         order.setUser(userRepository.findByEmail(email).orElseThrow());
@@ -81,7 +79,7 @@ public class ProductOrderServiceImpl implements IProductOrderService{
                 orderItem.setPrice(items.getProducts().getProductPrice());
                 orderItem.setProductorder(order);
                 orderItem.setProducts(items.getProducts());
-                orderItem.setQty(items.getQuantity());
+                orderItem.setQuantity(items.getQuantity());
                 orderItemRepository.save(orderItem);
             }
         }

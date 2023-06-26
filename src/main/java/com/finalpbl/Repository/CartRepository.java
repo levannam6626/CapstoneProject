@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.finalpbl.Model.Cart;
-import com.finalpbl.Model.Products;
 import com.finalpbl.Model.User;
 
 import jakarta.transaction.Transactional;
@@ -25,5 +24,5 @@ public interface CartRepository extends JpaRepository<Cart, Long>{
 
     @Modifying
     @Query(value = "delete from cart where user_id = :user_id and selected = 1", nativeQuery = true)
-    public List<Cart> deleteBySelectedAndUser(@Param("user_id") Long user_id);
+    public void deleteBySelectedAndUser(@Param("user_id") Long user_id);
 }

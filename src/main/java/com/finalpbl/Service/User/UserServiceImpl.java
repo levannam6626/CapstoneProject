@@ -110,20 +110,19 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
-    public String updateUser(String email, UserDto userDto) {
-        User user = userRepository.findByEmail(email).orElseThrow(null);
+    public String editUser(UserDto userDto) {
+        User user = userRepository.findById(userDto.getId()).orElseThrow(null);
         if(user != null)
         {
             user.setFirstname(userDto.getFirstname());
             user.setLastname(userDto.getLastname());
-            user.setEmail(userDto.getEmail());
-            user.setRole(Role.valueOf(userDto.getRole()));
             user.setPhone(userDto.getPhone());
             user.setAddress(userDto.getAddress());
+            user.setGender(userDto.getGender());
             userRepository.save(user);
-            return "Edit user success";
+            return "Edit Success";
         }
-        return "Edit failure";
+        return "Edit Failed";
     }
 
 }

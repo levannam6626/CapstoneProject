@@ -13,5 +13,6 @@ public interface IUserService {
     public String deleteUser(Long id);
     //public String deleteMultipleUsers(Long[] ids);
     public String createUser(UserRequest userRequest);
-    public String updateUser(String email, UserDto userDto);
+    public String editUser(UserDto userDto);
+    // public Boolean updateUser(Long id, UserDto userDto);
 }

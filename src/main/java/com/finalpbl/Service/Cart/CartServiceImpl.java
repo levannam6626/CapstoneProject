@@ -55,9 +55,11 @@ public class CartServiceImpl implements ICartService{
         double totalCost = 0;
         for(CartItemDto cartItem:cartItems)
         {
-            totalCost += (cartItem.getProducts().getProductPrice() * cartItem.getQuantity());
+            if(cartItem.isSelected() == true) {
+                totalCost += (cartItem.getProducts().getProductPrice() * cartItem.getQuantity());
+            }
         }
-        return new CartDto(cartItems, totalCost);
+        return new CartDto(cartItems, Math.round(totalCost * 100.0) / 100.0);
     }
 
     @Override
@@ -78,13 +80,16 @@ public class CartServiceImpl implements ICartService{
         }
         else
         {
-            if((cart.getQty() + cartItemDto.getQuantity()) <= products.getQuantity())
+            if((cart.getQty() + cartItemDto.getQuantity()) <= products.getProductQuantity())
             {
                 cart.setQty(cart.getQty() + cartItemDto.getQuantity());
-                cartRepository.save(cart);
-                return "Add Success";
+                //cartRepository.save(cart);
+                //return "Add Success";
             }
-            return "Quantity more than allow";
+            cart.setQty(products.getProductQuantity());
+            cartRepository.save(cart);
+            return "Add Success";
+            //return "Quantity more than allow";
         }
     }
 

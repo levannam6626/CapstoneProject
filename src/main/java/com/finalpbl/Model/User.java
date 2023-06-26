@@ -75,6 +75,7 @@ public class User {
     private List<ProductOrder> orders;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<Cart> carts;
 
     public User(String firstname, String lastname, String password, String email, String address, String phone, Boolean isDeleted, Role role, String gender) {

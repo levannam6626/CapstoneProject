@@ -34,5 +34,5 @@ public class ProductDto {
     private double productPrice;
 
     @NotBlank
-    private int quantity;
+    private int productQuantity;
 }
