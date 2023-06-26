@@ -50,9 +50,7 @@ public class ProductController {
     @GetMapping(path = "view/get-by-categoryname/{name}")
     public ResponseEntity<?> getProductsByCategoryName(@PathVariable(name = "name") String name)
     {
-        System.out.println(name);
         List<ProductDto> products = iProductService.getProductsByCategoryName(name);
-        
         return ResponseEntity.ok(products);
     }
 
@@ -68,20 +66,22 @@ public class ProductController {
     {
         String msg ="";
         try {
-            msg = iProductService.addProduct(productRequest,file);
+            msg = iProductService.addProduct(productRequest, file);
             if(msg.equals("CREATE SUCCESS") )
             {
-                return ResponseEntity.ok().build();
+                return ResponseEntity.ok(msg);
             }
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(msg);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(msg);
         }
     }
     @RequestMapping(path = "/edit-product", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> editProduct(@RequestPart(value = "productRequest") ProductDto productRequest,@ModelAttribute MultipartFile file)
+    public ResponseEntity<?> editProduct(@RequestPart(value = "productRequest") ProductDto productRequest, @ModelAttribute MultipartFile file)
     {
         String msg ="";
+        System.out.println("'file'");
+        System.out.println(file);
         try {
             msg = iProductService.editProduct(productRequest,file);
             if(msg.equals("EDIT SUCCESS") )
@@ -96,7 +96,6 @@ public class ProductController {
     @PostMapping(path = "/delete-product")
     public ResponseEntity<?> deleteProductsByid(@RequestBody List<Long> ids)
     {
-        System.out.println(ids);
         String msg = iProductService.deleteProductsByid(ids);
         if(msg.equals("Delete Success"))
         {

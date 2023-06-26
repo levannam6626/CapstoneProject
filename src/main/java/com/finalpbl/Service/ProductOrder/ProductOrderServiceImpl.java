@@ -58,9 +58,7 @@ public class ProductOrderServiceImpl implements IProductOrderService{
     @Override
     public String PlaceOrder(String email) {
         CartDto cartDto = cartService.findByUserOrderByCreatedDateDesc(email);
-
         List<CartItemDto> cartItemDtos = cartDto.getCartItems();
-
         ProductOrder order = new ProductOrder();
         order.setCreatedDate(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
         order.setUser(userRepository.findByEmail(email).orElseThrow());

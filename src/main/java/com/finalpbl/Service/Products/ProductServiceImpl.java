@@ -1,6 +1,8 @@
 package com.finalpbl.Service.Products;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -107,7 +109,7 @@ public class ProductServiceImpl implements IProductService{
             product.setProductName(productRequest.getProductName());
             product.setProductImage(uploadImg(file));
             product.setProductPrice(productRequest.getProductPrice());
-            product.setUpdateDate(productRequest.getUpdateDate());
+            product.setUpdateDate(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
             product.setProductDescription(productRequest.getProductDescription());
             product.setCategory(category);
             product.setIsDeleted(false);
@@ -129,8 +131,8 @@ public class ProductServiceImpl implements IProductService{
             productValidate.setProductDescription(productRequest.getProductDescription());
             productValidate.setProductPrice(productRequest.getProductPrice());
             productValidate.setProductQuantity(productRequest.getProductQuantity());
-            productValidate.setUpdateDate(productRequest.getUpdateDate());
-            productValidate.setQuantity(productRequest.getQuantity());
+            productValidate.setUpdateDate(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
+            productValidate.setProductQuantity(productRequest.getProductQuantity());
             if(file != null) {
                 productValidate.setProductImage(uploadImg(file));
                 deleteImg(productRequest.getProductImage());

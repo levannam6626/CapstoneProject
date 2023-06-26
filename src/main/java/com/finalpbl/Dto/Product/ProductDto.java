@@ -25,7 +25,6 @@ public class ProductDto {
     @NotBlank
     private String productDescription;
 
-    @NotBlank
     private String productImage;
 
     @NotBlank
