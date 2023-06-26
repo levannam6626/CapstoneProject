@@ -20,6 +20,8 @@ import com.finalpbl.Repository.CartRepository;
 import com.finalpbl.Repository.ProductsRepository;
 import com.finalpbl.Repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class CartServiceImpl implements ICartService{
     

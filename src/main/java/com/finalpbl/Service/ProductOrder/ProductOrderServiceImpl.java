@@ -3,12 +3,15 @@ package com.finalpbl.Service.ProductOrder;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.finalpbl.Dto.Cart.CartDto;
 import com.finalpbl.Dto.Cart.CartItemDto;
+import com.finalpbl.Dto.Order.ProductOrderDto;
+import com.finalpbl.Mapper.OrderResponseMapper;
 import com.finalpbl.Model.OrderItem;
 import com.finalpbl.Model.ProductOrder;
 import com.finalpbl.Model.User;
@@ -35,18 +38,21 @@ public class ProductOrderServiceImpl implements IProductOrderService{
     @Autowired
     private OrderItemRepository orderItemRepository;
 
+    @Autowired OrderResponseMapper orderResponseMapper;
     @Override
-    public List<ProductOrder> getAllOrders() {
+    public List<ProductOrderDto> getAllOrders() {
         List<ProductOrder> orders = productOrderRepository.findAll();
-        return orders;
+        List<ProductOrderDto> orderDtos = orders.stream().map(orderResponseMapper).collect(Collectors.toList());
+        return orderDtos;
     }
 
     @Override
-    public List<ProductOrder> getOrdersByUser(String email)
+    public List<ProductOrderDto> getOrdersByUser(String email)
     {
         User user = userRepository.findByEmail(email).orElseThrow();
         List<ProductOrder> orders = productOrderRepository.findByUserOrderByCreatedDateDesc(user);
-        return orders;
+        List<ProductOrderDto> orderDtos = orders.stream().map(orderResponseMapper).collect(Collectors.toList());
+        return orderDtos;
     }
 
     @Override
@@ -58,7 +64,7 @@ public class ProductOrderServiceImpl implements IProductOrderService{
     @Override
     public String PlaceOrder(String email) {
         CartDto cartDto = cartService.findByUserOrderByCreatedDateDesc(email);
-
+        System.out.println(email);
         List<CartItemDto> cartItemDtos = cartDto.getCartItems();
 
         ProductOrder order = new ProductOrder();
@@ -79,7 +85,6 @@ public class ProductOrderServiceImpl implements IProductOrderService{
                 orderItemRepository.save(orderItem);
             }
         }
-        cartService.DeleteOrderdItem(email);
         return "Add Order Success";
     }
 

@@ -29,7 +29,7 @@ public class ProductOrderController {
     @GetMapping(path = "/all")
     public ResponseEntity<?> getAllOrder()
     {
-        List<ProductOrder> orders = iProductOrderService.getAllOrders();
+        List<ProductOrderDto> orders = iProductOrderService.getAllOrders();
         return ResponseEntity.ok(orders);
     }
 
@@ -43,13 +43,14 @@ public class ProductOrderController {
     @GetMapping(path = "/get")
     public ResponseEntity<?> getOrderByUser(@AuthenticationPrincipal UserDetailsImpl user)
     {
-        List<ProductOrder> orders = iProductOrderService.getOrdersByUser(user.getUsername());
+        List<ProductOrderDto> orders = iProductOrderService.getOrdersByUser(user.getUsername());
         return ResponseEntity.ok(orders);
     }
 
     @PostMapping(path = "/create")
     public ResponseEntity<?> createOrder(@AuthenticationPrincipal UserDetailsImpl user)
     {
+        System.out.println(user.getUsername());
         String msg = iProductOrderService.PlaceOrder(user.getUsername());
         if(msg.equals("Add Order Success"))
         {

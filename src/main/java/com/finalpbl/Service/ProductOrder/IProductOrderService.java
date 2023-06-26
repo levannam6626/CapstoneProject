@@ -6,8 +6,8 @@ import com.finalpbl.Dto.Order.ProductOrderDto;
 import com.finalpbl.Model.ProductOrder;
 
 public interface IProductOrderService {
-    public List<ProductOrder> getAllOrders();
-    public List<ProductOrder> getOrdersByUser(String email);
+    public List<ProductOrderDto> getAllOrders();
+    public List<ProductOrderDto> getOrdersByUser(String email);
     public ProductOrder getOrderByID(long OrderID);
     public String PlaceOrder(String email);
 }

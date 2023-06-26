@@ -1,5 +1,7 @@
 package com.finalpbl.Dto.Order;
 
+import com.finalpbl.Dto.Product.ProductDto;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,5 +24,5 @@ public class OrderItemDto {
     private  long orderId;
     
     @NotNull
-    private  long productId;
+    private  ProductDto product;
 }
