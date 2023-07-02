@@ -8,15 +8,19 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finalpbl.Constant.OrderStatus;
 import com.finalpbl.Dto.Cart.CartDto;
 import com.finalpbl.Dto.Cart.CartItemDto;
+import com.finalpbl.Dto.Order.OrderUpdateRequestDto;
 import com.finalpbl.Dto.Order.ProductOrderDto;
 import com.finalpbl.Mapper.OrderResponseMapper;
 import com.finalpbl.Model.OrderItem;
 import com.finalpbl.Model.ProductOrder;
+import com.finalpbl.Model.Products;
 import com.finalpbl.Model.User;
 import com.finalpbl.Repository.OrderItemRepository;
 import com.finalpbl.Repository.ProductOrderRepository;
+import com.finalpbl.Repository.ProductsRepository;
 import com.finalpbl.Repository.UserRepository;
 import com.finalpbl.Service.Cart.ICartService;
 
@@ -37,6 +41,9 @@ public class ProductOrderServiceImpl implements IProductOrderService{
 
     @Autowired
     private OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private ProductsRepository productsRepository;
 
     @Autowired OrderResponseMapper orderResponseMapper;
     @Override
@@ -69,6 +76,7 @@ public class ProductOrderServiceImpl implements IProductOrderService{
         order.setCreatedDate(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
         order.setUser(userRepository.findByEmail(email).orElseThrow());
         order.setTotalPrice(cartDto.getTotalCost());
+        order.setOrderStatus(OrderStatus.PENDING);
         productOrderRepository.save(order);
 
         for(CartItemDto items: cartItemDtos)
@@ -76,28 +84,28 @@ public class ProductOrderServiceImpl implements IProductOrderService{
             if(items.isSelected() == true)
             {
                 OrderItem orderItem = new OrderItem();
+                Products products = items.getProducts();
                 orderItem.setPrice(items.getProducts().getProductPrice());
                 orderItem.setProductorder(order);
                 orderItem.setProducts(items.getProducts());
                 orderItem.setQuantity(items.getQuantity());
+                products.setProductQuantity(products.getProductQuantity() - items.getQuantity());
                 orderItemRepository.save(orderItem);
             }
         }
         return "Add Order Success";
     }
 
-    // @Override
-    // public String editOrder(ProductOrder order) {
-    //     ProductOrder orderValidate = productOrderRepository.findById(order.getId()).orElseThrow();
-    //     if(orderValidate != null)
-    //     {
-    //         ProductOrder order2 = new ProductOrder();
-    //         order2.setUser(order.getUser());
-    //         order2.setOrderItem(order.getOrderItem());
-    //         productOrderRepository.save(order2);
-    //         return "Edit order success";
-    //     }
-    //     return "Order not exist";
-    // }
+    @Override
+    public String editOrder(OrderUpdateRequestDto order) {
+        ProductOrder orderValidate = productOrderRepository.findById(order.getID()).orElseThrow();
+        if(orderValidate != null)
+        {
+            orderValidate.setOrderStatus(OrderStatus.valueOf(order.getStatus()));
+            productOrderRepository.save(orderValidate);
+            return "Edit order success";
+        }
+        return "Order not exist";
+    }
     
 }

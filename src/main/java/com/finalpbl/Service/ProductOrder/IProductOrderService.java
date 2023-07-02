@@ -10,4 +10,5 @@ public interface IProductOrderService {
     public List<ProductOrderDto> getOrdersByUser(String email);
     public ProductOrder getOrderByID(long OrderID);
     public String PlaceOrder(String email);
+    public String editOrder(ProductOrderDto order);
 }

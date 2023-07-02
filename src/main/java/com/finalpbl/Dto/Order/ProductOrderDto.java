@@ -19,6 +19,8 @@ public class ProductOrderDto {
 
     private Double totalPrice;
 
+    private String status;
+
     private LocalDateTime createdDate;
 
     private UserDto user;

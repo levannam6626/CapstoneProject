@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +40,7 @@ public class CategoryController {
         return ResponseEntity.ok(category);
     }
 
-    @RequestMapping(path = "", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @RequestMapping(path = "/add", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> addCategory(@ModelAttribute Category category)
     {
         String msg = categoryService.addCategory(category);
@@ -47,5 +49,16 @@ public class CategoryController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    @DeleteMapping(path = "/delete/{id}")
+    public ResponseEntity<?> deleteCategory(@PathVariable(name = "id") Long id)
+    {
+        String msg = categoryService.deleteCategory(id);
+        if(msg.equals("Delete Success"))
+        {
+            return ResponseEntity.ok().body(msg);
+        }
+        return ResponseEntity.badRequest().body(msg);
     }
 }

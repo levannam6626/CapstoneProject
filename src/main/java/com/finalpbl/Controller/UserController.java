@@ -31,7 +31,7 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @GetMapping(path = "/get-by-search/{email}")
+    @GetMapping(path = "view/get-by-search/{email}")
     public ResponseEntity<?> getUsersSearch(@PathVariable(name = "email") String email)
     {
         List<UserDto> userDtos;
@@ -44,7 +44,7 @@ public class UserController {
         return ResponseEntity.ok(userDtos);
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "view/{id}")
     public ResponseEntity<?> getUserbyID(@PathVariable(name = "id") Long id)
     {
         UserDto userDto = userService.getUserbyID(id);
@@ -62,7 +62,7 @@ public class UserController {
         return ResponseEntity.badRequest().body(msg);
     }
 
-    @RequestMapping(path = "/edit", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @RequestMapping(path = "/edit", method = RequestMethod.PATCH, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> editUser(@ModelAttribute UserDto user)
     {
         System.out.println(user.getEmail());
@@ -75,7 +75,7 @@ public class UserController {
     }
 
 
-    @DeleteMapping(path = "delete-account/{id}")
+    @DeleteMapping(path = "delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable(name = "id") Long id)
     {
         String msg = userService.deleteUser(id);
