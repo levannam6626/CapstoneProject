@@ -38,6 +38,16 @@ export default {
       categoryName: this.$route.params.categoryName
     }
   },
+  watch: {
+    url() {
+      this.setBackgroundMenuItem();
+    }
+  },
+  computed: {
+    url() {
+      return this.$route;
+    }
+  },
   methods: {
     ...mapActions('category', ['addCategoryAction','loadCategoriesAction']),
 
@@ -66,6 +76,15 @@ export default {
         arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1).toLowerCase();
       }
       return arr.join(" ");
+    },
+    setBackgroundMenuItem() {
+      const elements = document.getElementsByClassName('menu-item');
+      if(elements.length > 0) {
+        for (let index = 0; index < elements.length; index++) {
+          elements[index].querySelector('a').style.backgroundColor = "#fff";
+          elements[index].querySelector('a').style.color = "black";
+        }
+      }
     }
   },
   created() {

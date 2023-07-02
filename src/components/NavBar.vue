@@ -3,18 +3,18 @@
     <div class="nav-left">
       <a href="/"><font-awesome-icon icon="fa-solid fa-house" /></a>
       <ul class="menu" id="menu">
-        <li class="menu-item">
-          <a @click="this.$router.push('/add-product')" v-if="this.account.role === 'SELLER'">CREATE PRODUCT</a>
-          <a @click="this.$router.push('/introduce')" v-else>INTRODUCE</a>
+        <li class="nav-menu-item">
+          <a id="create-product" @click="this.$router.push('/add-product')" v-if="this.account.role === 'SELLER'">CREATE PRODUCT</a>
+          <a id="introduce" @click="this.$router.push('/introduce')" v-else>INTRODUCE</a>
         </li>
-        <li class="menu-item">
-          <a @click="showProductCategory()" style="min-width: 220px">PRODUCT CATEGORY</a>
+        <li class="nav-menu-item">
+          <a id="product-list" @click="showProductCategory()" style="min-width: 220px">PRODUCT CATEGORY</a>
           <TheMenu class="sub-menu" id="sub-menu" :showh3="false"/>
         </li>
-        <li class="menu-item">
-          <a href="/bills" v-if="this.loggedIn === true">BILLS</a>
+        <li class="nav-menu-item">
+          <a  id="bills" @click="this.$router.push('/bills')" v-if="this.loggedIn === true">BILLS</a>
         </li>
-        <li class="menu-item" v-if="this.account.role !== 'SELLER'">
+        <li class="nav-menu-item" v-if="this.account.role !== 'SELLER'">
           <a href="/#footer-contact">CONTACT</a>
         </li>
       </ul>
@@ -65,7 +65,15 @@ export default {
   emits :{
     searchProduct: null
   },
+  watch: {
+    url() {
+      this.setBackgroundNav();
+    }
+  },
   computed: {
+    url() {
+      return this.$route;
+    },
     cart() {
       return store.state.cart.cartList
     },
@@ -82,12 +90,34 @@ export default {
     UserDetail,
   },
   mounted() {
-    this.getCart();
+    this.setBackgroundNav()
+    if(store.state.auth.userAccount !== 'logout' && store.state.auth.userAccount.role !== undefined) {
+      this.getCart();
+    }
   },
   methods: {
     ...mapActions('cart',['getCartAction']),
     async getCart() {
       await this.getCartAction();
+    },
+    setBackgroundNav() {
+      const navMenuItems = document.getElementsByClassName('nav-menu-item');
+      if(navMenuItems.length > 0) {
+        for (let index = 0; index < navMenuItems.length; index++) {
+          if(navMenuItems[index].querySelector('a') !== null){
+            navMenuItems[index].querySelector('a').style.backgroundColor = "red";
+          }
+        }
+      }
+      if(this.$route.name === 'addProduct') {
+        document.getElementById('create-product').style.backgroundColor = '#252525'
+      }else if(this.$route.name === 'productList' && this.$route.path !== '/') {
+        document.getElementById('product-list').style.backgroundColor = '#252525'
+      }else if(this.$route.name === 'bill') {
+        document.getElementById('bills').style.backgroundColor = '#252525'
+      }else if(this.$route.name === 'introduce') {
+        document.getElementById('introduce').style.backgroundColor = '#252525'
+      }
     },
     changeShowMenu() {
       let icon = document.getElementById('icon');
@@ -154,11 +184,11 @@ nav {
 .menu li a {
   text-decoration-line: none;
 }
-.menu-item {
+.nav-menu-item {
   position: relative;
   height: 100%;
 }
-.menu-item > a {
+.nav-menu-item > a {
   box-sizing: border-box;
   cursor: pointer;
   width: auto;
@@ -169,8 +199,8 @@ nav {
   display: flex;
   align-items: center;
 }
-.menu-item > a:hover {
-  background-color: #252525;
+.nav-menu-item > a:hover {
+  background-color: #252525 !important;
 }
 .category {
   display: inline-block !important;
@@ -191,8 +221,8 @@ nav {
   z-index: 2;
 }
 .sub-menu a:hover {
-  color: red;
-  background-color: #90AA00;
+  color: red !important;
+  background-color: #90AA00 !important;
 }
 .sub-menu-item {
   position: relative;
@@ -243,7 +273,7 @@ nav {
   box-shadow: grey 2px 2px;
 }
 .nav-left button:hover {
-  background-color: grey;
+  background-color: grey !important;
 }
 .search {
   width: 100%;
@@ -352,9 +382,9 @@ nav {
     position: relative;
     gap: 0 !important;
   }
-  .responsive .menu-item a{
+  .responsive .nav-menu-item a{
     height: 40px;
-    background-color: #252525;
+    background-color: #252525 !important;
     color: #fff;
   }
   .responsive {

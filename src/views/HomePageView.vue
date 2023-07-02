@@ -2,7 +2,22 @@
   <div class="homepage" ref="homepage">
     <header id="header">
       <div class="contact" id="contact">
-        <div class="move">
+        <marquee width="100%" behavior="" direction="right">
+          <div class="move">
+            <div class="address">
+              <font-awesome-icon
+                class="address-icon"
+                icon="fa-solid fa-location-dot"
+              />
+              <span>85 NguyenLuongBang - HoaKhanhBac - LienChieu - DaNang </span>
+            </div>
+            <div class="email">
+              <font-awesome-icon class="email-icon" icon="fa-solid fa-envelope" />
+              <span>vannamka6626@gmail.com</span>
+            </div>
+          </div>
+        </marquee>
+        <!-- <div class="move">
           <div class="address">
             <font-awesome-icon
               class="address-icon"
@@ -14,7 +29,7 @@
             <font-awesome-icon class="email-icon" icon="fa-solid fa-envelope" />
             <span>vannamka6626@gmail.com</span>
           </div>
-        </div>
+        </div> -->
       </div>
       <router-view name="banner" v-if="this.loginRole !== 'SELLER'"></router-view>
       <div v-if="this.loginRole === 'SELLER' || (this.$route.path !== '/') && this.$route.params.productName === undefined && this.$route.params.categoryName === undefined || this.$route.params.productName !== undefined && this.$route.params.categoryName !== undefined" style="background-color: #fff; width: 100%; height: 2px;"></div>
@@ -207,8 +222,6 @@ export default {
   display: flex;
   justify-content: left;
   gap: 10px;
-  position: relative;
-  animation: addressmove 5s infinite;
 }
 .address, .email {
   box-sizing: border-box;

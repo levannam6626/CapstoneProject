@@ -16,10 +16,13 @@
   <div class="product">
     <div class="product-img">
       <figure>
-        <img :src="this.url + this.product.productImage" alt="">
+        <img @mousemove="scaleElement" @mouseenter="this.statusDiplay = 'block'" @mouseleave="this.statusDiplay = 'none'" :src="this.url + this.product.productImage" alt="product-img">
       </figure>
     </div>
     <div class="product-detail-show">
+      <figure class="zoom-img" :style="{display: statusDiplay}">
+        <img :src="this.url + this.product.productImage" :style="{transform: 'scale(' + scale + ')', transformOrigin: scaleOrigin }" alt="product-img">
+      </figure>
       <div class="product-name">
         {{ this.product.productName }}
       </div>
@@ -64,6 +67,9 @@
         categoryName: this.$route.params.categoryName,
         url: store.state.product.url,
         quantity: 1,
+        scale: 1.5,
+        scaleOrigin: '0 0',
+        statusDiplay: 'none'
       }
     },
     computed: {
@@ -93,6 +99,16 @@
       editProduct() {
         this.$router.push({name: 'editProduct', params:{productId: this.product.productId}})
       },
+      scaleElement(event) {
+        const { top, left } = event.target.getBoundingClientRect()
+        const mouseX = event.clientX - left
+        const mouseY = event.clientY - top
+        const scale = 2
+        const scaleOriginX = mouseX / event.target.offsetWidth * 100 + '%'
+        const scaleOriginY = mouseY / event.target.offsetHeight * 100 + '%'
+        this.scale = scale
+        this.scaleOrigin = scaleOriginX + ' ' + scaleOriginY
+      }
     },
   })
 </script>
@@ -158,20 +174,8 @@ p {
   width: 100%;
   cursor: pointer;
 }
-.product-img figure img:hover {
-  transform: scale(1.5);
-}
-.zoom-lens {
-  position: absolute;
-  border: 1px solid #d4d4d4;
-  /*set the size of the lens:*/
-  width: 40px;
-  height: 40px;
-}
-.zoom-result{
-  border: solid 1px rgb(150, 149, 149);
-}
 .product-detail-show {
+  position: relative;
   display: grid;
   width: 100%;
   min-width: 200px;
@@ -179,6 +183,21 @@ p {
   box-sizing: border-box;
   padding: 10px 15px;
   height: auto;
+}
+.zoom-img {
+  box-sizing: border-box;
+  overflow: hidden;
+  position: absolute;
+  top: -10;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  border: groove 3px;
+  background-color: #fff;
+}
+.zoom-img img {
+  transition: transform 0.3s ease;
 }
 .product-name {
   font-size: 2em;

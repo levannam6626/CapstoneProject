@@ -15,6 +15,7 @@ import BannerImg from "@/components/BannerImg.vue";
 import BillView from "@/views/BillView.vue";
 import CartList from "@/views/CartList.vue";
 import SuccessAlert from "@/components/SuccessAlert.vue";
+import TestImg from "@/views/TestImg.vue";
 
 import store from "@/store";
 import UserDetail from "@/views/UserDetail.vue";
@@ -91,6 +92,11 @@ const routes = [
     path: '/success',
     name: 'success',
     component: SuccessAlert
+  },
+  {
+    path: '/test',
+    name: 'test',
+    component: TestImg
   }
 ]
 const router = createRouter({

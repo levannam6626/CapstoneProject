@@ -65,7 +65,7 @@ class loadProductList extends request {
   }
   async deleteProductsById(ids) {
     try {
-      const res = await this.requestProduct().post(`${ENTITY_PATH}/delete-product`, ids );
+      const res = await this.requestProduct().delete(`${ENTITY_PATH}/delete-product`, ids );
       return res;
     } catch (err) {
       if (err.response.status === 401) {
