@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -93,7 +94,7 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
         }
     }
-    @PostMapping(path = "/delete-product")
+    @DeleteMapping(path = "/delete-product")
     public ResponseEntity<?> deleteProductsByid(@RequestBody List<Long> ids)
     {
         String msg = iProductService.deleteProductsByid(ids);

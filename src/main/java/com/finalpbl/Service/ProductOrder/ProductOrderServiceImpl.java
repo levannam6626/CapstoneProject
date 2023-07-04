@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.finalpbl.Dto.Cart.CartDto;
@@ -41,7 +42,8 @@ public class ProductOrderServiceImpl implements IProductOrderService{
     @Autowired OrderResponseMapper orderResponseMapper;
     @Override
     public List<ProductOrderDto> getAllOrders() {
-        List<ProductOrder> orders = productOrderRepository.findAll();
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdDate");
+        List<ProductOrder> orders = productOrderRepository.findAll(sort);
         List<ProductOrderDto> orderDtos = orders.stream().map(orderResponseMapper).collect(Collectors.toList());
         return orderDtos;
     }
@@ -76,13 +78,14 @@ public class ProductOrderServiceImpl implements IProductOrderService{
             if(items.isSelected() == true)
             {
                 OrderItem orderItem = new OrderItem();
-                orderItem.setPrice(items.getProducts().getProductPrice());
+                orderItem.setPrice(items.getProducts().getProductPrice() * items.getQuantity());
                 orderItem.setProductorder(order);
                 orderItem.setProducts(items.getProducts());
                 orderItem.setQuantity(items.getQuantity());
                 orderItemRepository.save(orderItem);
             }
         }
+        cartService.DeleteOrderdItem(email);
         return "Add Order Success";
     }
 
