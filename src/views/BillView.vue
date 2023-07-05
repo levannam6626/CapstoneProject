@@ -1,7 +1,10 @@
 <template>
   <div class="bill-view">
-    <div class="statistics" v-if="this.productOrders.length > 0 && this.loginRole === 'SELLER'">
-      <h2>Report Overview</h2>
+    <select class="select-overview" v-model="overView">
+      <option value="Report Overview">Report Overview</option>
+      <option value="All Orders">All Orders</option>
+    </select>
+    <div class="statistics" v-if="this.productOrders.length > 0 && this.loginRole === 'SELLER' && overView === 'Report Overview'">
       <div class="action">
         <select v-model="selected">
           <option value="Sales">Sales</option>
@@ -61,9 +64,22 @@
         </div>
       </div>
     </div>
-    <div class="bills" v-if="this.loginRole === 'CUSTOMER'">
+    <div class="bills" v-if="this.loginRole === 'CUSTOMER' || overView === 'All Orders'">
+      <div class="bills-display">
+        <select style="font-weight: bold;" :class="deliveryCss(deliveryStatus)" v-model="deliveryStatus">
+          <option style="padding: 10px 0; color: blue; background-color: #fff;" value="all">ALL</option>
+          <option style="padding: 10px 0; background-color: lightgreen;" value="pending">PENDING</option>
+          <option style="background-color: green;" value="awaiting_shipment">AWAITING</option>
+          <option style="background-color: blue;" value="completed">COMPLETED</option>
+          <option style="background-color: red;" value="canceled">CANCELED</option>
+        </select>
+        <div style="display: flex; width: auto; align-items: center;">
+          <span style="font-weight: bold;">TOTAL BILL: </span>
+          <p style="text-align: right; margin: 0; width: 4.2rem; color: blue; font-weight: bold; font-size: 22px;">{{ this.productOrdersDisplay.length }} / {{this.productOrders.length}}</p>
+        </div>
+      </div>
       <Carousel style="width: 100%; text-align: left !important;" v-bind="settings" :breakpoints="breakpoints">
-        <Slide v-for="(productOrder, index) in this.productOrders" :key="index">
+        <Slide v-for="(productOrder, index) in this.productOrdersDisplay" :key="index">
           <div class="carousel__item"><BillItem :product-order="productOrder" /></div>
         </Slide>
         <template #addons>
@@ -88,8 +104,6 @@ export default {
     return {
       loginRole: store.state.auth.userAccount.role,
       selected: 'Sales',
-      currentPage: 1,
-      billsPerPage: 3,
 
       settings: {
         itemsToShow: 1,
@@ -107,6 +121,8 @@ export default {
           snapAlign: 'start',
         },
       },
+      overView: 'Report Overview',
+      deliveryStatus: 'all'
     }
   },
   components: {
@@ -120,26 +136,32 @@ export default {
     productOrders() {
       return store.state.order.productOrders;
     },
-    displayedBills() {
-      const startIndex = (this.currentPage - 1) * this.billsPerPage;
-      const endIndex = startIndex + this.billsPerPage;
-      return this.productOrders.slice(startIndex, endIndex);
+    productOrdersDisplay() {
+      if(this.deliveryStatus !== 'all') {
+        return this.productOrders.filter(productOrder => {
+          return productOrder.status === this.deliveryStatus.toUpperCase();
+        });
+      } else {
+        return this.productOrders;
+      }
     },
-    totalPages() {
-      return Math.max(Math.ceil(this.productOrders.length / this.billsPerPage), 1);
+    productOrdersStatistic() {
+      return this.productOrders.filter(productOrder => {
+        return productOrder.status === "COMPLETED";
+      });
     },
     totalSales() {
       let totalSales = 0;
-      for (let index = this.productOrders.length - 1; index >= 0; index--) {
-        const productOrder = this.productOrders[index];
+      for (let index = this.productOrdersStatistic.length - 1; index >= 0; index--) {
+        const productOrder = this.productOrdersStatistic[index];
         totalSales += productOrder.totalPrice;
       }
       return Math.round(totalSales * 100) / 100;
     },
     totalQuantity() {
       let totalQuantity = 0;
-      for (let index = this.productOrders.length - 1; index >= 0; index--) {
-        const productOrder = this.productOrders[index];
+      for (let index = this.productOrdersStatistic.length - 1; index >= 0; index--) {
+        const productOrder = this.productOrdersStatistic[index];
         for (let index = 0; index < productOrder.order_items.length; index++) {
           const order_item = productOrder.order_items[index];
           totalQuantity += order_item.quantity;
@@ -148,14 +170,14 @@ export default {
       return totalQuantity;
     },
     dataYearSales() {
-      if (this.productOrders.length > 0) {
+      if (this.productOrdersStatistic.length > 0) {
         const colors = ['red', 'blue', '#3cba9f', '#e8c3b9'];
         const datasets = [];
         let datas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        let tmpYear = this.productOrders[this.productOrders.length - 1].createdDate.substr(0, 4);
+        let tmpYear = this.productOrdersStatistic[this.productOrdersStatistic.length - 1].createdDate.substr(0, 4);
         let tmpIndex = 0;
-        for (let index = this.productOrders.length - 1; index >= 0; index--) {
-          const productOrder = this.productOrders[index];
+        for (let index = this.productOrdersStatistic.length - 1; index >= 0; index--) {
+          const productOrder = this.productOrdersStatistic[index];
           const year = productOrder.createdDate.substr(0, 4);
           const month = productOrder.createdDate.substr(5, 2);
           if (year === tmpYear) {
@@ -206,8 +228,8 @@ export default {
       const datasets = [];
       let tmpIndex = -1;
       let tmpYear = null;
-      for (let index = 0; index < this.productOrders.length; index++) {
-        const productOrder = this.productOrders[index];
+      for (let index = 0; index < this.productOrdersStatistic.length; index++) {
+        const productOrder = this.productOrdersStatistic[index];
         const year = productOrder.createdDate.substr(0, 4);
         if (year === tmpYear) {
           datas[tmpIndex] = Math.round((datas[tmpIndex] + productOrder.totalPrice) * 100) / 100;
@@ -233,14 +255,14 @@ export default {
       }
     },
     dataYearQuantity() {
-      if (this.productOrders.length > 0) {
+      if (this.productOrdersStatistic.length > 0) {
         const colors = ['#3cba9f', '#db4b0f', 'red', 'blue'];
         const datasets = [];
         let datas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        let tmpYear = this.productOrders[this.productOrders.length - 1].createdDate.substr(0, 4);
+        let tmpYear = this.productOrdersStatistic[this.productOrdersStatistic.length - 1].createdDate.substr(0, 4);
         let tmpIndex = 0;
-        for (let index = this.productOrders.length - 1; index >= 0; index--) {
-          const productOrder = this.productOrders[index];
+        for (let index = this.productOrdersStatistic.length - 1; index >= 0; index--) {
+          const productOrder = this.productOrdersStatistic[index];
           const year = productOrder.createdDate.substr(0, 4);
           const month = productOrder.createdDate.substr(5, 2);
           if (year === tmpYear) {
@@ -300,8 +322,8 @@ export default {
       const datasets = [];
       let tmpIndex = -1;
       let tmpYear = null;
-      for (let index = 0; index < this.productOrders.length; index++) {
-        const productOrder = this.productOrders[index];
+      for (let index = 0; index < this.productOrdersStatistic.length; index++) {
+        const productOrder = this.productOrdersStatistic[index];
         const year = productOrder.createdDate.substr(0, 4);
         if (year === tmpYear) {
           for (let index = 0; index < productOrder.order_items.length; index++) {
@@ -340,8 +362,8 @@ export default {
       let tmpIndex = -1;
       let tmpDay = null;
       let tmpMon = null;
-      for (let index = 0; index < this.productOrders.length && tmpIndex < 30; index++) {
-        const productOrder = this.productOrders[index];
+      for (let index = 0; index < this.productOrdersStatistic.length && tmpIndex < 30; index++) {
+        const productOrder = this.productOrdersStatistic[index];
         const month = productOrder.createdDate.substr(5, 2);
         const day = productOrder.createdDate.substr(8, 2);
         if (day === tmpDay && month === tmpMon) {
@@ -369,8 +391,8 @@ export default {
       let tmpIndex = -1;
       let tmpDay = null;
       let tmpMon = null;
-      for (let index = 0; index < this.productOrders.length && tmpIndex < 30; index++) {
-        const productOrder = this.productOrders[index];
+      for (let index = 0; index < this.productOrdersStatistic.length && tmpIndex < 30; index++) {
+        const productOrder = this.productOrdersStatistic[index];
         const month = productOrder.createdDate.substr(5, 2);
         const day = productOrder.createdDate.substr(8, 2);
         if (day === tmpDay && month === tmpMon) {
@@ -405,9 +427,24 @@ export default {
     ...mapActions('order', ['loadAllBillAction', 'loadBillByUserAction']),
     async loadAllBill() {
       await this.loadAllBillAction();
+      console.log(this.productOrders)
     },
     async loadBillByUser() {
       await this.loadBillByUserAction();
+    },
+    deliveryCss(status) {
+      switch (status.toUpperCase()) {
+        case 'ALL':
+          return 'all-css';
+        case 'AWAITING_SHIPMENT':
+          return 'awaiting-css';
+        case 'COMPLETED':
+          return 'completed-css'
+        case 'CANCELED':
+          return 'canceled-css';
+        default:
+          return 'pending-css';
+      }
     },
   },
   mounted() {
@@ -424,7 +461,21 @@ export default {
   box-sizing: border-box;
   width: 100%;
 }
-
+.select-overview {
+  box-sizing: border-box;
+  height: 2rem;
+  width: 10rem;
+  border-radius: 5px;
+  text-align: center;
+  color: blue;
+  margin-bottom: 10px;
+  border: 1px groove #b1adad;
+  font-weight: bold;
+  font-size: 15px;
+}
+.select-overview:focus {
+  outline: none;
+}
 .statistics select {
   box-sizing: border-box;
   width: 8rem;
@@ -511,36 +562,68 @@ h2 {
   height: auto;
   min-height: 21.2rem;
   width: 100%;
-  display: flex;
   box-sizing: border-box;
 }
-.bills-content {
+.bills-display {
   display: flex;
-  gap: 20px;
-}
-.prev-btn, .next-btn {
-  position: absolute;
-  z-index: 1;
-  top: 48%;
-}
-.prev-btn {
-  left: 0;
-}
-.next-btn {
-  right: 0;
-}
-.prev-btn button, .next-btn button {
-  background-color: #fff;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 0 10px;
   border-radius: 5px;
-  font-size: 22px;
-  border: 0;
-  padding: 2px 15px;
-  font-weight: bold;
-  border: 1px solid #b1adad;;
+  height: 3rem;
+  width: 100%;
+  background-color: #fff;
 }
-.prev-btn button:not([disabled]):hover, .next-btn button:not([disabled]):hover {
-  background-color: black;
+.bills-display select{
+  box-sizing: border-box;
+  height: 2rem;
+  border-radius: 5px;
+  text-align: center;
+  width: 8rem;
+  border: 1px groove #b1adad;
+}
+.bills-display select:focus{
+  outline: none;
+}
+.bills-display select > option{
+  font-weight: bold;
+  border: 1px solid gray;
+  padding: 10px;
   color: #fff;
+}
+.all-css {
+  color: blue;
+  background-color: #fff;
+}
+.pending-css {
+  color: black;
+  background-color: lightgreen;
+}
+.awaiting-css {
+  color: white;
+  background-color: green;
+}
+.completed-css {
+  color: white;
+  background-color: blue;
+}
+.canceled-css {
+  color: white;
+  background-color: red;
+}
+</style>
+<style>
+.carousel__prev, .carousel__next {
+  margin: 0;
+}
+.carousel .carousel__icon {
+  color: red !important;
+  font-weight: bold;
+  background-color: #fff !important;
+  border: 1px solid #adacac;
+  box-sizing: border-box;
+  height: 35px;
 }
 </style>
 

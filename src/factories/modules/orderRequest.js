@@ -5,7 +5,7 @@ const ENTITY_PATH = "/api/v1/order";
 class orderRequest extends request {
   async createOrder() {
     try {
-      const res = await this.requestJsonAuth().post(`${ENTITY_PATH}/create`);
+      const res = await this.requestJsonAuth().post(`${ENTITY_PATH}/add`);
       return res;
     } catch (err) {
       return { err: err };
@@ -13,7 +13,7 @@ class orderRequest extends request {
   }
   async loadBillByUser() {
     try {
-      const res = await this.requestJsonAuth().get(`${ENTITY_PATH}/get`);
+      const res = await this.requestJsonAuth().get(`${ENTITY_PATH}/view/getByUser`);
       return res;
     } catch (err) {
       return { err: err };
@@ -21,7 +21,7 @@ class orderRequest extends request {
   }
   async loadAllBill() {
     try {
-      const res = await this.requestJsonAuth().get(`${ENTITY_PATH}/all`);
+      const res = await this.requestJsonAuth().get(`${ENTITY_PATH}/view/all`);
       return res;
     } catch (err) {
       return { err: err };

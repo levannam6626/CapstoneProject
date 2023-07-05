@@ -18,7 +18,7 @@ class categoryRequest extends request {
   }
   async createCategory(objCategory) {
     try {
-      const res = await this.requestFormData().post(`${ENTITY_PATH}`, objCategory);
+      const res = await this.requestFormData().post(`${ENTITY_PATH}/add`, objCategory);
       return res;
     } catch (err) {
       if (err.response.status === 400) {

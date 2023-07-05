@@ -5,7 +5,7 @@ const ENTITY_PATH = "/api/v1/products";
 class loadProductList extends request {
   async createProduct(product) {
     try {
-      const res = await this.requestFormData().post(`${ENTITY_PATH}/create-product`, product);
+      const res = await this.requestFormData().post(`${ENTITY_PATH}/add`, product);
       return res;
     } catch (err) {
       if (err.response.status === 400) {
@@ -53,7 +53,7 @@ class loadProductList extends request {
   }
   async editProduct(product) {
     try {
-      const res = await this.requestFormData().post(`${ENTITY_PATH}/edit-product`, product );
+      const res = await this.requestFormData().post(`${ENTITY_PATH}/edit`, product );
       return res;
     } catch (err) {
       if (err.status === 401) {
@@ -65,7 +65,7 @@ class loadProductList extends request {
   }
   async deleteProductsById(ids) {
     try {
-      const res = await this.requestProduct().delete(`${ENTITY_PATH}/delete-product`, ids );
+      const res = await this.requestProduct().delete(`${ENTITY_PATH}/delete`, ids );
       return res;
     } catch (err) {
       if (err.response.status === 401) {

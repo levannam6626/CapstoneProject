@@ -18,7 +18,7 @@
           </div>
           <div class="quantity">
             <label for="quantity">Quantity:</label>
-            <input type="number" id="quantity" min="0" max="1000" v-model="this.product.productQuantity" required/>
+            <input type="number" id="quantity" min="1" max="1000" v-model="this.product.productQuantity" required/>
           </div>
           <div class="product-category">
             <label for="product-category">Category:</label>
@@ -45,7 +45,7 @@
           <span class="message" v-show="!this.image.status">{{ this.image.message }}</span>
           <div class="final-url">
             <label>Image:</label>
-            <label for="upload">Import image
+            <label for="upload" style="padding-top: 5px;">Import image
               <input type="file" accept="image/*" id="upload" style="display: none;" @change="upload($event)" />
             </label>
           </div>
@@ -133,6 +133,7 @@ export default {
   justify-content: center;
   width: 100%;
   height: 100%;
+  max-width: 70rem;
 }
 
 .create-product-form {

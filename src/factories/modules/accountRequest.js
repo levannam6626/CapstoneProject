@@ -32,7 +32,7 @@ class accountRequest extends request {
   }
   async getUserByID(id) {
     try {
-      const res = await this.requestJsonAuth().get(`${ENTITY_PATH}account/${id}`);
+      const res = await this.requestJsonAuth().get(`${ENTITY_PATH}account/view/${id}`);
       return res;
     } catch (err) {
       if (err.response.status === 401) {
@@ -44,7 +44,7 @@ class accountRequest extends request {
   }
   async getUsersSearch(email) {
     try {
-      const res = await this.requestJsonAuth().get(`${ENTITY_PATH}account/get-by-search/${email}`);
+      const res = await this.requestJsonAuth().get(`${ENTITY_PATH}account/view/get-by-search/${email}`);
       return res;
     } catch (err) {
       if (err.response.status === 401) {
@@ -58,7 +58,7 @@ class accountRequest extends request {
     try {
       var res;
       accounts.forEach((account) =>{
-        res = this.requestJsonAuth().delete(`${ENTITY_PATH}account/delete-account/${account.id}`);
+        res = this.requestJsonAuth().delete(`${ENTITY_PATH}account/delete/${account.id}`);
       });
       return res;
     } catch (err) {

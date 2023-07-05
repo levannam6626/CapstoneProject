@@ -137,6 +137,7 @@ export default {
   justify-content: center;
   width: 100%;
   height: 100%;
+  max-width: 70rem;
 }
 .edit-product-form {
   border-radius: 8px;

@@ -148,8 +148,8 @@ h3 {
   cursor: pointer;
 }
 .menu-item a:hover {
-  color: red;
-  background-color: #90AA00;
+  color: red !important;
+  background-color: #90AA00 !important;
 }
 .add {
   text-align: center;

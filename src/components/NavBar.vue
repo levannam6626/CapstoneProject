@@ -177,6 +177,7 @@ nav {
   margin: 0px;
   padding: 0px;
   align-items: center;
+  gap: 1px;
 }
 .menu li {
   list-style: none;

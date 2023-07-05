@@ -1,7 +1,7 @@
 <template>
   <div class="bill-item">
-    <p style=" display: flex; align-items: center; height: 3em; width: 9em; background-color: #00000a; color: #fff;
-        font-weight: bold; box-sizing: border-box; padding-left: 2em; " >
+    <p style=" display: flex; align-items: center; margin: 0px; height: 3em; width: 9em; background-color: #00000a; color: #fff;
+        font-weight: bold; box-sizing: border-box; padding-left: 1.2em; " >
       BILL
     </p>
     <p style=" padding-right: 1.2em; margin: 0; font-weight: bold; text-align: right; width: 100%; box-sizing: border-box;">
@@ -35,15 +35,15 @@
             <th style="width: 20%; box-sizing: border-box; padding-left: 1.2rem">
               Image
             </th>
-            <th style="width: 30%">Product Name</th>
+            <th style="width: 30%; text-align: center;">Name</th>
             <th style="width: 16%">Price</th>
             <th style="width: 10%">Qty</th>
-            <th style="width: 18%">Total</th>
+            <th style="width: 18%; padding-right: 1.2em; text-align: right;">Total</th>
           </tr>
         </thead>
         <tbody>
           <tr style="border-bottom: 1px solid rgb(192, 188, 188); height: 3em" v-for="(orderItem, index) in this.productOrder.order_items" :key="index">
-            <td style="display: flex; align-items: center; height: 3em; box-sizing: border-box; padding-left: 30px;">
+            <td style="display: flex; align-items: center; height: 3em; box-sizing: border-box; padding-left: 1.2em ;">
               <figure>
                 <img :src="this.url + orderItem.product.productImage" />
               </figure>
@@ -51,14 +51,22 @@
             <td>{{ orderItem.product.productName }}</td>
             <td>${{ orderItem.product.productPrice }}</td>
             <td>x{{ orderItem.quantity }}</td>
-            <td>${{ orderItem.price }}</td>
+            <td style="padding-right: 1.2em; text-align: right;">${{ orderItem.price }}</td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="total">
-      <span>TOTAL:</span>
+      <span>TOTAL: &nbsp;</span>
       <span> ${{ this.productOrder.totalPrice }}</span>
+    </div>
+    <div style="margin-right: 1.2em; float: right; height: 2rem; width: auto; margin-bottom: 10px">
+      <select @change="changeDeliveryStatus" :class="deliveryStatusClass" class="change-delivery-status" :disabled="this.$store.state.auth.userAccount.role !== 'SELLER'" v-model="deliveryStatus">
+        <option style="padding: 10px 0; background-color: lightgreen;" value="PENDING">PENDING</option>
+        <option style="background-color: green;" value="AWAITING_SHIPMENT">AWAITING_SHIPMENT</option>
+        <option style="background-color: blue;" value="COMPLETED">COMPLETED</option>
+        <option style="background-color: red;" value="CANCELED">CANCELED</option>
+      </select>
     </div>
     <div class="infor">
       <span
@@ -83,6 +91,8 @@ import store from "@/store";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
 library.add(faEnvelope, faPhone);
+
+import { mapActions } from "vuex";
 export default {
   props: {
     productOrder: {
@@ -93,19 +103,39 @@ export default {
   data() {
     return {
       url: store.state.product.url,
+      deliveryStatus: this.productOrder.status
     };
   },
   computed: {
+    deliveryStatusClass() {
+      switch (this.deliveryStatus) {
+        case 'AWAITING_SHIPMENT':
+          return 'awaiting-css';
+        case 'COMPLETED':
+          return 'completed-css'
+        case 'CANCELED':
+          return 'canceled-css';
+        default:
+          return 'pending-css';
+      }
+    },
     createdDate() {
       const date = this.productOrder.createdDate.substr(0, 10);
       const time = this.productOrder.createdDate.substr(11, 5);
       return time + ", " + date;
     },
   },
+  methods: {
+    ...mapActions('order',['changeDeliveryStatusAction']),
+    async changeDeliveryStatus() {
+      await this.changeDeliveryStatusAction
+    }
+  },
 };
 </script>
 <style scoped>
 .bill-item {
+  position: relative;
   width: 25rem;
   height: auto;
   min-height: 33rem;
@@ -117,7 +147,7 @@ export default {
 .bill-infor {
   box-sizing: border-box;
   padding-left: 1.2em;
-  margin-bottom: 1em;
+  margin-bottom: 0.4em;
 }
 
 .name,
@@ -183,14 +213,37 @@ img:hover {
 .total {
   display: flex;
   justify-content: right;
-  color: red;
   width: 100%;
   font-weight: bold;
   box-sizing: border-box;
-  padding-right: 10%;
+  padding-right: 1.2em;
   margin: 1em 0;
 }
-
+.change-delivery-status {
+  border: none;
+  height: 100%;
+  font-weight: bold;
+  text-align: center;
+}
+.change-delivery-status:focus, .change-delivery-status:target {
+  outline: none;
+}
+.pending-css {
+  color: black;
+  background-color: lightgreen;
+}
+.awaiting-css {
+  color: white;
+  background-color: green;
+}
+.completed-css {
+  color: white;
+  background-color: blue;
+}
+.canceled-css {
+  color: white;
+  background-color: red;
+}
 .infor {
   display: flex;
   justify-content: center;

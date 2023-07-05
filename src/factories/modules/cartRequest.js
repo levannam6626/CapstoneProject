@@ -17,7 +17,7 @@ class orderRequest extends request {
   }
   async getCart() {
     try {
-      const res = await this.requestJsonAuth().get(`${ENTITY_PATH}/get`);
+      const res = await this.requestJsonAuth().get(`${ENTITY_PATH}/view/get`);
       return res;
     } catch (err) {
       if (err.response.status === 401) {
@@ -29,7 +29,7 @@ class orderRequest extends request {
   }
   async changeSelected(cartItem) {
     try {
-      const res = await this.requestFormData().post(`${ENTITY_PATH}/update`, cartItem);
+      const res = await this.requestFormData().post(`${ENTITY_PATH}/edit`, cartItem);
       return res;
     } catch (err) {
       if (err.response.status === 401) {
