@@ -78,7 +78,7 @@
           <p style="text-align: right; margin: 0; width: 4.2rem; color: blue; font-weight: bold; font-size: 22px;">{{ this.productOrdersDisplay.length }} / {{this.productOrders.length}}</p>
         </div>
       </div>
-      <Carousel style="width: 100%; text-align: left !important;" v-bind="settings" :breakpoints="breakpoints">
+      <Carousel style="width: 100%; text-align: left !important;" v-bind="settings" :breakpoints="breakpoints" v-if="this.productOrdersDisplay.length > 0">
         <Slide v-for="(productOrder, index) in this.productOrdersDisplay" :key="index">
           <div class="carousel__item"><BillItem :product-order="productOrder" /></div>
         </Slide>

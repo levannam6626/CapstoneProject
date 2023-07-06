@@ -3,9 +3,9 @@ import request from "..";
 const ENTITY_PATH = "/api/v1/order";
 
 class orderRequest extends request {
-  async createOrder() {
+  async createOrder(userInfor) {
     try {
-      const res = await this.requestJsonAuth().post(`${ENTITY_PATH}/add`);
+      const res = await this.requestFormData().post(`${ENTITY_PATH}/add`, userInfor);
       return res;
     } catch (err) {
       return { err: err };

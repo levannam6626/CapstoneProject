@@ -5,9 +5,9 @@
   <div class="cart-item-content" >
     <a>{{ cartItem.products.productName }}</a>
     <div class="product-quantity">
-      <button @click="decreaseQuantity()" :disabled="this.quantity === 1">-</button>
+      <button @mousedown="initFastDecreaseQuantity()" @mouseup="destroyFastDecreaseQuantity()" @click="decreaseQuantity()" :disabled="this.quantity === 1 || this.quantity === 0">-</button>
       <input type="text" maxlength="3" v-model="this.quantityString" readonly/>
-      <button @click="increaseQuantity()" :disabled="this.quantity === cartItem.products.productQuantity">+</button>
+      <button @mousedown="initFastIncreaseQuantity()" @mouseup="destroyFastIncreaseQuantity()" @click="increaseQuantity()" :disabled="this.quantity === cartItem.products.productQuantity">+</button>
     </div>
     <label>${{ this.totalPrice }}</label>
   </div>
@@ -33,7 +33,8 @@ export default {
   },
   data() {
     return {
-      url: store.state.product.url
+      url: store.state.product.url,
+      intervalId: null
     }
   },
   computed: {
@@ -55,10 +56,26 @@ export default {
   methods: {
     ...mapActions('cart',['delCartItemAction']),
     decreaseQuantity() {
-      this.$emit('quantityUpdate', this.index, Math.max((this.quantity - 1), 1));
+      this.$emit('quantityUpdate', this.index, Math.min(Math.max((this.quantity - 1), 1), this.cartItem.products.productQuantity));
+    },
+    initFastDecreaseQuantity() {
+      this.intervalId = setInterval(() => {
+        this.$emit('quantityUpdate', this.index, Math.min(Math.max((this.quantity - 1), 1), this.cartItem.products.productQuantity));
+      }, 100);
+    },
+    destroyFastDecreaseQuantity() {
+      clearInterval(this.intervalId)
     },
     increaseQuantity() {
       this.$emit('quantityUpdate', this.index, Math.min((this.quantity + 1), this.cartItem.products.productQuantity));
+    },
+    initFastIncreaseQuantity() {
+      this.intervalId = setInterval(() => {
+        this.$emit('quantityUpdate', this.index, Math.min((this.quantity + 1), this.cartItem.products.productQuantity));
+      }, 100);
+    },
+    destroyFastIncreaseQuantity() {
+      clearInterval(this.intervalId)
     },
     delCartItem() {
       this.delCartItemAction(this.cartItem);

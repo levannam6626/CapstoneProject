@@ -1,38 +1,41 @@
 <template>
   <div class="payment">
-    <div class="payment-header">
-      <span>Confirm Order</span>
-      <a @click="this.$emit('closePayment')"><font-awesome-icon icon="fa-solid fa-x" /></a>
-    </div>
-    <div class="payment-content">
-      <div class="user-infor">
-        <h3>{{ this.account.firstname }} {{ this.account.lastname }}</h3>
-        <label for="address-delivery">Delivery address:</label>
-        <input type="text" placeholder="Delivery address" maxlength="150" id="address-delivery" v-model="this.account.address">
-        <label for="phone-delivery">Phone:</label>
-        <input type="text" placeholder="Phone number" id="phone-delivery" v-model="this.account.phone">
-        <label for="notes">Additional notes if yes:</label>
-        <input type="text" placeholder="Additional notes" id="notes" maxlength="150" v-model="this.notes">
-        <div class="total-cost">
-          <span>Total Cost:</span>
-          <span>${{ this.totalCost }}</span>
-        </div>
+    <form @submit.prevent="payment">
+      <div class="payment-header">
+        <span>Confirm Order</span>
+        <a @click="this.$emit('closePayment', false)"><font-awesome-icon icon="fa-solid fa-x" /></a>
       </div>
-      <div class="items">
-        <div class="items-cart" v-for="(cart, index) in cartList" :key="index">
-          <figure>
-            <img :src="this.url + cart.products.productImage" />
-          </figure>
-          <div class="items-cart-content">
-            <a>{{ cart.products.productName }}</a>
-            <label>${{ cart.products.productPrice }}<span style="float: right;">x{{ cart.quantity }}</span></label>
+      <div class="payment-content">
+        <div class="user-infor">
+          <h3>{{ this.account.firstname }} {{ this.account.lastname }}</h3>
+          <label for="address-delivery">Delivery address:</label>
+          <input type="text" placeholder="Delivery address" maxlength="150" id="address-delivery" v-model="this.account.address" required>
+          <label for="phone-delivery">Phone:</label><span style="margin-left: 2rem;" class="message">{{ this.messages.phone }}</span>
+          <input type="text" placeholder="Phone number" id="phone-delivery" minlength="10" maxlength="13" v-model="this.account.phone" required>
+          
+          <label for="notes">Additional notes if yes:</label>
+          <input type="text" placeholder="Additional notes" id="notes" maxlength="150" v-model="this.notes">
+          <div class="total-cost">
+            <span>Total Cost:</span>
+            <span>${{ this.totalCost }}</span>
+          </div>
+        </div>
+        <div class="items">
+          <div class="items-cart" v-for="(cart, index) in cartList" :key="index">
+            <figure>
+              <img :src="this.url + cart.products.productImage" />
+            </figure>
+            <div class="items-cart-content">
+              <a>{{ cart.products.productName }}</a>
+              <label>${{ cart.products.productPrice }}<span style="float: right;">x{{ cart.quantity }}</span></label>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="payment-footer">
-      <button @click="payment()">PAYMENT</button>
-    </div>
+      <div class="payment-footer">
+        <button type="submit">PAYMENT</button>
+      </div>
+    </form>
   </div>
     <SuccessAlert message="Congratulations, your products has been successfully ordered." @closeAlert="closeAlert" v-show="this.alert"/>
 </template>
@@ -61,7 +64,13 @@ export default {
       url: store.state.product.url,
       account: store.state.auth.userAccount,
       notes: '',
-      alert: false
+      alert: false,
+      reg: {
+        regPhone: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/
+      },
+      messages: {
+        phone: ''
+      }
     }
   },
   emits :{
@@ -74,17 +83,38 @@ export default {
     ...mapActions('order',['paymentAction']),
     ...mapActions('cart',['getCartAction']),
     ...mapMutations('order',['paymentMutation']),
+    resetMessages() {
+      this.messages.phone = '';
+    },
+    validated() {
+      this.resetMessages();
+      if (!this.reg.regPhone.test(this.account.phone)) {
+        this.messages.phone = "Please enter a valid phone number";
+      }else {
+        return true;
+      }
+      return false;
+    },
     async payment() {
-      await this.paymentAction();
-      if(store.state.order.message.payment === "Add Order Success") {
-        this.paymentMutation(null);
-        await this.getCartAction();
-        this.alert = true;
+      if (this.validated()) {
+        console.log(this.account)
+        const userInfor = {
+          fullName: this.account.firstname + ' ' + this.account.lastname,
+          deliveryAddress: this.account.address,
+          phone: this.account.phone,
+          additionalNotes: this.notes
+        }
+        await this.paymentAction(userInfor);
+        if(store.state.order.message.payment === "Add Order Success") {
+          this.paymentMutation(null);
+          await this.getCartAction();
+          this.alert = true;
+        }
       }
     },
     closeAlert() {
       this.alert = false;
-      this.$emit('closePayment');
+      this.$emit('closePayment', true);
     },
     totalPrice(cart) {
       return Math.round((cart.quantity * cart.products.productPrice) *100) /100;
@@ -166,6 +196,10 @@ export default {
 }
 .user-infor input:focus {
   outline: none;
+}
+.message {
+  color: red;
+  font-size: 10px;
 }
 .total-cost {
   display: flex;

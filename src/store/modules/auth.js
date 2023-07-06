@@ -31,8 +31,8 @@ export default {
         content.commit('getUserMutation', objUser);
       }
     },
-    logoutAction(content)
-    {
+    async logoutAction(content) {
+      await accountRequest.logout();
       content.commit('loginMutation','logout');
       content.commit('getUserMutation','logout');
     },

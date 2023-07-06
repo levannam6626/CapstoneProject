@@ -15,17 +15,20 @@
       <div class="name">
         <p>Client's Name:</p>
         <span
-          >{{ this.productOrder.user.firstname }}
-          {{ this.productOrder.user.lastname }}</span
+          >{{ this.productOrder.fullName }}</span
         >
       </div>
       <div class="phone">
         <p>Phone:</p>
-        <span>{{ this.productOrder.user.phone }}</span>
+        <span>{{ this.productOrder.phone }}</span>
       </div>
       <div class="address">
         <p>Address:</p>
-        <span>{{ this.productOrder.user.address }}</span>
+        <span>{{ this.productOrder.deliveryAddress }}</span>
+      </div>
+      <div class="notes">
+        <p>Notes:</p>
+        <span>{{ this.productOrder.additionalNotes }}</span>
       </div>
     </div>
     <div class="table-container">
@@ -62,7 +65,7 @@
     </div>
     <div style="margin-right: 1.2em; float: right; height: 2rem; width: auto; margin-bottom: 10px">
       <select @change="changeDeliveryStatus" id="selectedStatus" :class="deliveryStatusClass" class="change-delivery-status" :disabled="!(this.$store.state.auth.userAccount.role === 'SELLER')" :value="deliveryStatus" v-if="this.$store.state.auth.userAccount.role === 'SELLER'">
-        <option style="padding: 10px 0; background-color: lightgreen;" value="PENDING" :disabled="true">PENDING</option>
+        <option style="padding: 10px 0; background-color: lightgreen;" value="PENDING">PENDING</option>
         <option style="background-color: green;" value="AWAITING_SHIPMENT">AWAITING_SHIPMENT</option>
         <option style="background-color: blue;" value="COMPLETED">COMPLETED</option>
         <option style="background-color: red;" value="CANCELED">CANCELED</option>
@@ -195,15 +198,20 @@ export default {
 
 .name,
 .phone,
-.address {
+.address,
+.notes {
   display: flex;
 }
 
 .name p,
 .phone p,
-.address p {
+.address p,
+.notes p {
   margin: 0;
   width: 8em;
+}
+.notes {
+  height: 2rem;
 }
 .table-container {
   height: 12.5rem;

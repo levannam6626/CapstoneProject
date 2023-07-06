@@ -4,7 +4,7 @@
     <ul style="margin: 0px; padding: 0px;">
       <li class="menu-item" v-for="(category, index) in this.categories" :key="index" >
         <a :href="'/' + category.categoryName " :class="category.categoryName">{{ category.categoryName }}</a>
-        <button :class="category.categoryName" @click="deleteCategoryById(category.id)" style="float: right;" v-if="userAccount.role === 'SELLER'"><font-awesome-icon icon="fa-solid fa-minus" /></button>
+        <button id="btn" :class="category.categoryName" @click="deleteCategoryById(category.id)" style="float: right;" v-if="userAccount.role === 'SELLER'"><font-awesome-icon icon="fa-solid fa-minus" /></button>
       </li>
       <li class="menu-item add" v-if="userAccount.role === 'SELLER'">
         <a @click="this.showAddCategory = true" id="add">
@@ -88,8 +88,10 @@ export default {
         for (let index = 0; index < elements.length; index++) {
           elements[index].querySelector('a').style.backgroundColor = "#fff";
           elements[index].querySelector('a').style.color = "black";
-          elements[index].querySelector('button').style.backgroundColor = "#fff";
-          elements[index].querySelector('button').style.color = "black";
+          if(elements[index].querySelector('button') !== null) {
+            elements[index].querySelector('#btn').style.backgroundColor = "#fff";
+            elements[index].querySelector('#btn').style.color = "black";
+          }
         }
       }
     }

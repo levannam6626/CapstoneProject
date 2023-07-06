@@ -28,7 +28,7 @@
         <span for="">User Detail</span>
         <div class="action-search">
           <font-awesome-icon class="search-icon" icon="fa-solid fa-magnifying-glass" />
-          <input type="search" placeholder="Search by email" v-on:keyup.enter="searchUser" v-model="emailSearch">
+          <input type="search" placeholder="Search by email" v-model="emailSearch">
         </div>
         <div class="action-btn">
           <button class="btn-add" @click="showAddUserForm = !showAddUserForm">Add</button>
@@ -98,13 +98,18 @@ export default ({
     }
   },
   computed: {
+    userFilter() {
+      return this.users.filter(user => {
+        return user.email.toLowerCase().includes(this.emailSearch.toLowerCase());
+      });
+    },
     displayedUsers() {
       const startIndex = (this.currentPage - 1) * this.usersPerPage;
       const endIndex = startIndex + this.usersPerPage;
-      return this.users.slice(startIndex, endIndex);
+      return this.userFilter.slice(startIndex, endIndex);
     },
     totalPages() {
-      return Math.max(Math.ceil(this.users.length / this.usersPerPage), 1);
+      return Math.max(Math.ceil(this.userFilter.length / this.usersPerPage), 1);
     }
   },
   components: {
@@ -124,15 +129,7 @@ export default ({
     logout() {
       this.deToken('logout');
       this.logoutAction();
-      this.$router.push('/');
-    },
-    searchUser() {
-      if(this.emailSearch === "") {
-        this.loadUserAccount('all');
-      }
-      else {
-        this.loadUserAccount(this.emailSearch);
-      }
+      this.$router.push('/login');
     },
     async loadUserAccount(email) {
       await this.getUserListAction(email);

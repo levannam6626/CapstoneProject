@@ -109,7 +109,7 @@ export default {
         phone: '',
         password: '',
         confirmPassword: '',
-      },
+      }
     };
   },
   mounted: function () {

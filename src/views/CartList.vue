@@ -140,9 +140,11 @@ export default {
         this.showPayment = false;
       }
     },
-    closePayment() {
+    closePayment(status) {
       this.showPayment = false;
-      this.selectedItems = [];
+      if(status === true) {
+        this.selectedItems = [];
+      }
     }
   },
   async mounted() {

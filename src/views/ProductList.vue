@@ -21,14 +21,14 @@
       <ProductItem :product="product" @checkedProduct="checkedProductInparent"/>
     </div>
   </div>
-  <div class="page-footer">
+  <div class="pagination-product">
     <el-pagination
       :page-size="pagination.pageSize"
       :pager-count="pagination.pagerCount"
       :page-count="pagination.totalPage"
       layout="prev, pager, next"
       v-model:current-page="pagination.page"
-      @current-change="getPageCampaigns()"
+      @current-change="getPageProducts()"
     />
   </div>
   <footer>
@@ -37,7 +37,6 @@
   </div>
 </template>
 <script>
-import { Pagination } from 'element-ui';
 import { mapActions } from 'vuex';
 import ProductItem from '@/components/ProductItem.vue';
 import store from '@/store';
@@ -54,15 +53,12 @@ export default {
       searchProductName: '',
       checkedProductIds:[],
       pagination: {
-        pageSize: 2,
+        pageSize: 1,
         pagerCount: 2,
-        totalPage: 3,
+        totalPage: 5,
         page: 1,
       },
     };
-  },
-  components: {
-    Pagination
   },
   computed: {
     products() {
@@ -82,7 +78,7 @@ export default {
     }
   },
   components: {
-    ProductItem,
+    ProductItem
   },
   methods: {
     ...mapActions('product',['searchProductAction','searchProductByCategoryNameAction','deleteProductsAction']),
@@ -93,20 +89,20 @@ export default {
         this.checkedProductIds = this.checkedProductIds.filter(item => item !== checkedProduct.id);
       }
     },
+    getPageProducts() {
+      console.log()
+    },
     async searchProductByCategoryName(name) {
       await this.searchProductByCategoryNameAction(name);
-      //this.products = store.state.product.products;
     },
     async searchProduct(name) {
       await this.searchProductAction(name);
-      //this.products = store.state.product.products;
     },
     async deleteProducts() {
       await this.deleteProductsAction(this.checkedProductIds);
       if(store.state.product.messages.delete === "Success") {
         alert('Delete Success');
         await this.searchProduct('all');
-        //this.products = store.state.product.products;
       }
     }
   },
@@ -158,6 +154,11 @@ h3 {
   gap: 20px;
   box-sizing: border-box;
   padding-top: 20px;
+}
+.pagination-product {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
 }
 footer button {
   position: fixed;

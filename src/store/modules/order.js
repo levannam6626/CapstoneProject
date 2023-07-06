@@ -8,8 +8,8 @@ export default {
     },
   },
   actions: {
-    async paymentAction(content) {
-      let res = await orderRequest.createOrder();
+    async paymentAction(content, userInfor) {
+      let res = await orderRequest.createOrder(userInfor);
       if(res.status === 200) {
         content.commit('paymentMutation', res.data);
       }

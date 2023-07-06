@@ -11,6 +11,14 @@ class accountRequest extends request {
       return { err: err };
     }
   }
+  async logout() {
+    try {
+      const res = await this.requestJsonAuth().post(`${ENTITY_PATH}auth/logout`);
+      return res;
+    } catch (err) {
+      return { err: err };
+    }
+  }
   async register(objRegister) {
     try {
       await this.requestRegister().post(`${ENTITY_PATH}account/register`, { ...objRegister });
