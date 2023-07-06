@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,7 +63,7 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @RequestMapping(path = "/create-product", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @RequestMapping(path = "/add", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> addProduct(@ModelAttribute ProductDto productRequest,@Valid @RequestPart(value = "file") MultipartFile file)
     {
         String msg ="";
@@ -77,12 +78,10 @@ public class ProductController {
             return ResponseEntity.badRequest().body(msg);
         }
     }
-    @RequestMapping(path = "/edit-product", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @RequestMapping(path = "/edit", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> editProduct(@RequestPart(value = "productRequest") ProductDto productRequest, @ModelAttribute MultipartFile file)
     {
         String msg ="";
-        System.out.println("'file'");
-        System.out.println(file);
         try {
             msg = iProductService.editProduct(productRequest,file);
             if(msg.equals("EDIT SUCCESS") )
@@ -94,7 +93,7 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
         }
     }
-    @DeleteMapping(path = "/delete-product")
+    @DeleteMapping(path = "/delete")
     public ResponseEntity<?> deleteProductsByid(@RequestBody List<Long> ids)
     {
         String msg = iProductService.deleteProductsByid(ids);

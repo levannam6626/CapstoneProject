@@ -17,7 +17,17 @@ import lombok.Setter;
 public class ProductOrderDto {
     private long ID;
 
+    private String fullName;
+
+    private String deliveryAddress;
+
+    private String phone;
+
+    private String additionalNotes;
+
     private Double totalPrice;
+
+    private String status;
 
     private LocalDateTime createdDate;
 

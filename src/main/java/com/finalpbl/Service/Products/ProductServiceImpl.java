@@ -132,7 +132,6 @@ public class ProductServiceImpl implements IProductService{
             productValidate.setProductPrice(productRequest.getProductPrice());
             productValidate.setProductQuantity(productRequest.getProductQuantity());
             productValidate.setUpdateDate(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
-            productValidate.setProductQuantity(productRequest.getProductQuantity());
             if(file != null) {
                 productValidate.setProductImage(uploadImg(file));
                 deleteImg(productRequest.getProductImage());

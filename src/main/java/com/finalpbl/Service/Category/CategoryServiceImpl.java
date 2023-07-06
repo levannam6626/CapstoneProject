@@ -38,5 +38,16 @@ public class CategoryServiceImpl implements ICategoryService{
         return "Error";
         
     }
+
+    @Override
+    public String deleteCategory(long id) {
+        Category categoryValidate = categoryRepository.findById(id).orElseThrow(null);
+        if(categoryValidate != null)
+        {
+            categoryRepository.delete(categoryValidate);
+            return "Delete Success";
+        }
+        return "Cannot find Category. Delete failure!";
+    }
     
 }

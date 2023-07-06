@@ -11,6 +11,8 @@ import com.finalpbl.Model.RefreshToken;
 import com.finalpbl.Repository.RefreshTokenRepository;
 import com.finalpbl.Repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class RefreshTokenService implements IRefreshTokenService{
 
@@ -44,6 +46,15 @@ public class RefreshTokenService implements IRefreshTokenService{
         }
         return token;
     }
+
+    @Override
+    @Transactional
+    public String deleteTokenByUserID(long id) {
+       refreshTokenRepository.deleteByUserId(id);
+       return "Logged out";
+    }
+
+    
 
     
     

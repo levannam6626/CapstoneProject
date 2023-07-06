@@ -6,9 +6,12 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.finalpbl.Constant.OrderStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,11 +38,27 @@ public class ProductOrder {
     @Column(name = "po_id")
     private long id;
 
+    @Column(name = "full_name")
+    private String fullName;
+
+    @Column(name = "delivery_address")
+    private String deliveryAddress;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "additional_notes")
+    private String additionalNotes;
+
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
     @Column(name = "total_price")
     private Double totalPrice;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private OrderStatus orderStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

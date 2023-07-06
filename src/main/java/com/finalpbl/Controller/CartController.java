@@ -37,14 +37,14 @@ public class CartController {
         return ResponseEntity.badRequest().body("Cannot Add Cart Item");
     }
 
-    @GetMapping(path = "/get")
+    @GetMapping(path = "view/get")
     public ResponseEntity<?> GetCart(@AuthenticationPrincipal UserDetailsImpl user)
     {
         CartDto cartDto = cartService.findByUserOrderByCreatedDateDesc(user.getUsername());
         return ResponseEntity.ok(cartDto);
     }   
 
-    @PostMapping(path = "/update")
+    @PostMapping(path = "/edit")
     public ResponseEntity<?> updateCart(@ModelAttribute AddEditCartDto cartItemDto)
     {
         String msg = cartService.UpdateCart(cartItemDto);

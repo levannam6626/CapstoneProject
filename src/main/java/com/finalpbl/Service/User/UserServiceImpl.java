@@ -39,17 +39,6 @@ public class UserServiceImpl implements IUserService{
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    // @Autowired
-	// private MessageSource messageSource;
-    
-    // @Override
-    // public List<User> getUsers() {
-    //     List<User> users;
-    //     users = userRepository.findAll();
-
-    //     return users;
-    // }
-
     @Override 
     public List<UserDto> getAllUsers()
     {
