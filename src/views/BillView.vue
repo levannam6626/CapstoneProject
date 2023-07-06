@@ -1,8 +1,8 @@
 <template>
   <div class="bill-view">
-    <select class="select-overview" v-model="overView">
+    <select class="select-overview" v-model="overView" v-if="this.loginRole === 'SELLER'">
       <option value="Report Overview">Report Overview</option>
-      <option value="All Orders">All Orders</option>
+      <option value="Bill List">Bill List</option>
     </select>
     <div class="statistics" v-if="this.productOrders.length > 0 && this.loginRole === 'SELLER' && overView === 'Report Overview'">
       <div class="action">
@@ -64,7 +64,7 @@
         </div>
       </div>
     </div>
-    <div class="bills" v-if="this.loginRole === 'CUSTOMER' || overView === 'All Orders'">
+    <div class="bills" v-if="this.loginRole === 'CUSTOMER' || overView === 'Bill List'">
       <div class="bills-display">
         <select style="font-weight: bold;" :class="deliveryCss(deliveryStatus)" v-model="deliveryStatus">
           <option style="padding: 10px 0; color: blue; background-color: #fff;" value="all">ALL</option>

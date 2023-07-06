@@ -71,7 +71,7 @@ class accountRequest extends request {
   }
   async editUser(objUser) {
     try {
-      const res = await this.requestFormData().post(`${ENTITY_PATH}account/edit`, objUser);
+      const res = await this.requestFormData().patch(`${ENTITY_PATH}account/edit`, objUser);
       return res;
     } catch (err) {
       if (err.response.status === 401) {

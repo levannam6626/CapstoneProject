@@ -25,6 +25,10 @@ export default {
       if(res.status === 200) {
         content.commit('setBillMutation', res.data);
       }
+    },
+    async changeDeliveryStatusAction(content, orderUpdateData) {
+      await orderRequest.changeDeliveryStatus(orderUpdateData);
+      content.dispatch('loadAllBillAction');
     }
   },
   mutations: {

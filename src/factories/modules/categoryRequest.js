@@ -27,6 +27,14 @@ class categoryRequest extends request {
       return { err: err };
     }
   }
+  async deleteCategoryById(id) {
+    try {
+      const res = await this.requestJsonAuth().delete(`${ENTITY_PATH}/delete/` + id);
+      return res;
+    } catch (err) {
+      return { err: err };
+    }
+  }
 }
 export default new categoryRequest();
 

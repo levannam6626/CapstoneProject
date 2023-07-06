@@ -21,12 +21,23 @@
       <ProductItem :product="product" @checkedProduct="checkedProductInparent"/>
     </div>
   </div>
+  <div class="page-footer">
+    <el-pagination
+      :page-size="pagination.pageSize"
+      :pager-count="pagination.pagerCount"
+      :page-count="pagination.totalPage"
+      layout="prev, pager, next"
+      v-model:current-page="pagination.page"
+      @current-change="getPageCampaigns()"
+    />
+  </div>
   <footer>
     <button @click="deleteProducts" v-if="checkedProductIds.length > 0">Delete</button>
   </footer>
   </div>
 </template>
 <script>
+import { Pagination } from 'element-ui';
 import { mapActions } from 'vuex';
 import ProductItem from '@/components/ProductItem.vue';
 import store from '@/store';
@@ -42,7 +53,16 @@ export default {
       showList: true,
       searchProductName: '',
       checkedProductIds:[],
+      pagination: {
+        pageSize: 2,
+        pagerCount: 2,
+        totalPage: 3,
+        page: 1,
+      },
     };
+  },
+  components: {
+    Pagination
   },
   computed: {
     products() {

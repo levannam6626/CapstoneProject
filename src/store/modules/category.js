@@ -27,6 +27,10 @@ export default {
         }
       });
     },
+    async deleteCategoryByIdAction(content, id) {
+      await categoryRequest.deleteCategoryById(id);
+      await content.dispatch('loadCategoriesAction','all');
+    }
   },
   mutations: {
     getCategoryByIdMutation(state, data) {

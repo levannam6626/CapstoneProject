@@ -5,10 +5,13 @@ import store from './store'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
+import ElementPlus from "element-plus";
+import "element-plus/dist/index.css";
 
 const app = createApp(App);
 app.use(router);
 app.use(store);
+app.use(ElementPlus);
 app.component('font-awesome-icon', FontAwesomeIcon, );
 app.mount('#app');
 

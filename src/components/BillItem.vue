@@ -61,11 +61,17 @@
       <span> ${{ this.productOrder.totalPrice }}</span>
     </div>
     <div style="margin-right: 1.2em; float: right; height: 2rem; width: auto; margin-bottom: 10px">
-      <select @change="changeDeliveryStatus" :class="deliveryStatusClass" class="change-delivery-status" :disabled="this.$store.state.auth.userAccount.role !== 'SELLER'" v-model="deliveryStatus">
-        <option style="padding: 10px 0; background-color: lightgreen;" value="PENDING">PENDING</option>
+      <select @change="changeDeliveryStatus" id="selectedStatus" :class="deliveryStatusClass" class="change-delivery-status" :disabled="!(this.$store.state.auth.userAccount.role === 'SELLER')" :value="deliveryStatus" v-if="this.$store.state.auth.userAccount.role === 'SELLER'">
+        <option style="padding: 10px 0; background-color: lightgreen;" value="PENDING" :disabled="true">PENDING</option>
         <option style="background-color: green;" value="AWAITING_SHIPMENT">AWAITING_SHIPMENT</option>
         <option style="background-color: blue;" value="COMPLETED">COMPLETED</option>
         <option style="background-color: red;" value="CANCELED">CANCELED</option>
+      </select>
+      <select @change="changeDeliveryStatus" id="selectedStatus" :class="deliveryStatusClass" class="change-delivery-status" :disabled="!(deliveryStatus === 'AWAITING_SHIPMENT')" :value="deliveryStatus" v-else>
+        <option style="padding: 10px 0; background-color: lightgreen;" value="PENDING" v-if="deliveryStatus !== 'AWAITING_SHIPMENT'">PENDING</option>
+        <option style="background-color: green;" value="AWAITING_SHIPMENT" >AWAITING_SHIPMENT</option>
+        <option style="background-color: blue;" value="COMPLETED">COMPLETED</option>
+        <option style="background-color: red;" value="CANCELED" v-if="deliveryStatus !== 'AWAITING_SHIPMENT'">CANCELED</option>
       </select>
     </div>
     <div class="infor">
@@ -102,11 +108,13 @@ export default {
   },
   data() {
     return {
-      url: store.state.product.url,
-      deliveryStatus: this.productOrder.status
-    };
+      url: store.state.product.url
+    }
   },
   computed: {
+    deliveryStatus() {
+      return this.productOrder.status;
+    },
     deliveryStatusClass() {
       switch (this.deliveryStatus) {
         case 'AWAITING_SHIPMENT':
@@ -127,10 +135,45 @@ export default {
   },
   methods: {
     ...mapActions('order',['changeDeliveryStatusAction']),
-    async changeDeliveryStatus() {
-      await this.changeDeliveryStatusAction
+    async changeDeliveryStatus(event) {
+      const selectedStatus = document.getElementById('selectedStatus');
+      selectedStatus.className = 'change-delivery-status';
+      switch (event.target.value) {
+        case 'AWAITING_SHIPMENT':
+          selectedStatus.className += ' awaiting-css';
+          break;
+        case 'COMPLETED':
+          selectedStatus.className += ' completed-css';
+          break;
+        case 'CANCELED':
+          selectedStatus.className += ' canceled-css';
+          break;
+        default:
+          selectedStatus.className += ' pending-css';
+          break;
+      }
+      const orderUpdateData = {
+        ID: this.productOrder.id,
+        status: event.target.value
+      }
+      await this.changeDeliveryStatusAction(orderUpdateData);
+      selectedStatus.className = 'change-delivery-status';
+      switch (this.deliveryStatus) {
+        case 'AWAITING_SHIPMENT':
+          selectedStatus.className += ' awaiting-css';
+          break;
+        case 'COMPLETED':
+          selectedStatus.className += ' completed-css';
+          break;
+        case 'CANCELED':
+          selectedStatus.className += ' canceled-css';
+          break;
+        default:
+          selectedStatus.className += ' pending-css';
+          break;
+      }
     }
-  },
+  }
 };
 </script>
 <style scoped>

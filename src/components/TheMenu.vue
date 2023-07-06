@@ -4,6 +4,7 @@
     <ul style="margin: 0px; padding: 0px;">
       <li class="menu-item" v-for="(category, index) in this.categories" :key="index" >
         <a :href="'/' + category.categoryName " :class="category.categoryName">{{ category.categoryName }}</a>
+        <button :class="category.categoryName" @click="deleteCategoryById(category.id)" style="float: right;" v-if="userAccount.role === 'SELLER'"><font-awesome-icon icon="fa-solid fa-minus" /></button>
       </li>
       <li class="menu-item add" v-if="userAccount.role === 'SELLER'">
         <a @click="this.showAddCategory = true" id="add">
@@ -12,13 +13,12 @@
         </a>
       </li>
     </ul>
-    
   </div>
 </template>
 <script>
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPlus} from '@fortawesome/free-solid-svg-icons';
-library.add(faPlus);
+import { faMinus, faPlus} from '@fortawesome/free-solid-svg-icons';
+library.add(faMinus, faPlus);
 import store from '@/store';
 import { mapActions } from 'vuex';
 
@@ -31,7 +31,6 @@ export default {
   },
   data() {
     return {
-      categories: [],
       showAddCategory: false,
       inputString: "",
       userAccount: store.state.auth.userAccount,
@@ -46,14 +45,16 @@ export default {
   computed: {
     url() {
       return this.$route;
+    },
+    categories() {
+      return store.state.category.categories;
     }
   },
   methods: {
-    ...mapActions('category', ['addCategoryAction','loadCategoriesAction']),
+    ...mapActions('category', ['addCategoryAction','loadCategoriesAction','deleteCategoryByIdAction']),
 
     async loadCategories(id) {
       await this.loadCategoriesAction(id);
-      this.categories = store.state.category.categories;
     },
     async addCategory() {
       if(this.inputString !== "") {
@@ -64,10 +65,14 @@ export default {
         this.$el.querySelector('#add').style.cursor = 'progress';
         await this.addCategoryAction(objCategory);
         this.$el.querySelector('#add').style.cursor = 'pointer';
-        this.categories = store.state.category.categories;
         this.inputString = "";
       }
       this.showAddCategory = false;
+    },
+    async deleteCategoryById(id) {
+      if(confirm("Do you really want to delete?")){
+        await this.deleteCategoryByIdAction(id)
+      }
     },
     // Capitalize the first letter of each word in a string
     capitalizeString(string) {
@@ -83,6 +88,8 @@ export default {
         for (let index = 0; index < elements.length; index++) {
           elements[index].querySelector('a').style.backgroundColor = "#fff";
           elements[index].querySelector('a').style.color = "black";
+          elements[index].querySelector('button').style.backgroundColor = "#fff";
+          elements[index].querySelector('button').style.color = "black";
         }
       }
     }
@@ -133,6 +140,7 @@ h3 {
   height: 80px;
 }
 .menu-item {
+  display: flex;
   list-style-type: none;
 }
 .menu-item a {
@@ -146,10 +154,26 @@ h3 {
   border-bottom: 1px solid #DDDDDD;
   padding: 10px;
   cursor: pointer;
+  width: 100%;
 }
 .menu-item a:hover {
   color: red !important;
   background-color: #90AA00 !important;
+}
+.menu-item a:hover + button{
+  color: red !important;
+  background-color: #90AA00 !important;
+}
+.menu-item button {
+  border: 0;
+  background-color: #fff;
+  border-bottom: 1px solid #DDDDDD;
+  font-weight: bold;
+  padding: 0px 10px;
+  cursor: pointer;
+}
+.menu-item button:hover {
+  color: red;
 }
 .add {
   text-align: center;

@@ -27,6 +27,14 @@ class orderRequest extends request {
       return { err: err };
     }
   }
+  async changeDeliveryStatus(orderUpdateData) {
+    try {
+      const res = await this.requestFormData().post(`${ENTITY_PATH}/edit`, orderUpdateData);
+      return res;
+    } catch (err) {
+      return { err: err };
+    }
+  }
 }
 export default new orderRequest();
 

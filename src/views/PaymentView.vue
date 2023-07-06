@@ -64,6 +64,9 @@ export default {
       alert: false
     }
   },
+  emits :{
+    closePayment: null
+  },
   components: {
     SuccessAlert
   },
