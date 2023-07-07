@@ -102,7 +102,7 @@ export default {
           fullName: this.account.firstname + ' ' + this.account.lastname,
           deliveryAddress: this.account.address,
           phone: this.account.phone,
-          additionalNotes: this.notes
+          additionalNotes: (this.notes === '')? 'There are no notes!': this.notes
         }
         await this.paymentAction(userInfor);
         if(store.state.order.message.payment === "Add Order Success") {

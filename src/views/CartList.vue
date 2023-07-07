@@ -9,13 +9,14 @@
         <input type="checkbox" name="action" @change="changeSelected(cartItem)" :value="cartItem" v-model="selectedItems"/>
         <CartItem :cart-item="cartItem" :index="index" @quantity-update="quantityUpdateInParent" @delete-cartItem="deleteCartItem"/>
       </div>
+      <div class="check-length" v-if="checkLength === false "><font-awesome-icon id="icon" icon="fa-solid fa-cart-shopping" />There are no products in the cart yet</div>
     </div>
     <div class="payment-transparent" @click="paymentClick($event)" v-show="this.showPayment">
       <PaymentView :cart-list="this.selectedItems" :total-cost="this.totalCost" @close-payment="closePayment"/>
     </div>
     <footer>
       <div class="select-all">
-        <input type="checkbox" id="all" v-model="allSelected"><label for="all">SelectAll</label>
+        <input type="checkbox" id="all" @change="changeSelectedAll()" v-model="allSelected"><label for="all">SelectAll</label>
       </div>
       <button @click="orderProducts()" class="order">Order ({{ this.selectedItems.length }})</button>
       <div class="total-price">
@@ -27,9 +28,9 @@
   </div>
 </template>
 <script>
-import { faLeftLong } from "@fortawesome/free-solid-svg-icons";
+import { faLeftLong, faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
-library.add(faLeftLong);
+library.add(faLeftLong, faCartShopping);
 import store from '@/store';
 import { mapActions } from 'vuex';
 import CartItem from '@/components/CartItem.vue';
@@ -78,7 +79,7 @@ export default {
     },
     allSelected: {
       get() {
-        return this.selectedItems.length === this.cart.length;
+        return (this.cart.cartItems === undefined || this.cart.cartItems)? false : this.selectedItems.length === this.cart.cartItems.length;
       },
       set(value) {
         if (value) {
@@ -88,6 +89,13 @@ export default {
           this.selectedItems = [];
         }
       }
+    },
+    checkLength() {
+      if(this.cart.cartItems !== undefined) {
+        if(this.cart.cartItems.length > 0) {
+          return true;
+        }
+      }return false
     }
   },
   watch: {
@@ -96,7 +104,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("cart", ["getCartAction","changeSelectedAction"]),
+    ...mapActions("cart", ["getCartAction", "changeSelectedAction", "changeSelectedAllAction"]),
     async getCart() {
       await this.getCartAction();
     },
@@ -111,13 +119,13 @@ export default {
       this.totalCostCalculator();
     },
     deleteCartItem() {
-      this.selectedItems = [],
+      this.selectedItems = [];
       this.setSelected()
     },
     setSelected() {
       if(this.cart.cartItems !== undefined) {
         for (let index = 0; index < this.cart.cartItems.length; index++) {
-          const cartItem = this.cart.cartItems[index];
+          let cartItem = this.cart.cartItems[index];
           if(cartItem.selected === true) {
             this.selectedItems.push(cartItem);
           }
@@ -128,6 +136,17 @@ export default {
     changeSelected(cartItem) {
       cartItem.selected = this.selectedItems.some(selectedItem => selectedItem.id === cartItem.id)
       this.changeSelectedAction(cartItem);
+    },
+    async changeSelectedAll() {
+      const cartItems = this.cart.cartItems;
+      for (let index = 0; index < cartItems.length; index++) {
+        if(this.selectedItems.length > 0) {
+          cartItems[index].selected = true;
+        } else {
+          cartItems[index].selected = false;
+        }
+      }
+      await this.changeSelectedAllAction(cartItems);
     },
     totalCostCalculator() {
       this.totalCost = 0;
@@ -168,7 +187,7 @@ export default {
   box-sizing: border-box;
   width: 100%;
   padding: 10px 0px;
-  border-bottom: 1px solid #000;
+  border-bottom: 2px solid #000;
   margin-bottom: 10px;
 }
 .header button {
@@ -208,6 +227,21 @@ export default {
   width: 100%;
   height: 3.7em;
   border-bottom: solid 1px rgb(190, 188, 188);
+}
+.check-length {
+  box-sizing: border-box;
+  align-self: center;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center ;
+  min-height: 14.7rem;
+  font-size: 20px;
+  color: red
+}
+.check-length #icon {
+  transform: rotate(-30deg);
 }
 .payment-transparent {
   position: absolute;

@@ -18,11 +18,14 @@ export default {
       })
 		},
     async changeSelectedAction(content, cartItem) {
-      await cartRequest.changeSelected(cartItem)
+      await cartRequest.changeSelected(cartItem);
+    },
+    async changeSelectedAllAction(content, cartItems) {
+      await cartRequest.changeSelectedAllAction(cartItems);
     },
     async delCartItemAction(content, cartItem) {
       await cartRequest.delCartItem(cartItem);
-      content.dispatch('getCartAction');
+      await content.dispatch('getCartAction');
     }
   },
   mutations: {

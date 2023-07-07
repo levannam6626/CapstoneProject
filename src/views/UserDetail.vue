@@ -100,6 +100,7 @@ export default {
         this.$el.querySelector('#submit').style.cursor = 'progress';
         await this.editUserAction(objUser);
         this.$el.querySelector('#submit').style.cursor = 'pointer';
+        alert('edit success!')
         this.edit = false;
       }
     },

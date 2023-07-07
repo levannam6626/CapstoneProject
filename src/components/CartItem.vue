@@ -77,8 +77,8 @@ export default {
     destroyFastIncreaseQuantity() {
       clearInterval(this.intervalId)
     },
-    delCartItem() {
-      this.delCartItemAction(this.cartItem);
+    async delCartItem() {
+      await this.delCartItemAction(this.cartItem);
       this.$emit('deleteCartItem')
     }
   }

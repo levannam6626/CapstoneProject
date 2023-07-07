@@ -8,10 +8,6 @@ class orderRequest extends request {
       const res = await this.requestFormData().post(`${ENTITY_PATH}/add`, objCart );
       return res;
     } catch (err) {
-      if (err.response.status === 401) {
-        localStorage.clear();
-        this.$router.push("/");
-      }
       return { err: err };
     }
   }
@@ -20,10 +16,6 @@ class orderRequest extends request {
       const res = await this.requestJsonAuth().get(`${ENTITY_PATH}/view/get`);
       return res;
     } catch (err) {
-      if (err.response.status === 401) {
-        localStorage.clear();
-        this.$router.push("/");
-      }
       return { err: err };
     }
   }
@@ -32,10 +24,14 @@ class orderRequest extends request {
       const res = await this.requestFormData().post(`${ENTITY_PATH}/edit`, cartItem);
       return res;
     } catch (err) {
-      if (err.response.status === 401) {
-        localStorage.clear();
-        this.$router.push("/");
-      }
+      return { err: err };
+    }
+  }
+  async changeSelectedAllAction(cartItems) {
+    try {
+      const res = await this.requestJsonAuth().post(`${ENTITY_PATH}/edit-multiple`, cartItems);
+      return res;
+    } catch (err) {
       return { err: err };
     }
   }

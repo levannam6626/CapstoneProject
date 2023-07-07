@@ -104,8 +104,8 @@
         const mouseX = event.clientX - left
         const mouseY = event.clientY - top
         const scale = 2
-        const scaleOriginX = mouseX / event.target.offsetWidth * 100 + '%'
-        const scaleOriginY = mouseY / event.target.offsetHeight * 100 + '%'
+        const scaleOriginX = mouseX / event.target.offsetWidth * 80 + '%'
+        const scaleOriginY = mouseY / event.target.offsetHeight * 80 + '%'
         this.scale = scale
         this.scaleOrigin = scaleOriginX + ' ' + scaleOriginY
       }
@@ -193,6 +193,7 @@ p {
   margin: 0;
   padding: 0;
   height: 100%;
+  width: 22rem;
   border: groove 3px;
   background-color: #fff;
 }
@@ -311,6 +312,10 @@ p {
   .product-img {
     display: flex;
     justify-content: center;
+  }
+  .zoom-img {
+    width: 100%;
+    height: 20rem;
   }
 }
 @media screen and (max-width: 444px) {
