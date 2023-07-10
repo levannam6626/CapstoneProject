@@ -64,17 +64,21 @@ public class ProductController {
     }
 
     @RequestMapping(path = "/add", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> addProduct(@ModelAttribute ProductDto productRequest,@Valid @RequestPart(value = "file") MultipartFile file)
+    public ResponseEntity<?> addProduct(@RequestPart(value = "productRequest") ProductDto productRequest,@Valid @RequestPart(value = "file") MultipartFile file)
     {
         String msg ="";
         try {
+            System.out.println(productRequest.getCategoryId());
+            System.out.println(productRequest.getProductName());
             msg = iProductService.addProduct(productRequest, file);
             if(msg.equals("CREATE SUCCESS") )
             {
                 return ResponseEntity.ok(msg);
             }
+            System.out.println(msg);
             return ResponseEntity.badRequest().body(msg);
         } catch (Exception e) {
+            System.out.println(msg);
             return ResponseEntity.badRequest().body(msg);
         }
     }
