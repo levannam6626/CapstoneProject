@@ -53,7 +53,7 @@ export default {
       searchProductName: '',
       checkedProductIds:[],
       pagination: {
-        pageSize: 6,
+        pageSize: 8,
         pagerCount: 2,
         page: 1
       },
