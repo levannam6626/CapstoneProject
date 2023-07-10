@@ -40,6 +40,18 @@ public class ProductOrder {
     @Column(name = "po_id")
     private long id;
 
+    @Column(name = "full_name")
+    private String fullName;
+
+    @Column(name = "delivery_address")
+    private String deliveryAddress;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "additional_notes")
+    private String additionalNotes;
+
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 

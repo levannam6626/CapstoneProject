@@ -103,6 +103,17 @@ public class CartServiceImpl implements ICartService{
     }
 
     @Override
+    public String UpdateCartMultiple(List<AddEditCartDto> cartItemDtos) {
+        for(AddEditCartDto cartItemDto : cartItemDtos) {
+            Cart cart = cartRepository.findById(cartItemDto.getId()).orElseThrow();
+            cart.setQty(cartItemDto.getQuantity());
+            cart.setSelected(cartItemDto.isSelected());
+            cartRepository.save(cart);  
+        }
+        return "Edit Success";
+    }
+
+    @Override
     public String DeleteCart(long CartId) {
         Cart cart = cartRepository.findById(CartId).orElseThrow(null);
         if(cart != null)

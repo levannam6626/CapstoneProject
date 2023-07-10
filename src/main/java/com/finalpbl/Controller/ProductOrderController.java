@@ -51,10 +51,9 @@ public class ProductOrderController {
     }
 
     @PostMapping(path = "/add")
-    @PreAuthorize("hasAuthority('CUSTOMER')")
-    public ResponseEntity<?> createOrder(@AuthenticationPrincipal UserDetailsImpl user)
+    public ResponseEntity<?> createOrder(@ModelAttribute ProductOrderDto productOrderDto,@AuthenticationPrincipal UserDetailsImpl user)
     {
-        String msg = iProductOrderService.PlaceOrder(user.getUsername());
+        String msg = iProductOrderService.PlaceOrder(productOrderDto, user.getUsername());
         if(msg.equals("Add Order Success"))
         {
             return ResponseEntity.ok().body(msg);

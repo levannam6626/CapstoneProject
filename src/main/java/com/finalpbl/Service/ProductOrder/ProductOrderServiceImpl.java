@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.finalpbl.Constant.OrderStatus;
@@ -48,7 +49,8 @@ public class ProductOrderServiceImpl implements IProductOrderService{
     @Autowired OrderResponseMapper orderResponseMapper;
     @Override
     public List<ProductOrderDto> getAllOrders() {
-        List<ProductOrder> orders = productOrderRepository.findAll();
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdDate");
+        List<ProductOrder> orders = productOrderRepository.findAll(sort);
         List<ProductOrderDto> orderDtos = orders.stream().map(orderResponseMapper).collect(Collectors.toList());
         return orderDtos;
     }
@@ -69,10 +71,14 @@ public class ProductOrderServiceImpl implements IProductOrderService{
     }
 
     @Override
-    public String PlaceOrder(String email) {
+    public String PlaceOrder(ProductOrderDto productOrderDto, String email) {
         CartDto cartDto = cartService.findByUserOrderByCreatedDateDesc(email);
         List<CartItemDto> cartItemDtos = cartDto.getCartItems();
         ProductOrder order = new ProductOrder();
+        order.setFullName(productOrderDto.getFullName());
+        order.setDeliveryAddress(productOrderDto.getDeliveryAddress());
+        order.setPhone(productOrderDto.getPhone());
+        order.setAdditionalNotes(productOrderDto.getAdditionalNotes());
         order.setCreatedDate(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
         order.setUser(userRepository.findByEmail(email).orElseThrow());
         order.setTotalPrice(cartDto.getTotalCost());
@@ -84,8 +90,8 @@ public class ProductOrderServiceImpl implements IProductOrderService{
             if(items.isSelected() == true)
             {
                 OrderItem orderItem = new OrderItem();
+                orderItem.setPrice(items.getProducts().getProductPrice() * items.getQuantity());
                 Products products = items.getProducts();
-                orderItem.setPrice(items.getProducts().getProductPrice());
                 orderItem.setProductorder(order);
                 orderItem.setProducts(items.getProducts());
                 orderItem.setQuantity(items.getQuantity());
@@ -94,6 +100,7 @@ public class ProductOrderServiceImpl implements IProductOrderService{
                 productsRepository.save(products);
             }
         }
+        cartService.DeleteOrderdItem(email);
         return "Add Order Success";
     }
 
