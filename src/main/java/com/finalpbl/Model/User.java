@@ -80,6 +80,10 @@ public class User {
     @JsonManagedReference
     private List<Cart> carts;
 
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Payment> payments;
+
     public User(String firstname, String lastname, String password, String email, String address, String phone, Boolean isDeleted, Role role, String gender) {
         this.firstname = firstname;
         this.lastname = lastname;

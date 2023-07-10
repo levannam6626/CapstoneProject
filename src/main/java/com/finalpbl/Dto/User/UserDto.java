@@ -14,8 +14,6 @@ public class UserDto {
     
     private long id;
 
-    private String password;
-
     private String firstname;
 
     private String lastname;
@@ -23,10 +21,12 @@ public class UserDto {
     private String email;
 
     private String address;
-    
+
     private String phone;
 
     private String gender;
+
+    private String password;
 
     private String role;
 }

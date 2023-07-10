@@ -64,7 +64,7 @@ public class ProductController {
     }
 
     @RequestMapping(path = "/add", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> addProduct(@ModelAttribute ProductDto productRequest,@Valid @RequestPart(value = "file") MultipartFile file)
+    public ResponseEntity<?> addProduct(@RequestPart(value = "productRequest") ProductDto productRequest, @ModelAttribute MultipartFile file)
     {
         String msg ="";
         try {
