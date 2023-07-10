@@ -23,7 +23,7 @@ export default {
         if(result === true){
           content.commit('setLoginFormMutation', objRegister);
         }else {
-          content.commit('setRegisterStatusMutation', result);
+          content.commit('setRegisterStatusMutation', false);
         }
       });
     },

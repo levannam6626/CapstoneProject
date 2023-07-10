@@ -98,6 +98,7 @@ export default {
           productQuantity: this.product.productQuantity,
           productDescription: this.product.productDescription,
         };
+        console.log(objproduct.categoryId)
         const objproductDB = new FormData();
         objproductDB.append(
           "productRequest",

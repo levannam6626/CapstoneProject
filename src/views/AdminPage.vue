@@ -67,16 +67,21 @@
         </div>
       </div>
       <div class="register-form" v-show="this.showAddUserForm" @click="closeRegisterForm($event)">
-        <RegisterForm :logedinRole = "'ADMIN'" class="adduser" @closeForm="closeFormInParent"/>
+        <RegisterForm :logedinRole = "'ADMIN'" class="adduser" @closeForm="closeFormInParent" @alertSuccess="alertSuccessInparent"/>
       </div>
-      
+      <div class="alert" v-show="this.alertSuccess">
+        <SuccessAlert :message="'User account has been created successfully'" @closeAlert="closeAlert"/>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import store from '@/store';
 import { mapActions } from 'vuex';
+
 import RegisterForm from '@/components/RegisterForm.vue';
+import SuccessAlert from '@/components/SuccessAlert.vue';
+
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faBars, faRightFromBracket, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 library.add(faBars, faRightFromBracket, faMagnifyingGlass);
@@ -85,7 +90,6 @@ export default ({
   data() {
     return {
       showAside: true,
-      users: [],
       currentPage: 1,
       usersPerPage: 6,
       userCount: 0,
@@ -94,10 +98,19 @@ export default ({
       selectedOptions: [],
       deleteAccountAction: false,
       emailSearch: "",
-      showAddUserForm: false
+      showAddUserForm: false,
+      alertSuccess: false
     }
   },
   computed: {
+    users() {
+      if(store.state.account.userList.length >0) {
+        return store.state.account.userList.filter(user => {
+          return user.role !== 'ADMIN';
+        })
+      }
+      return store.state.account.userList;
+    },
     userFilter() {
       return this.users.filter(user => {
         return user.email.toLowerCase().includes(this.emailSearch.toLowerCase());
@@ -114,6 +127,7 @@ export default ({
   },
   components: {
     RegisterForm,
+    SuccessAlert
   },
   watch: {
     deleteAccountAction(deleteAccountAction) {
@@ -133,7 +147,6 @@ export default ({
     },
     async loadUserAccount(email) {
       await this.getUserListAction(email);
-      this.users = store.state.account.userList;
       this.userCount = this.users.length;
       this.sellerCount = 0;
       this.customerCount = 0;
@@ -163,6 +176,12 @@ export default ({
         this.showAddUserForm = false;
         this.loadUserAccount('all');
       }
+    },
+    alertSuccessInparent() {
+      this.alertSuccess = true;
+    },
+    closeAlert() {
+      this.alertSuccess = false;
     }
   },
   mounted() {
@@ -415,6 +434,17 @@ td {
   width: 65%;
   z-index: 1;
   box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+.alert {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color:  rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: center;
 }

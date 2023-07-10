@@ -1,11 +1,11 @@
 <template>
   <div class="container">
-    <div class="success">
-      <div class="success-top">
-        <font-awesome-icon class="success-icon" icon="fa-solid fa-circle-check" />
-        <p>Success</p>
+    <div class="unsuccessfull">
+      <div class="unsuccessfull-top">
+        <font-awesome-icon class="failed-icon" icon="fa-solid fa-circle-check" />
+        <p>Unsuccessfull</p>
       </div>
-      <div class="success-bottom">
+      <div class="unsuccessfull-bottom">
         <div class="mesage">
           <p>{{ this.message }}</p>
         </div>
@@ -26,7 +26,7 @@ export default {
     message: {
       type: String,
       require: true,
-      default: 'Congratulations!'
+      default: 'Unexpected!'
     }
   },
   data() {
@@ -51,13 +51,14 @@ export default {
   border-radius: 17px;
   background-color: rgba(0, 0, 0, 0.6);
 }
-.success {
+
+.unsuccessfull {
   height: 20rem;
   width: 17rem;
   align-self: center;
 }
 
-.success-top {
+.unsuccessfull-top {
   display: grid;
   justify-content: center;
   text-align: center;
@@ -67,7 +68,7 @@ export default {
   border-radius: 12px 12px 0 0;
 }
 
-.success-icon {
+.unsuccessfull-icon {
   display: flex;
   justify-items: center;
   font-size: 4.5em;
@@ -75,35 +76,39 @@ export default {
   padding-bottom: 0;
 }
 
-.success-top p {
+.unsuccessfull-top p {
   font-size: 20px;
   text-transform: uppercase;
   font-family: source sans pro, sans-serif;
   margin: 0;
 }
 
-.success-bottom {
+.unsuccessfull-bottom {
   text-align: center;
   justify-items: center;
   background-color: #fff;
   height: 50%;
   border-radius: 0 0 12px 12px;
 }
+
 .mesage {
   box-sizing: border-box;
   padding: 10px;
   height: 70%;
   padding-top: 3rem;
 }
-.mesage p{
+
+.mesage p {
   margin: 0;
   color: #757575;
   font-family: source sans pro, sans-serif;
   align-content: center;
 }
+
 .btn {
   height: 30%;
 }
+
 .btn button {
   cursor: pointer;
   background-color: #8BC34A;
@@ -113,11 +118,6 @@ export default {
   font-size: 1em;
   padding: 10px 2em;
   box-shadow: 2px 1px 5px 5px rgba(199, 198, 198, 0.5);
-}
-.btn button:hover {
-  background-color: greenyellow;
-  color: #666666;
-}
-</style>
-
+}</style>
   
+    

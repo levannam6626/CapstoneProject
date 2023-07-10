@@ -11,7 +11,7 @@
     </div>
     <label>${{ this.totalPrice }}</label>
   </div>
-  <button class="btn-del" @click="delCartItem()">Del</button>
+  <button class="btn-del" @click="delCartItem()">X</button>
 </template>
 <script>
 import store from '@/store';

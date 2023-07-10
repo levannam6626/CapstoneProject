@@ -8,10 +8,6 @@ class loadProductList extends request {
       const res = await this.requestFormData().post(`${ENTITY_PATH}/add`, product);
       return res;
     } catch (err) {
-      if (err.response.status === 400) {
-        localStorage.clear();
-        this.$router.push("/");
-      }
       return { err: err };
     }
   }

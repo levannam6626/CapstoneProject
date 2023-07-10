@@ -36,7 +36,7 @@
     <div class="action">
       <a @click="showEdit()" v-show="!edit">Edit</a>
       <button type="submit" id="submit" v-show="edit">Submit</button>
-      <button class="logout-btn" @click="logout()" >Log-out</button>
+      <a class="logout-btn" @click="this.$emit('cancelProfile', true)">Cancel</a>
     </div>
   </form>
 </template>
@@ -55,6 +55,9 @@ export default {
       edit: false,
       message: '',
     }
+  },
+  emit: {
+    cancelProfile: null
   },
   computed: {
     userAccount() {

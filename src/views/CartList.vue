@@ -79,7 +79,7 @@ export default {
     },
     allSelected: {
       get() {
-        return (this.cart.cartItems === undefined || this.cart.cartItems === null)? false : this.selectedItems.length === this.cart.cartItems.length;
+        return (this.cart.cartItems === undefined || this.cart.cartItems === null || this.selectedItems.length === 0)? false : this.selectedItems.length === this.cart.cartItems.length;
       },
       set(value) {
         if (value) {
@@ -121,6 +121,7 @@ export default {
     deleteCartItem() {
       this.selectedItems = [];
       this.setSelected()
+      console.log(this.selectedItems)
     },
     setSelected() {
       if(this.cart.cartItems !== undefined) {
@@ -130,8 +131,8 @@ export default {
             this.selectedItems.push(cartItem);
           }
         }
-        this.totalCostCalculator();
       }
+      this.totalCostCalculator();
     },
     changeSelected(cartItem) {
       cartItem.selected = this.selectedItems.some(selectedItem => selectedItem.id === cartItem.id)

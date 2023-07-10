@@ -206,7 +206,7 @@ export default {
   height: 30px;
   z-index: 1;
   box-sizing: border-box;
-  padding: 6px 15px;
+  padding: 6px 28px;
   overflow: hidden;
 }
 .sticky-contact {

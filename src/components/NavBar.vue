@@ -38,7 +38,7 @@
         <li><a id="profile" @click="showDetail($event)">Profile</a></li>
         <li><a @click="logout()">Logout</a></li>
       </ul>
-      <UserDetail class="user-detail" v-show="showUserDetail"/>
+      <UserDetail class="user-detail" @cancelProfile="cancelProfile" v-show="showUserDetail"/>
     </div>
   </nav>
   <div class="button-toggle" @click="changeShowMenu()">
@@ -169,7 +169,12 @@ export default {
     },
     showDetail() {
       this.showUserDetail = !this.showUserDetail;
-    },logout() {
+    },
+    cancelProfile() {
+      this.showUserDetail = false;
+      this.showAccountAction = false;
+    },
+    logout() {
       this.logoutAction();
       this.deToken('logout');
       this.$router.push('/login');

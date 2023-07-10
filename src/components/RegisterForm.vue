@@ -63,14 +63,19 @@
       <a href="login" class="signup-image-link" v-if="this.logedinRole !== 'ADMIN'">I am already member</a>
     </div>
     <button v-if="this.logedinRole === 'ADMIN'" @click="$emit('closeForm',true)">X</button>
+    <div class="alert" v-show="this.alertSuccess" v-if="this.logedinRole !== 'ADMIN'">
+      <SuccessAlert :message="'User account has been created successfully'" @closeAlert="closeAlert"/>
+    </div>
   </div>
 </template>
 <script>
 import { mapActions } from 'vuex';
 import store from '@/store';
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faEnvelope, faUser, faLock, faPhone, faLocationDot } from '@fortawesome/free-solid-svg-icons'
-library.add(faEnvelope, faUser, faLock, faPhone, faLocationDot)
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faEnvelope, faUser, faLock, faPhone, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+library.add(faEnvelope, faUser, faLock, faPhone, faLocationDot);
+
+import SuccessAlert from '@/components/SuccessAlert.vue';
 
 export default {
   props: {
@@ -109,8 +114,13 @@ export default {
         phone: '',
         password: '',
         confirmPassword: '',
-      }
+      },
+      alertSuccess: false,
+      alertFailed: true
     };
+  },
+  components: {
+    SuccessAlert
   },
   mounted: function () {
     this.resetLoginData();
@@ -187,24 +197,25 @@ export default {
         this.$el.querySelector('#submit').style.cursor = 'pointer';
         this.isRegister = store.state.account.registerStatus;
         if(this.isRegister === true) {
-          alert("Register success !!!");
           if(this.logedinRole === "ADMIN")
           {
             this.resetLoginData();
             this.resetRegisterData();
             this.$emit('closeForm', true);
+            this.$emit('alertSuccess', true);
           }else{
+            this.alertSuccess = true;
             this.$router.push("login");
           }
         }
-        else {
-          if(this.isRegister === 'Email has been registered' ) {
-            this.messages.email = this.isRegister;
-          }
-          alert("Register failed !!!");
+        else {this.messages.email = 'Email has been registered';
         }
       }
     },
+    closeAlert() {
+      this.alertSuccess = false;
+      this.alertFailed = false;
+    }
   },
 };
 </script>
@@ -356,6 +367,13 @@ select:focus {
 }
 .signup>button:hover {
   font-weight: bold;
+}
+.alert {
+  position: absolute;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  background-color:  rgba(0, 0, 0, 0.07);
 }
 @media screen and (max-width: 760px) {
   .signup-image {
