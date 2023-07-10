@@ -60,7 +60,7 @@ export default {
     },
     initFastDecreaseQuantity() {
       this.intervalId = setInterval(() => {
-        if(this.quantity === this.cartItem.products.quantity || this.quantity === 1 || this.quantity === 0) {
+        if(this.quantity === 1 || this.quantity === 0) {
           clearInterval(this.intervalId)
         }else {
           this.$emit('quantityUpdate', this.index, Math.min(Math.max((this.quantity - 1), 1), this.cartItem.products.productQuantity));
@@ -75,7 +75,7 @@ export default {
     },
     initFastIncreaseQuantity() {
       this.intervalId = setInterval(() => {
-        if(this.quantity === this.cartItem.products.quantity || this.quantity === 1 || this.quantity === 0) {
+        if(this.quantity === this.cartItem.products.productQuantity) {
           clearInterval(this.intervalId)
         }else {
           this.$emit('quantityUpdate', this.index, Math.min((this.quantity + 1), this.cartItem.products.productQuantity));

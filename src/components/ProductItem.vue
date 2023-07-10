@@ -11,9 +11,9 @@
       <p>{{ this.product.productDescription }}</p>
     </div>
     <div class="product-quantity" v-if="this.account.role !== 'SELLER'">
-      <button @click="this.quantity = Math.max((this.quantity - 1), 1)">-</button>
+      <button @mousedown="initFastDecreaseQuantity()" @mouseup="destroyFastDecreaseQuantity()" @click="this.quantity = Math.max((this.quantity - 1), 1)" :disabled="this.quantity <= 1">-</button>
       <input type="text" maxlength="3" v-model="this.quantityString" readonly/>
-      <button @click="this.quantity = Math.min((this.quantity + 1), this.product.productQuantity)">+</button>
+      <button @mousedown="initFastIncreaseQuantity()" @mouseup="destroyFastIncreaseQuantity()" @click="this.quantity = Math.min((this.quantity + 1), this.product.productQuantity)" :disabled="this.quantity === product.productQuantity">+</button>
     </div>
     <div class="product-price">
       <label>${{ this.product.productPrice }}</label>
@@ -49,6 +49,7 @@
         },
         quantity: 1,
         isOrderedByThisUser: false,
+        intervalId: null
       };
     },
     computed: {
@@ -81,6 +82,30 @@
         // if(person !== undefined) {
         //   this.isOrderedByThisUser = true;
         // }
+      },
+      initFastDecreaseQuantity() {
+        this.intervalId = setInterval(() => {
+          if(this.quantity === 1 || this.quantity === 0) {
+            clearInterval(this.intervalId)
+          }else {
+            this.quantity = Math.max((this.quantity - 1), 1)
+          }
+        }, 100);
+      },
+      destroyFastDecreaseQuantity() {
+        clearInterval(this.intervalId)
+      },
+      initFastIncreaseQuantity() {
+        this.intervalId = setInterval(() => {
+          if(this.quantity === this.product.productQuantity) {
+            clearInterval(this.intervalId)
+          }else {
+            this.quantity = Math.min((this.quantity + 1), this.product.productQuantity);
+          }
+        }, 100);
+      },
+      destroyFastIncreaseQuantity() {
+        clearInterval(this.intervalId)
       },
       async showDetail() {
         this.$emit('showDetail',this.product);
@@ -178,7 +203,11 @@ p {
 .product-quantity button:hover {
   background-color: rgb(226, 222, 222);
 }
+.product-quantity button[disabled] {
+  background-color: rgb(226, 222, 222);
+}
 .product-quantity input{
+  cursor: pointer;
   text-align: center;
   height: 22px;
   width: 22px;

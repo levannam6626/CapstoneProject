@@ -41,9 +41,9 @@
       </div>
       <div class="product-action" v-if="this.$store.state.auth.userAccount.role !== 'SELLER'">
         <div class="product-quantity">
-          <button @click="this.quantity = Math.max((this.quantity - 1), 0)">-</button>
+          <button @mousedown="initFastDecreaseQuantity()" @mouseup="destroyFastDecreaseQuantity()" @click="this.quantity = Math.max((this.quantity - 1), 1)" :disabled="this.quantity <= 1">-</button>
           <input type="text" maxlength="3" v-model="this.quantityString"/>
-          <button @click="this.quantity = Math.min((this.quantity + 1), this.product.productQuantity)">+</button>
+          <button @mousedown="initFastIncreaseQuantity()" @mouseup="destroyFastIncreaseQuantity()" @click="this.quantity = Math.min((this.quantity + 1), this.product.productQuantity)" :disabled="this.quantity === product.productQuantity">+</button>
         </div>
         <button @click="addProductToCart()"><font-awesome-icon icon="fa-solid fa-cart-shopping" /> ADD TO CART</button>
       </div>
@@ -108,6 +108,30 @@
         const scaleOriginY = mouseY / event.target.offsetHeight * 80 + '%'
         this.scale = scale
         this.scaleOrigin = scaleOriginX + ' ' + scaleOriginY
+      },
+      initFastDecreaseQuantity() {
+        this.intervalId = setInterval(() => {
+          if(this.quantity === 1 || this.quantity === 0) {
+            clearInterval(this.intervalId)
+          }else {
+            this.quantity = Math.max((this.quantity - 1), 1)
+          }
+        }, 100);
+      },
+      destroyFastDecreaseQuantity() {
+        clearInterval(this.intervalId)
+      },
+      initFastIncreaseQuantity() {
+        this.intervalId = setInterval(() => {
+          if(this.quantity === this.product.productQuantity) {
+            clearInterval(this.intervalId)
+          }else {
+            this.quantity = Math.min((this.quantity + 1), this.product.productQuantity);
+          }
+        }, 100);
+      },
+      destroyFastIncreaseQuantity() {
+        clearInterval(this.intervalId)
       }
     },
   })
@@ -253,7 +277,11 @@ p {
 .product-quantity button:hover {
   background-color: rgb(226, 222, 222);
 }
+.product-quantity button[disabled] {
+  background-color: rgb(226, 222, 222);
+}
 .product-quantity input{
+  cursor: pointer;
   text-align: center;
   height: 40px;
   width: 40px;

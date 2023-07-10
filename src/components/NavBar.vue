@@ -31,9 +31,13 @@
       <button class="account login" @click="login()" v-if="this.loggedIn === false">
         <span style="font-weight: bold;" >SIGN-IN</span>
       </button>
-      <button class="account detail" @click="showDetail($event)" v-else>
+      <button class="account detail" @click="dropDownUserAction($event)" v-else>
         <span id="name">{{ this.account.firstname }}</span>
       </button>
+      <ul class="account-action" id="account-action" v-show="showAccountAction">
+        <li><a id="profile" @click="showDetail($event)">Profile</a></li>
+        <li><a @click="logout()">Logout</a></li>
+      </ul>
       <UserDetail class="user-detail" v-show="showUserDetail"/>
     </div>
   </nav>
@@ -59,7 +63,8 @@ export default {
       loggedIn: store.state.auth.loginStatus,
       account: store.state.auth.userAccount,
       productName: '',
-      showUserDetail: false,
+      showAccountAction: false,
+      showUserDetail: false
     }
   },
   emits :{
@@ -68,6 +73,15 @@ export default {
   watch: {
     url() {
       this.setBackgroundNav();
+    },
+    showUserDetail() {
+      if(this.showUserDetail === true) {
+        document.getElementById('profile').style.backgroundColor = 'red';
+        document.getElementById('profile').style.border = '1px solid black';
+      } else {
+        document.getElementById('profile').style.backgroundColor = '#252525';
+        document.getElementById('profile').style.border = '1px solid white';
+      }
     }
   },
   computed: {
@@ -97,6 +111,7 @@ export default {
   },
   methods: {
     ...mapActions('cart',['getCartAction']),
+    ...mapActions('auth',['deToken','logoutAction']),
     async getCart() {
       await this.getCartAction();
     },
@@ -144,10 +159,20 @@ export default {
     login() {
       this.$router.push("/login");
     },
-    showDetail(event) {
+    dropDownUserAction(event) {
       if(event.target.className === 'account detail' || event.target.id === 'name') {
-        this.showUserDetail = !this.showUserDetail;
+        this.showAccountAction = !this.showAccountAction;
+        if(this.showAccountAction === false) {
+          this.showUserDetail = false;
+        }
       }
+    },
+    showDetail() {
+      this.showUserDetail = !this.showUserDetail;
+    },logout() {
+      this.logoutAction();
+      this.deToken('logout');
+      this.$router.push('/login');
     }
   },
 };
@@ -227,7 +252,6 @@ nav {
 }
 .sub-menu-item {
   position: relative;
-
 }
 .sub-menu-item > a {
   box-sizing: border-box;
@@ -351,9 +375,46 @@ nav {
   width: 64px ;
   overflow: hidden;
 }
+.account-action {
+  position: absolute;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 1px;
+  right: 0px;
+  top: 48px;
+  width: 78px;
+  height: 55px;
+  z-index: 2;
+  border-radius: 8px;
+}
+.account-action li {
+  list-style-type: none;
+  height: 48%;
+  width: 100%;
+}
+.account-action li a {
+  cursor: pointer;
+  box-sizing: border-box;
+  display: inline-block;
+  padding: 3px 0;
+  padding-left: 15px;
+  text-align: left;
+  text-decoration: none;
+  color: white;
+  width: 100%;
+  border-radius: 8px;
+  height: 100%;
+  background-color: #252525;
+  border: 1px solid white;
+}
+.account-action li a:hover {
+  background-color: red !important;
+  color: #fff !important;
+  border: 1px solid black !important;
+}
 .user-detail {
   position: absolute;
-  right: 70px;
+  right: 75px;
   top: 47px;
   width: 250px;
   background-color: rgb(15, 15, 15);

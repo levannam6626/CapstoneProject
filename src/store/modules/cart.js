@@ -1,4 +1,5 @@
 import cartRequest from "@/factories/modules/cartRequest";
+import store from "..";
 export default {
   namespaced: true,
   state: {
@@ -14,6 +15,8 @@ export default {
       await res.then((array) => {
         if(array.status === 200) {
           content.commit('getCartMutation', array.data);
+        }else if(array.err.response.status === 403) {
+          store.dispatch('auth/logoutAction')
         }
       })
 		},
