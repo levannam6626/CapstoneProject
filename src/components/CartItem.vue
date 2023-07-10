@@ -60,7 +60,11 @@ export default {
     },
     initFastDecreaseQuantity() {
       this.intervalId = setInterval(() => {
-        this.$emit('quantityUpdate', this.index, Math.min(Math.max((this.quantity - 1), 1), this.cartItem.products.productQuantity));
+        if(this.quantity === this.cartItem.products.quantity || this.quantity === 1 || this.quantity === 0) {
+          clearInterval(this.intervalId)
+        }else {
+          this.$emit('quantityUpdate', this.index, Math.min(Math.max((this.quantity - 1), 1), this.cartItem.products.productQuantity));
+        }
       }, 100);
     },
     destroyFastDecreaseQuantity() {
@@ -71,7 +75,11 @@ export default {
     },
     initFastIncreaseQuantity() {
       this.intervalId = setInterval(() => {
-        this.$emit('quantityUpdate', this.index, Math.min((this.quantity + 1), this.cartItem.products.productQuantity));
+        if(this.quantity === this.cartItem.products.quantity || this.quantity === 1 || this.quantity === 0) {
+          clearInterval(this.intervalId)
+        }else {
+          this.$emit('quantityUpdate', this.index, Math.min((this.quantity + 1), this.cartItem.products.productQuantity));
+        }
       }, 100);
     },
     destroyFastIncreaseQuantity() {

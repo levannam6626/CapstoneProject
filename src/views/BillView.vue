@@ -75,7 +75,7 @@
         </select>
         <div style="display: flex; width: auto; align-items: center;">
           <span style="font-weight: bold;">TOTAL BILL: </span>
-          <p style="text-align: right; margin: 0; width: 4.2rem; color: blue; font-weight: bold; font-size: 22px;">{{ this.productOrdersDisplay.length }} / {{this.productOrders.length}}</p>
+          <p style="text-align: right; margin: 0; width: 4.2rem; color: blue; font-weight: bold; font-size: 22px;">{{ this.productOrdersFilter.length }} / {{this.productOrders.length}}</p>
         </div>
       </div>
       <Carousel style="width: 100%; text-align: left !important;" v-bind="settings" :breakpoints="breakpoints" v-if="this.productOrdersDisplay.length > 0">
@@ -86,6 +86,16 @@
           <Navigation style="color: red;"/>
         </template>
       </Carousel>
+      <div class="pagination-product">
+        <el-pagination
+          :page-size="pagination.pageSize"
+          :pager-count="pagination.pagerCount"
+          :page-count="totalPage"
+          layout="prev, pager, next"
+          v-model:current-page="pagination.page"
+          @current-change="getPageBills()"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -104,7 +114,11 @@ export default {
     return {
       loginRole: store.state.auth.userAccount.role,
       selected: 'Sales',
-
+      pagination: {
+        pageSize: 9,
+        pagerCount: 2,
+        page: 1
+      },
       settings: {
         itemsToShow: 1,
         snapAlign: 'center',
@@ -136,7 +150,7 @@ export default {
     productOrders() {
       return store.state.order.productOrders;
     },
-    productOrdersDisplay() {
+    productOrdersFilter() {
       if(this.deliveryStatus !== 'all') {
         return this.productOrders.filter(productOrder => {
           return productOrder.status === this.deliveryStatus.toUpperCase();
@@ -144,6 +158,14 @@ export default {
       } else {
         return this.productOrders;
       }
+    },
+    productOrdersDisplay() {
+      const startIndex = (this.pagination.page - 1) * this.pagination.pageSize;
+      const endIndex = startIndex + this.pagination.pageSize;
+      return this.productOrdersFilter.slice(startIndex, endIndex);
+    },
+    totalPage() {
+      return Math.max(Math.ceil(this.productOrdersFilter.length / this.pagination.pageSize), 1);
     },
     productOrdersStatistic() {
       return this.productOrders.filter(productOrder => {
@@ -446,6 +468,9 @@ export default {
           return 'pending-css';
       }
     },
+    getPageBills() {
+      console.log(this.pagination.page)
+    }
   },
   mounted() {
     if (store.state.auth.userAccount.role === 'CUSTOMER') {
@@ -611,6 +636,11 @@ h2 {
 .canceled-css {
   color: white;
   background-color: red;
+}
+.pagination-product {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
 }
 </style>
 <style>

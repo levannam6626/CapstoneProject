@@ -9,7 +9,7 @@
         <input type="checkbox" name="action" @change="changeSelected(cartItem)" :value="cartItem" v-model="selectedItems"/>
         <CartItem :cart-item="cartItem" :index="index" @quantity-update="quantityUpdateInParent" @delete-cartItem="deleteCartItem"/>
       </div>
-      <div class="check-length" v-if="checkLength === false "><font-awesome-icon id="icon" icon="fa-solid fa-cart-shopping" />There are no products in the cart yet</div>
+      <div class="check-length" v-if="checkLength === false"><font-awesome-icon id="icon" icon="fa-solid fa-cart-shopping" />There are no products in the cart yet</div>
     </div>
     <div class="payment-transparent" @click="paymentClick($event)" v-show="this.showPayment">
       <PaymentView :cart-list="this.selectedItems" :total-cost="this.totalCost" @close-payment="closePayment"/>
@@ -79,7 +79,7 @@ export default {
     },
     allSelected: {
       get() {
-        return (this.cart.cartItems === undefined || this.cart.cartItems)? false : this.selectedItems.length === this.cart.cartItems.length;
+        return (this.cart.cartItems === undefined || this.cart.cartItems === null)? false : this.selectedItems.length === this.cart.cartItems.length;
       },
       set(value) {
         if (value) {

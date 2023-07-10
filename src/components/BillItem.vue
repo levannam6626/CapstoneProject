@@ -23,7 +23,7 @@
         <span>{{ this.productOrder.phone }}</span>
       </div>
       <div class="address">
-        <p>Address:</p>
+        <p>Delivery Address:</p>
         <span>{{ this.productOrder.deliveryAddress }}</span>
       </div>
       <div class="notes">

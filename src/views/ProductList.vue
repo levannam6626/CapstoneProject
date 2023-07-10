@@ -17,7 +17,7 @@
     </h3>
   </header>
   <div class="content" v-if="showList===true">
-    <div v-for="(product, index) in this.products" :key="index">
+    <div v-for="(product, index) in this.productsDisplay" :key="index">
       <ProductItem :product="product" @checkedProduct="checkedProductInparent"/>
     </div>
   </div>
@@ -25,7 +25,7 @@
     <el-pagination
       :page-size="pagination.pageSize"
       :pager-count="pagination.pagerCount"
-      :page-count="pagination.totalPage"
+      :page-count="totalPage"
       layout="prev, pager, next"
       v-model:current-page="pagination.page"
       @current-change="getPageProducts()"
@@ -53,16 +53,23 @@ export default {
       searchProductName: '',
       checkedProductIds:[],
       pagination: {
-        pageSize: 1,
+        pageSize: 6,
         pagerCount: 2,
-        totalPage: 5,
-        page: 1,
+        page: 1
       },
     };
   },
   computed: {
     products() {
       return store.state.product.products;
+    },
+    productsDisplay() {
+      const startIndex = (this.pagination.page - 1) * this.pagination.pageSize;
+      const endIndex = startIndex + this.pagination.pageSize;
+      return this.products.slice(startIndex, endIndex);
+    },
+    totalPage() {
+      return Math.max(Math.ceil(this.products.length / this.pagination.pageSize), 1);
     }
   },
   watch: {
