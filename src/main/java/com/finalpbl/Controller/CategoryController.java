@@ -41,6 +41,7 @@ public class CategoryController {
     }
 
     @RequestMapping(path = "/add", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PreAuthorize("hasAuthority('SELLER')")
     public ResponseEntity<?> addCategory(@ModelAttribute Category category)
     {
         String msg = categoryService.addCategory(category);
@@ -52,6 +53,7 @@ public class CategoryController {
     }
 
     @DeleteMapping(path = "/delete/{id}")
+    @PreAuthorize("hasAuthority('SELLER')")
     public ResponseEntity<?> deleteCategory(@PathVariable(name = "id") Long id)
     {
         String msg = categoryService.deleteCategory(id);

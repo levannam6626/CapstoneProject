@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -79,6 +80,7 @@ public class ProductController {
         }
     }
     @RequestMapping(path = "/edit", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PreAuthorize("hasAuthority('SELLER')")
     public ResponseEntity<?> editProduct(@RequestPart(value = "productRequest") ProductDto productRequest, @ModelAttribute MultipartFile file)
     {
         String msg ="";
@@ -93,7 +95,8 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
         }
     }
-    @PostMapping(path = "/delete")
+    @DeleteMapping(path = "/delete")
+    @PreAuthorize("hasAuthority('SELLER')")
     public ResponseEntity<?> deleteProductsByid(@RequestBody List<Long> ids)
     {
         String msg = iProductService.deleteProductsByid(ids);

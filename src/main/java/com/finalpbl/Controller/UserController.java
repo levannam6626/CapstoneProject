@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
@@ -32,6 +33,7 @@ public class UserController {
     private IUserService userService;
 
     @GetMapping(path = "view/get-by-search/{email}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> getUsersSearch(@PathVariable(name = "email") String email)
     {
         List<UserDto> userDtos;
@@ -65,7 +67,6 @@ public class UserController {
     @RequestMapping(path = "/edit", method = RequestMethod.PATCH, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> editUser(@ModelAttribute UserDto user)
     {
-        System.out.println(user.getEmail());
         String msg = userService.editUser(user);
         if(msg.equals("Edit Success"))
         {
@@ -74,8 +75,20 @@ public class UserController {
         return ResponseEntity.badRequest().body(msg);
     }
 
+    @RequestMapping(path = "/edit-password", method = RequestMethod.PATCH, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<?> editPassword(@ModelAttribute UserDto user)
+    {
+        String msg = userService.editPassword(user);
+        if(msg.equals("Change Password Success"))
+        {
+            return ResponseEntity.ok().body(msg);
+        }
+        return ResponseEntity.badRequest().body(msg);
+    }
+
 
     @DeleteMapping(path = "delete/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteUser(@PathVariable(name = "id") Long id)
     {
         String msg = userService.deleteUser(id);

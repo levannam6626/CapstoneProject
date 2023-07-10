@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ public class ProductOrderController {
     private IProductOrderService iProductOrderService;
 
     @GetMapping(path = "view/all")
+    @PreAuthorize("hasAuthority('SELLER')")
     public ResponseEntity<?> getAllOrder()
     {
         List<ProductOrderDto> orders = iProductOrderService.getAllOrders();
@@ -41,6 +43,7 @@ public class ProductOrderController {
     }
 
     @GetMapping(path = "view/getByUser")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     public ResponseEntity<?> getOrderByUser(@AuthenticationPrincipal UserDetailsImpl user)
     {
         List<ProductOrderDto> orders = iProductOrderService.getOrdersByUser(user.getUsername());
@@ -48,6 +51,7 @@ public class ProductOrderController {
     }
 
     @PostMapping(path = "/add")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     public ResponseEntity<?> createOrder(@AuthenticationPrincipal UserDetailsImpl user)
     {
         String msg = iProductOrderService.PlaceOrder(user.getUsername());
@@ -59,6 +63,7 @@ public class ProductOrderController {
     }
 
     @PostMapping(path = "/edit")
+    @PreAuthorize("hasAuthority('SELLER')")
     public ResponseEntity<?> editOrder(@ModelAttribute OrderUpdateRequestDto order)
     {
         String msg = iProductOrderService.editOrder(order);

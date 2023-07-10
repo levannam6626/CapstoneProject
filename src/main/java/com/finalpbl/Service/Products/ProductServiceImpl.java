@@ -112,7 +112,6 @@ public class ProductServiceImpl implements IProductService{
             product.setUpdateDate(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
             product.setProductDescription(productRequest.getProductDescription());
             product.setCategory(category);
-            product.setIsDeleted(false);
             product.setProductQuantity(productRequest.getProductQuantity());
             productsRepository.save(product);
             return "CREATE SUCCESS";
@@ -122,7 +121,7 @@ public class ProductServiceImpl implements IProductService{
     @Override
     public String editProduct(ProductDto productRequest, MultipartFile file) throws ParseException {
         Category category = categoryRepository.findById(productRequest.getCategoryId()).orElseThrow();
-        Products productValidate = productsRepository.findProductsByProductIdAndIsDeleted(productRequest.getProductId(), false);
+        Products productValidate = productsRepository.findProductsByProductId(productRequest.getProductId());
         if(productValidate == null) {
             return "PRODUCT DOES NOT EXIST";
         } else {
@@ -145,8 +144,7 @@ public class ProductServiceImpl implements IProductService{
         for (Long id : ids)
         {
             Products product = productsRepository.findById(id).orElseThrow(null);
-            product.setIsDeleted(true);
-            productsRepository.save(product);   
+            productsRepository.delete(product);   
         }
         return "Delete Success";
     }

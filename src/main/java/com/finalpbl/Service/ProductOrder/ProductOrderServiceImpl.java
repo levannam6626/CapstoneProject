@@ -91,6 +91,7 @@ public class ProductOrderServiceImpl implements IProductOrderService{
                 orderItem.setQuantity(items.getQuantity());
                 products.setProductQuantity(products.getProductQuantity() - items.getQuantity());
                 orderItemRepository.save(orderItem);
+                productsRepository.save(products);
             }
         }
         return "Add Order Success";

@@ -6,12 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.finalpbl.Model.Category;
+import com.finalpbl.Model.Products;
 import com.finalpbl.Repository.CategoryRepository;
+import com.finalpbl.Repository.ProductsRepository;
 
 @Service
 public class CategoryServiceImpl implements ICategoryService{
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ProductsRepository productsRepository;
 
     @Override
     public List<Category> getAllCategory() {
@@ -42,8 +47,14 @@ public class CategoryServiceImpl implements ICategoryService{
     @Override
     public String deleteCategory(long id) {
         Category categoryValidate = categoryRepository.findById(id).orElseThrow(null);
+       
         if(categoryValidate != null)
         {
+            List<Products> products = productsRepository.findAllByCategoryId(id);
+            for (Products p:products)
+            {
+                productsRepository.delete(p);
+            }
             categoryRepository.delete(categoryValidate);
             return "Delete Success";
         }
