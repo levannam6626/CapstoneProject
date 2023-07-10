@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="header">
-      <button @click="this.$router.go(-1)"><font-awesome-icon icon="fa-solid fa-left-long" /></button>
+      <button @click="this.$router.push('/')"><font-awesome-icon icon="fa-solid fa-left-long" /></button>
       <h3>CART LIST</h3>
     </div>
     <div class="content">
@@ -162,6 +162,7 @@ export default {
     },
     closePayment(status) {
       this.showPayment = false;
+      this.$router.push('/bills')
       if(status === true) {
         this.selectedItems = [];
       }

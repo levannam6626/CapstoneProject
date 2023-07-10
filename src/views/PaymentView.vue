@@ -19,6 +19,15 @@
             <span>Total Cost:</span>
             <span>${{ this.totalCost }}</span>
           </div>
+          <div class="payment-method">
+            <span style="color: red; text-decoration: underline;">Payment method</span>
+            <div class="payment-method-item">
+              <input type="radio" id="cash" v-model="selectedOptionPayment" value="cash"><label for="cash">In cash</label>
+            </div>
+            <div class="payment-method-item">
+              <input type="radio" id="bank" v-model="selectedOptionPayment" value="bank"><label for="bank">By bank transfer</label>
+            </div>
+          </div>
         </div>
         <div class="items">
           <div class="items-cart" v-for="(cart, index) in cartList" :key="index">
@@ -64,6 +73,7 @@ export default {
       url: store.state.product.url,
       account: store.state.auth.userAccount,
       notes: '',
+      selectedOptionPayment: 'cash',
       alert: false,
       reg: {
         regPhone: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/
@@ -80,9 +90,9 @@ export default {
     SuccessAlert
   },
   methods: {
-    ...mapActions('order',['paymentAction']),
+    ...mapActions('order',['paymentAction','paymentByBankTransferAction']),
     ...mapActions('cart',['getCartAction']),
-    ...mapMutations('order',['paymentMutation']),
+    ...mapMutations('order',['paymentMutation','paymentByBankTransferMutation']),
     resetMessages() {
       this.messages.phone = '';
     },
@@ -95,20 +105,47 @@ export default {
       }
       return false;
     },
+    async pay(paymentType) {
+      const userInfor = {
+        fullName: this.account.firstname + ' ' + this.account.lastname,
+        deliveryAddress: this.account.address,
+        phone: this.account.phone,
+        additionalNotes: (this.notes === '')? 'There are no notes!': this.notes,
+        paymentType: paymentType
+      }
+      await this.paymentAction(userInfor);
+      if(store.state.order.message.payment === "Add Order Success") {
+        this.paymentMutation(null);
+        await this.getCartAction();
+      }
+      if(paymentType === 'cash') {
+        this.alert = true;
+      }else {
+        alert('Payment Success')
+        this.$router.push('/bills')
+      }
+    },
     async payment() {
       if (this.validated()) {
-        console.log(this.account)
-        const userInfor = {
-          fullName: this.account.firstname + ' ' + this.account.lastname,
-          deliveryAddress: this.account.address,
-          phone: this.account.phone,
-          additionalNotes: (this.notes === '')? 'There are no notes!': this.notes
-        }
-        await this.paymentAction(userInfor);
-        if(store.state.order.message.payment === "Add Order Success") {
-          this.paymentMutation(null);
-          await this.getCartAction();
-          this.alert = true;
+        // const userInfor = {
+        //   fullName: this.account.firstname + ' ' + this.account.lastname,
+        //   deliveryAddress: this.account.address,
+        //   phone: this.account.phone,
+        //   additionalNotes: (this.notes === '')? 'There are no notes!': this.notes
+        // }
+        if(this.selectedOptionPayment === 'bank') {
+          await this.paymentByBankTransferAction(parseInt(this.totalCost));
+          let paymentBank = store.state.order.paymentBank;
+          this.paymentByBankTransferMutation({})
+          window.location.href = paymentBank.url;
+        }else {
+          await this.pay('cash')
+          // await this.paymentAction(userInfor);
+          // if(store.state.order.message.payment === "Add Order Success") {
+          //   this.paymentMutation(null);
+          //   await this.getCartAction();
+          //   this.alert = true;
+          // }
         }
       }
     },
@@ -119,7 +156,12 @@ export default {
     totalPrice(cart) {
       return Math.round((cart.quantity * cart.products.productPrice) *100) /100;
     }
-  }
+  },
+  mounted() {
+    if(this.$route.query.vnp_ResponseCode ==='00') {
+      this.pay('bank')
+    }
+  },
 }
 </script>
 <style scoped>
@@ -191,7 +233,7 @@ export default {
   box-sizing: border-box;
   padding-left: 8px;
   width: 100%;
-  margin-bottom: 12px;
+  margin-bottom: 5px;
   border-color: #ccc;
 }
 .user-infor input:focus {
@@ -205,9 +247,29 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
   color: red;
   font-weight: bold;
+}
+.payment-method {
+ width: 100%; 
+}
+.payment-method-item {
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+} 
+.payment-method-item input {
+  width: 15px;
+  font-size: 15px;
+  margin: 0;
+  padding: 0;
+  height: 13px;
+  margin-left: 15px;
+}
+.payment-method-item label {
+  width: auto;
+  margin-left: 5px;
 }
 input[type='number'] {
   width: 50%;

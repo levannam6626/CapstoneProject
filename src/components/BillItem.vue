@@ -30,6 +30,10 @@
         <p>Notes:</p>
         <span>{{ this.productOrder.additionalNotes }}</span>
       </div>
+      <div class="address">
+        <p>Payment by:</p>
+        <span style="text-transform: uppercase;">{{ this.productOrder.paymentType }}</span>
+      </div>
     </div>
     <div class="table-container">
       <table>

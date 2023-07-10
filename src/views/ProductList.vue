@@ -37,7 +37,7 @@
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import ProductItem from '@/components/ProductItem.vue';
 import store from '@/store';
 export default {
@@ -89,6 +89,7 @@ export default {
   },
   methods: {
     ...mapActions('product',['searchProductAction','searchProductByCategoryNameAction','deleteProductsAction']),
+    ...mapMutations('product',['createProductMutation']),
     checkedProductInparent(checkedProduct) {
       if(checkedProduct.status) {
         this.checkedProductIds.push(checkedProduct.id)
@@ -110,6 +111,7 @@ export default {
       if(store.state.product.messages.delete === "Success") {
         alert('Delete Success');
         await this.searchProduct('all');
+        this.createProductMutation('');
       }
     }
   },

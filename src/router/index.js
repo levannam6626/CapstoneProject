@@ -73,6 +73,7 @@ const routes = [
       },
       {
         path: '/cart-list',
+        alias: ['/vnpay_jsp/vnpay_return.jsp'],
         name: 'cartList',
         component: CartList
       },

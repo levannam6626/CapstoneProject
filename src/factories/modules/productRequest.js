@@ -61,7 +61,13 @@ class loadProductList extends request {
   }
   async deleteProductsById(ids) {
     try {
-      const res = await this.requestProduct().delete(`${ENTITY_PATH}/delete`, ids );
+      let params ='';
+      for (let index = 0; index < ids.length; index++) {
+        const id = ids[index];
+        if(index !=0) {params += '&'}
+        params += 'ids='+id;
+      }
+      const res = await this.requestFormData().delete(`${ENTITY_PATH}/delete?`+params );
       return res;
     } catch (err) {
       if (err.response.status === 401) {
