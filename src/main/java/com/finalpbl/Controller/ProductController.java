@@ -83,6 +83,7 @@ public class ProductController {
         }
     }
     @RequestMapping(path = "/edit", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PreAuthorize("hasAuthority('SELLER')")
     public ResponseEntity<?> editProduct(@RequestPart(value = "productRequest") ProductDto productRequest, @ModelAttribute MultipartFile file)
     {
         String msg ="";
@@ -98,7 +99,8 @@ public class ProductController {
         }
     }
     @DeleteMapping(path = "/delete")
-    public ResponseEntity<?> deleteProductsByid(@RequestBody List<Long> ids)
+    @PreAuthorize("hasAuthority('SELLER')")
+    public ResponseEntity<?> deleteProductsByid(@RequestParam(name="ids") List<Long> ids)
     {
         String msg = iProductService.deleteProductsByid(ids);
         if(msg.equals("Delete Success"))

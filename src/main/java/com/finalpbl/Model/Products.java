@@ -21,12 +21,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "products")
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -62,9 +64,6 @@ public class Products {
     @Column(name = "product_quantity")
     @NotNull
     private int productQuantity;
-
-    @Column(nullable = false)
-    private Boolean isDeleted;
 
     @ManyToOne
     @JsonBackReference

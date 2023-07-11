@@ -29,6 +29,8 @@ public class ProductOrderDto {
 
     private String status;
 
+    private String paymentType;
+
     private LocalDateTime createdDate;
 
     private UserDto user;

@@ -21,12 +21,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "product_order")
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -55,6 +57,9 @@ public class ProductOrder {
 
     @Column(name = "total_price")
     private Double totalPrice;
+
+    @Column(name = "payment_type")
+    private String paymentType;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

@@ -22,7 +22,7 @@ public class OrderResponseMapper implements Function<ProductOrder, ProductOrderD
 
     @Override
     public ProductOrderDto apply(ProductOrder order) {
-        return new ProductOrderDto(order.getId(), order.getFullName(), order.getDeliveryAddress(), order.getPhone(), order.getAdditionalNotes(), order.getTotalPrice(),order.getOrderStatus().name(), order.getCreatedDate(), modelMapper.map(order.getUser(), UserDto.class), order.getOrderItem().stream().map(orderItemResponseMapper).collect(Collectors.toList()));
+        return new ProductOrderDto(order.getId(), order.getFullName(), order.getDeliveryAddress(), order.getPhone(), order.getAdditionalNotes(), order.getTotalPrice(),order.getOrderStatus().name(), order.getPaymentType(), order.getCreatedDate(), modelMapper.map(order.getUser(), UserDto.class), order.getOrderItem().stream().map(orderItemResponseMapper).collect(Collectors.toList()));
     }
     
 }

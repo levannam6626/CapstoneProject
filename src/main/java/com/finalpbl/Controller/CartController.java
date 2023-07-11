@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,6 +31,7 @@ public class CartController {
     private ICartService cartService;
 
     @PostMapping(path = "/add")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     public ResponseEntity<?> AddCart(@ModelAttribute AddEditCartDto cartItemDto, @AuthenticationPrincipal UserDetailsImpl user)
     {
         String msg = cartService.AddCartItem(cartItemDto, user.getUsername());
@@ -41,6 +43,7 @@ public class CartController {
     }
 
     @GetMapping(path = "view/get")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     public ResponseEntity<?> GetCart(@AuthenticationPrincipal UserDetailsImpl user)
     {
         CartDto cartDto = cartService.findByUserOrderByCreatedDateDesc(user.getUsername());
@@ -48,6 +51,7 @@ public class CartController {
     }   
 
     @PostMapping(path = "/edit")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     public ResponseEntity<?> updateCart(@ModelAttribute AddEditCartDto cartItemDto)
     {
         String msg = cartService.UpdateCart(cartItemDto);
@@ -70,6 +74,7 @@ public class CartController {
     }
 
     @DeleteMapping(path = "/delete/{id}")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     public ResponseEntity<?> deleteCart(@PathVariable(name = "id") long ID)
     {
         String msg = cartService.DeleteCart(ID);

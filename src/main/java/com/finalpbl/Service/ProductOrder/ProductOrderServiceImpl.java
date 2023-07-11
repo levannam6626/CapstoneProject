@@ -79,6 +79,7 @@ public class ProductOrderServiceImpl implements IProductOrderService{
         order.setDeliveryAddress(productOrderDto.getDeliveryAddress());
         order.setPhone(productOrderDto.getPhone());
         order.setAdditionalNotes(productOrderDto.getAdditionalNotes());
+        order.setPaymentType(productOrderDto.getPaymentType());
         order.setCreatedDate(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
         order.setUser(userRepository.findByEmail(email).orElseThrow());
         order.setTotalPrice(cartDto.getTotalCost());
@@ -97,6 +98,7 @@ public class ProductOrderServiceImpl implements IProductOrderService{
                 orderItem.setQuantity(items.getQuantity());
                 products.setProductQuantity(products.getProductQuantity() - items.getQuantity());
                 orderItemRepository.save(orderItem);
+                productsRepository.save(products);
             }
         }
         cartService.DeleteOrderdItem(email);

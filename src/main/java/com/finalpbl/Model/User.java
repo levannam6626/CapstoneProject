@@ -25,12 +25,14 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "users")
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -77,6 +79,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private List<Cart> carts;
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Payment> payments;
 
     public User(String firstname, String lastname, String password, String email, String address, String phone, Boolean isDeleted, Role role, String gender) {
         this.firstname = firstname;

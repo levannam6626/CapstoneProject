@@ -114,4 +114,17 @@ public class UserServiceImpl implements IUserService{
         return "Edit Failed";
     }
 
+    @Override
+    public String editPassword(UserDto userDto)
+    {
+        User user = userRepository.findById(userDto.getId()).orElseThrow(null);
+        if(user != null)
+        {
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            userRepository.save(user);
+            return "Change Password Success";
+        }
+        return "Failed";
+    }
+
 }

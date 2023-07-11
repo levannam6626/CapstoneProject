@@ -85,8 +85,9 @@ public class CartServiceImpl implements ICartService{
                 cart.setQty(cart.getQty() + cartItemDto.getQuantity());
                 //cartRepository.save(cart);
                 //return "Add Success";
+            }else {
+                cart.setQty(products.getProductQuantity());
             }
-            cart.setQty(products.getProductQuantity());
             cartRepository.save(cart);
             return "Add Success";
             //return "Quantity more than allow";
