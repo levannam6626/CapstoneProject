@@ -26,10 +26,10 @@
               <button type="submit">Login</button>
             </div>
           </form>
-          <div class="media-btn">
+          <!-- <div class="media-btn">
             <button class="facebook-btn" ><font-awesome-icon class="icon" icon="fa-brands fa-facebook" /></button>
             <button class="google-btn" ><font-awesome-icon class="icon" icon="fa-brands fa-google" /></button>
-          </div>
+          </div> -->
           <a href="register">Create an account</a>
         </div>
       </div>
@@ -174,10 +174,10 @@ a {
   width: 100%;
 }
 .password {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 .submit {
-  margin-top: 25px;
+  margin-top: 45px;
   width: 100%;
 }
 .email-icon{
